@@ -43,6 +43,9 @@ public class SignUpActivityManager extends AppCompatActivity {
         }
         String phoneNumber = editTextPhone.getText().toString();
         // todo liza: check if telephone number valid
+        if (phoneNumber.length() > 10 | phoneNumber.length() < 8) {
+            Toast.makeText(this, "Invalid phone number", Toast.LENGTH_LONG).show();
+        }
         AuthorizationLocal authorizationLocal = new AuthorizationLocal();
         if(authorizationLocal.signUp(email,password,phoneNumber)){
 

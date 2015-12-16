@@ -4,6 +4,7 @@
     <string name="signIn">Sign In</string>
     <string name="signUpTheme">Sign Up manager</string>
     <string name="hintPassword">Password</string>
-    <string name="hinEmail">Email</string>
+    <string name="hintEmail">Email</string>
     <string name="hintPhone">Phone number</string>
+    <string name="SignInText">Sign In</string>
 </resources>
