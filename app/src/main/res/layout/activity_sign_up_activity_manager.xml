@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".SignUpActivityManager">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/signUpTheme"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:hint="@string/hinEmail"
+        android:ems="10"
+        android:id="@+id/editEmailSignUpManager"
+        android:layout_marginTop="51dp"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="@string/hintPassword"
+        android:ems="10"
+        android:id="@+id/editPasswordSignUpManager"
+        android:layout_marginTop="73dp"
+        android:layout_below="@+id/editEmailSignUpManager"
+        android:layout_centerHorizontal="true"
+        android:password="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:hint="@string/hintPhone"
+        android:ems="10"
+        android:id="@+id/editPhoneSignUpManager"
+        android:layout_below="@+id/editPasswordSignUpManager"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="65dp"
+        android:phoneNumber="false" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signUpButton"
+        android:id="@+id/buttonSignUp"
+        android:onClick="signUpManagerClicked"
+        android:layout_below="@+id/editPhoneSignUpManager"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="48dp" />
+
+    <Button
+        android:onClick="signInManagerClickedInSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/signIn"
+        android:id="@+id/button2"
+        android:layout_alignTop="@+id/buttonSignUp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>
