@@ -13,7 +13,8 @@
         android:text="@string/signUpTheme"
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignLeft="@+id/editEmailSignUpManager"
+        android:layout_alignStart="@+id/editEmailSignUpManager" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -38,7 +39,7 @@
         android:layout_centerHorizontal="true"
         android:password="true" />
 
-    <EditText
+    <EditText style=""
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="phone"
