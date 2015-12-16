@@ -71,4 +71,5 @@
         android:layout_alignTop="@+id/buttonSignUp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
 </RelativeLayout>
