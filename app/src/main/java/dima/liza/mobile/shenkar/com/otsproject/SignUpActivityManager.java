@@ -35,6 +35,11 @@ public class SignUpActivityManager extends AppCompatActivity {
     }
 
     public void signInManagerClickedInSignUp(View view) {
+        Intent intent = new Intent (this,SignInActivityManager.class);
+        startActivity(intent);
+    }
+
+    public void signUpManagerClicked(View view) {
         String email = editTextEmail.getText().toString();
         // todo liza: check if email valid
         String password = editTextPassword.getText().toString();
@@ -61,10 +66,8 @@ public class SignUpActivityManager extends AppCompatActivity {
             Toast.makeText(this,"Error sign up.Try again leter",Toast.LENGTH_LONG).show();
             return;
         }
-    }
 
-    public void signUpManagerClicked(View view) {
-        Intent intent = new Intent (this,SignInActivityManager.class);
-        startActivity(intent);
+
+
     }
 }
