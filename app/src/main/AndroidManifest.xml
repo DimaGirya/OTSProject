@@ -17,6 +17,8 @@
         </activity>
         <activity android:name=".SignInActivityManager" >
         </activity>
+        <activity android:name=".EditTeamActivity" >
+        </activity>
     </application>
 
 </manifest>

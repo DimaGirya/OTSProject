@@ -20,9 +20,9 @@ public class SignUpActivityManager extends AppCompatActivity {
     Boolean ifLogIn = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        sharedpreferences = getSharedPreferences(LoginPreferences,MODE_PRIVATE);
         super.onCreate(savedInstanceState);
-        sharedpreferences = getPreferences(MODE_PRIVATE);
-        sharedpreferences.getBoolean(IfLoggedIn,ifLogIn);
+        ifLogIn =  sharedpreferences.getBoolean(IfLoggedIn,false);
         if(!ifLogIn) {
             setContentView(R.layout.activity_sign_up_activity_manager);
             editTextEmail = (EditText) findViewById(R.id.editEmailSignUpManager);
@@ -30,7 +30,9 @@ public class SignUpActivityManager extends AppCompatActivity {
             editTextPhone = (EditText) findViewById(R.id.editPhoneSignUpManager);
         }
         else{
-            // user loget in move to next activity
+            Toast.makeText(this, "Welcome back", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent (this,EditTeamActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -54,13 +56,15 @@ public class SignUpActivityManager extends AppCompatActivity {
         }
         AuthorizationLocal authorizationLocal = new AuthorizationLocal();
         if(authorizationLocal.signUp(email,password,phoneNumber)){
-
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString(Password,password);
             editor.putString(Phone,phoneNumber);
             editor.putString(Email,email);
-            editor.putBoolean(IfLoggedIn,true);
+            editor.putBoolean(IfLoggedIn, true);
             editor.commit();
+            Toast.makeText(this,"Sign up complete.Welcome ",Toast.LENGTH_LONG).show();
+            Intent intent = new Intent (this,EditTeamActivity.class);
+            startActivity(intent);
         }
         else{
             Toast.makeText(this,"Error sign up.Try again leter",Toast.LENGTH_LONG).show();
