@@ -7,4 +7,10 @@
     <string name="hintEmail">Email</string>
     <string name="hintPhone">Phone number</string>
     <string name="SignInText">Sign In</string>
+    <string name="hintTeamName">Team name</string>
+    <string name="buttonSaveTeamName">Save team name</string>
+    <string name="buttonInviteMembers">Invite members</string>
+    <string name="buttonDeleteMembers">Delete members</string>
+    <string name="buttonEditTeamDone">Done</string>
+    <string name="addTaskActionButton">Add task</string>
 </resources>

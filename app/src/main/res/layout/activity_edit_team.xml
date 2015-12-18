@@ -7,4 +7,81 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="dima.liza.mobile.shenkar.com.otsproject.activity.EditTeamActivity">
 
+    <EditText
+        android:hint="@string/hintTeamName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editTeamNameTextField"
+        android:layout_marginTop="38dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonSaveTeamName"
+        android:onClick="onClickSaveTeamName"
+        android:id="@+id/bSaveTeamName"
+        android:layout_below="@+id/editTeamNameTextField"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonInviteMembers"
+        android:onClick="onClickInviteMembers"
+        android:id="@+id/bInviteMembers"
+        android:layout_below="@+id/bSaveTeamName"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonEditTeamDone"
+        android:id="@+id/buttonEditTeamDone"
+        android:onClick="onCLickEditTeamDone"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonDeleteMembers"
+        android:id="@+id/buttonDeleteMembers"
+        android:onClick="onClickDeleteMembers"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/buttonEditTeamDone"
+        android:layout_toEndOf="@+id/buttonEditTeamDone" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listViewTeamMembers"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/bInviteMembers"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/buttonEditTeamDone" />
+
+    <!--
+    need to change to FloatingActionButton
+    addTaskActionButton
+   -->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/addTaskActionButton"
+        android:onClick="onClickAddTask"
+        android:id="@+id/addTaskActionButton"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/buttonDeleteMembers"
+        android:layout_toEndOf="@+id/buttonDeleteMembers" />
+
 </RelativeLayout>
