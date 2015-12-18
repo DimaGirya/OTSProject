@@ -1,6 +1,5 @@
-package dima.liza.mobile.shenkar.com.otsproject;
+package dima.liza.mobile.shenkar.com.otsproject.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +8,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class SignUpActivityManager extends AppCompatActivity {
+import dima.liza.mobile.shenkar.com.otsproject.AuthorizationLocal;
+import dima.liza.mobile.shenkar.com.otsproject.R;
+
+public class SignUpManagerActivity extends AppCompatActivity {
     EditText editTextEmail,editTextPassword,editTextPhone;
     SharedPreferences sharedpreferences;
     public static final String LoginPreferences = "LoginPreferences" ;
@@ -24,7 +26,7 @@ public class SignUpActivityManager extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ifLogIn =  sharedpreferences.getBoolean(IfLoggedIn,false);
         if(!ifLogIn) {
-            setContentView(R.layout.activity_sign_up_activity_manager);
+            setContentView(R.layout.activity_sign_up_manager);
             editTextEmail = (EditText) findViewById(R.id.editEmailSignUpManager);
             editTextPassword = (EditText) findViewById(R.id.editPasswordSignUpManager);
             editTextPhone = (EditText) findViewById(R.id.editPhoneSignUpManager);
@@ -37,7 +39,7 @@ public class SignUpActivityManager extends AppCompatActivity {
     }
 
     public void signInManagerClickedInSignUp(View view) {
-        Intent intent = new Intent (this,SignInActivityManager.class);
+        Intent intent = new Intent (this,SignInManagerActivity.class);
         startActivity(intent);
     }
 
