@@ -45,19 +45,10 @@ public class SignUpManagerActivity extends AppCompatActivity {
 
     public void signUpManagerClicked(View view) {
         String email = editTextEmail.getText().toString();
-        // todo liza: check if email valid
         String password = editTextPassword.getText().toString();
-        if(password.length()<5){
-            Toast.makeText(this,"Password must by at lest 6 charecters",Toast.LENGTH_LONG).show();
-            return;
-        }
         String phoneNumber = editTextPhone.getText().toString();
-        // todo liza: check if telephone number valid
-        if (phoneNumber.length() > 10 | phoneNumber.length() < 8) {
-            Toast.makeText(this, "Invalid phone number", Toast.LENGTH_LONG).show();
-        }
         AuthorizationLocal authorizationLocal = new AuthorizationLocal();
-        if(authorizationLocal.signUp(email,password,phoneNumber)){
+        if(authorizationLocal.signUp(email,password,phoneNumber, this)){
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString(Password,password);
             editor.putString(Phone,phoneNumber);
