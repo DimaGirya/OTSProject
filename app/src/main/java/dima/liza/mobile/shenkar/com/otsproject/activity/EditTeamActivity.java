@@ -1,5 +1,6 @@
 package dima.liza.mobile.shenkar.com.otsproject.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -30,7 +31,8 @@ public class EditTeamActivity extends AppCompatActivity {
     }
 
     public void onClickInviteMembers(View view) {
-
+        Intent intent = new Intent(this, AddEmployeeActivity.class);
+        startActivity(intent);
     }
 
 
@@ -43,5 +45,6 @@ public class EditTeamActivity extends AppCompatActivity {
     }
 
     public void onClickAddTask(View view) {
+
     }
 }

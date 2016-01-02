@@ -8,7 +8,7 @@ import android.view.View;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 
 public class SignInManagerActivity extends AppCompatActivity {
-
+    // todo and refactor to Manager And Employee
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
