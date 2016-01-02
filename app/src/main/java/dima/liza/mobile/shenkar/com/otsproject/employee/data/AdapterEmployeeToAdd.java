@@ -20,7 +20,15 @@ public class AdapterEmployeeToAdd extends BaseAdapter {
     private Context context;
     private List<EmployeeToAdd> employeeToAdd;
 
-
+    public AdapterEmployeeToAdd(Context context, List<EmployeeToAdd> employeeToAdd) {
+        this.context = context;
+        this.employeeToAdd = employeeToAdd;
+    }
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+       // employeeToAdd = dataAccess.getList();
+    }
     @Override
     public int getCount() {
         return employeeToAdd.size();
