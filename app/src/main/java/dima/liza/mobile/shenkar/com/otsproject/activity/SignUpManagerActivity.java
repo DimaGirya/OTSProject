@@ -81,16 +81,18 @@ public class SignUpManagerActivity extends AppCompatActivity {
                 @Override
                 public void done(com.parse.ParseException e) {
                     if (e == null) {    // SIGN UP DONE
-                        Toast.makeText(getThis(),"SIGN UP DONE",Toast.LENGTH_LONG).show();
+                        Toast.makeText(SignUpManagerActivity.this, "SIGN UP DONE", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getThis(), EditTeamActivity.class);
+                        startActivity(intent);
                         // Hooray! Let them use the app now.
                     } else {
-                        Toast.makeText(getThis(),"Any parsse error,Try letter!",Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "ParseException:", e);
+                        Toast.makeText(SignUpManagerActivity.this, "Any parsse error,Try letter!", Toast.LENGTH_LONG).show();
                     }
                 }
             });
             // todo Dima or Liza chek if registration succeeded
-            Intent intent = new Intent(getThis(), EditTeamActivity.class);
-            startActivity(intent);
+
         }
         else{
             Toast.makeText(this,"Error sign up.Try again leter",Toast.LENGTH_LONG).show();
