@@ -8,6 +8,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Email"
+        android:padding="5dp"
         android:id="@+id/listToAddEmployeeEmail" />
 
     <TextView
@@ -15,5 +16,6 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
+        android:padding="5dp"
         android:id="@+id/listToAddEmployeePhone" />
 </LinearLayout>

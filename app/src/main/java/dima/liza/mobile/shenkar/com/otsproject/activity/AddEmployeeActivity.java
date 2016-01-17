@@ -1,5 +1,6 @@
 package dima.liza.mobile.shenkar.com.otsproject.activity;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,7 +11,10 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 import java.util.ArrayList;
@@ -25,6 +29,8 @@ public class AddEmployeeActivity extends AppCompatActivity {
     ListView listView;
     List<EmployeeToAdd> listEmployeeToAdd;
     ListAdapter adapter;
+    int numOfNewEmployee;
+    int numOfAddNewEmployee;
     private static String TAG  = "AddEmployeeActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,33 +46,44 @@ public class AddEmployeeActivity extends AppCompatActivity {
     }
 
     public void onClickAddEmployeeSubmit(View view) {
+        ProgressDialog  pd = new ProgressDialog(this);
+        pd.setTitle("Adding employee to data base");
+        pd.setMessage("Please wait");
+        pd.show();
         ParseUser currentUser = ParseUser.getCurrentUser();
+        EmployeeToAdd employeeToAdd;
+         numOfNewEmployee = listEmployeeToAdd.size();
+         numOfAddNewEmployee = 0;
         for (int i = 0; i < listEmployeeToAdd.size(); i++) {
-            ParseUser user = new ParseUser();
-            user.setUsername(listEmployeeToAdd.get(i).getEmail());
-            user.setPassword(listEmployeeToAdd.get(i).getPhone());
-            user.setEmail(listEmployeeToAdd.get(i).getEmail());
-            user.put("phoneNumber", listEmployeeToAdd.get(i).getPhone());
-            user.put("isManager", false);
-            user.put("manager", currentUser.getUsername());
-            user.signUpInBackground(new SignUpCallback() {
+            ParseObject newEmployee = new ParseObject("newEmployee");
+            employeeToAdd = listEmployeeToAdd.get(i);
+            newEmployee.put("email", employeeToAdd.getEmail());
+            newEmployee.put("numberPhone", employeeToAdd.getPhone());
+            newEmployee.put("manager", currentUser.getEmail());
+            newEmployee.put("isManager", false);
+            newEmployee.saveInBackground(new SaveCallback() {
                 @Override
-                public void done(com.parse.ParseException e) {
+                public void done(ParseException e) {
                     if (e == null) {    // SIGN UP DONE
+                        numOfAddNewEmployee++;
                         // todo send email to user
-                        ParseUser currentUser = ParseUser.getCurrentUser();
-                        Toast.makeText(AddEmployeeActivity.this, currentUser.getUsername(),Toast.LENGTH_LONG).show();
-                        Toast.makeText(AddEmployeeActivity.this, "Sign up done", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddEmployeeActivity.this, "Add new employee done", Toast.LENGTH_LONG).show();
+                        if (numOfAddNewEmployee == numOfNewEmployee) {
+                            // todo notificate user add done
+                            Toast.makeText(AddEmployeeActivity.this, "Add all new employee done", Toast.LENGTH_LONG).show();
+                            finish();
+                        }
 
                     } else {
-                        Toast.makeText(AddEmployeeActivity.this,"Sign up fail",Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddEmployeeActivity.this, "Add new employee fail", Toast.LENGTH_LONG).show();
                         Log.d(TAG, "ParseException:", e);
+                        // push notification to user that add fail
                     }
                 }
             });
 
         }
-        finish(); // not good
+
     }
 
     public void onClickAddToList(View view) {

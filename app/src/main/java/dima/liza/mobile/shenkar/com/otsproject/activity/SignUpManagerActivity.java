@@ -21,13 +21,9 @@ import dima.liza.mobile.shenkar.com.otsproject.ManagerAuthorization;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 
 public class SignUpManagerActivity extends AppCompatActivity {
-    public Context getThis(){
-        return this;
-    }
+    ProgressDialog  pd;
     private static String TAG  = "SignUpManagerActivity";
     EditText editTextEmail,editTextPassword,editTextPhone;
-    SharedPreferences sharedpreferences;
-    public static final String LoginPreferences = "LoginPreferences" ;
     public static final String IfLoggedIn = "ifLoggedIn";
     public static final String Password = "password";
     public static final String Phone = "phoneKey";
@@ -65,11 +61,16 @@ public class SignUpManagerActivity extends AppCompatActivity {
     }
 
     public void signUpManagerClicked(View view) {
+
         String email = editTextEmail.getText().toString();
         String password = editTextPassword.getText().toString();
         String phoneNumber = editTextPhone.getText().toString();
         ManagerAuthorization authorizationLocal = new ManagerAuthorization();
         if(authorizationLocal.signUp(email,password,phoneNumber, this)){
+            pd = new ProgressDialog(this);
+            pd.setTitle("Adding employee to data base");
+            pd.setMessage("Please wait");
+            pd.show();
             ParseUser user = new ParseUser();
             user.setUsername(email);
             user.setPassword(password);
@@ -82,24 +83,16 @@ public class SignUpManagerActivity extends AppCompatActivity {
                 public void done(com.parse.ParseException e) {
                     if (e == null) {    // SIGN UP DONE
                         Toast.makeText(SignUpManagerActivity.this, "SIGN UP DONE", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getThis(), EditTeamActivity.class);
+                        Intent intent = new Intent(SignUpManagerActivity.this, EditTeamActivity.class);
                         startActivity(intent);
-                        // Hooray! Let them use the app now.
                     } else {
                         Log.d(TAG, "ParseException:", e);
-                        Toast.makeText(SignUpManagerActivity.this, "Any parsse error,Try letter!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SignUpManagerActivity.this, "Sign up failed", Toast.LENGTH_LONG).show();
+                        //todo check why sign up failed(already have a user or no internet) and notify user
+                        SignUpManagerActivity.this.pd.dismiss();
                     }
                 }
             });
-            // todo Dima or Liza chek if registration succeeded
-
         }
-        else{
-            Toast.makeText(this,"Error sign up.Try again leter",Toast.LENGTH_LONG).show();
-            return;
-        }
-
-
-
     }
 }
