@@ -5,60 +5,60 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="dima.liza.mobile.shenkar.com.otsproject.activity.SignInManagerActivity">
+    tools:context="dima.liza.mobile.shenkar.com.otsproject.activity.SignInActivity">
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
-        android:id="@+id/managerSignInEmail"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="95dp"
-        android:hint="@string/hintEmail" />
+        android:id="@+id/SignInEmail"
+        android:layout_marginTop="70dp"
+        android:hint="@string/hintEmail"
+        android:layout_below="@+id/textView2"
+        android:layout_alignLeft="@+id/goToSignUp"
+        android:layout_alignStart="@+id/goToSignUp" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/managerSignInPassword"
-        android:layout_below="@+id/managerSignInEmail"
-        android:layout_alignLeft="@+id/managerSignInEmail"
-        android:layout_alignStart="@+id/managerSignInEmail"
-        android:layout_marginTop="40dp"
-        android:hint="@string/hintPassword" />
+        android:id="@+id/SignInPassword"
+        android:hint="@string/hintPassword"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/SignInEmail"
+        android:layout_alignStart="@+id/SignInEmail" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/signIn"
         android:id="@+id/signIn"
+        android:layout_marginBottom="44dp"
+        android:onClick="SignInClicked"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="36dp" />
+        android:layout_toRightOf="@+id/textView2"
+        android:layout_toEndOf="@+id/textView2" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/signUpButton"
         android:id="@+id/goToSignUp"
-        android:layout_alignBottom="@+id/signIn"
-        android:layout_alignLeft="@+id/managerSignInPassword"
-        android:layout_alignStart="@+id/managerSignInPassword"
         android:onClick="onClickGotoSignUp"
-        />
+        android:layout_alignTop="@+id/signIn"
+        android:layout_toLeftOf="@+id/textView2"
+        android:layout_toStartOf="@+id/textView2" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/textView2"
+        android:text="@string/SignInText"
+        android:layout_marginTop="52dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/SignInText" />
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
