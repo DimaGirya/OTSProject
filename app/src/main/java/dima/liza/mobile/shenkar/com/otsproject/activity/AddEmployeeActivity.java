@@ -4,7 +4,9 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
@@ -33,7 +35,6 @@ import dima.liza.mobile.shenkar.com.otsproject.employee.data.NotificationControl
 
 public class AddEmployeeActivity extends AppCompatActivity {
 
-
     ProgressDialog  progressDialog;
     EditText editTextEmail,editTextPhone;
     ListView listView;
@@ -42,6 +43,8 @@ public class AddEmployeeActivity extends AppCompatActivity {
     int numOfNewEmployee;
     int numOfAddNewEmployee;
     private static String TAG  = "AddEmployeeActivity";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,8 +55,46 @@ public class AddEmployeeActivity extends AppCompatActivity {
         adapter =  new AdapterEmployeeToAdd(this,listEmployeeToAdd);
         listView = (ListView) findViewById(R.id.listViewAddEmployee);
         listView.setAdapter(adapter);
-   //     listView.setAdapter();
+        //     listView.setAdapter();
     }
+
+
+    @Override
+    public void onBackPressed() {
+        if(listEmployeeToAdd.size()>0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle("Confirm");
+            builder.setMessage("Are you sure? " + listEmployeeToAdd.size() + " employees will not be added");
+
+            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int which) {
+                    AddEmployeeActivity.super.onBackPressed();
+                    dialog.dismiss();
+                }
+
+            });
+
+            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // Do nothing
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+        else{
+            AddEmployeeActivity.super.onBackPressed();
+        }
+    }
+
+
+
 
     public void onClickAddEmployeeSubmit(View view) {
         progressDialog = new ProgressDialog(this);
@@ -114,10 +155,9 @@ public class AddEmployeeActivity extends AppCompatActivity {
 
         EmployeeToAdd newEmployee = new EmployeeToAdd(emailToAdd,phoneToAdd);
        listEmployeeToAdd.add(newEmployee);
-    //    adapter.notifyDataSetChanged();
-     // adapter.notifyAll();
 
-        // TODO clean after adding and update table
+
+
         editTextEmail.setText("");
         editTextPhone.setText("");
     }
