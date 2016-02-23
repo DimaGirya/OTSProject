@@ -12,7 +12,7 @@ import com.parse.Parse;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
-import dima.liza.mobile.shenkar.com.otsproject.ManagerAuthorization;
+import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 
 public class SignUpManagerActivity extends AppCompatActivity {
@@ -60,10 +60,10 @@ public class SignUpManagerActivity extends AppCompatActivity {
         String email = editTextEmail.getText().toString();
         String password = editTextPassword.getText().toString();
         String phoneNumber = editTextPhone.getText().toString();
-        ManagerAuthorization authorizationLocal = new ManagerAuthorization();
-        if(authorizationLocal.signUp(email,password,phoneNumber, this)){
+        ManagerValidation authorizationLocal = new ManagerValidation();
+        if(authorizationLocal.signUpValidation(email,password,phoneNumber, this)){
             pd = new ProgressDialog(this);
-            pd.setTitle("Adding employee to data base");
+            pd.setTitle("Adding manager to data base");
             pd.setMessage("Please wait");
             pd.show();
             ParseUser user = new ParseUser();

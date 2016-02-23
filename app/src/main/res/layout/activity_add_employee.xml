@@ -13,6 +13,7 @@
         android:inputType="textEmailAddress"
         android:ems="10"
         android:id="@+id/addEmployeeEmail"
+        android:hint="@string/hintEmail"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -25,6 +26,7 @@
         android:inputType="phone"
         android:ems="10"
         android:id="@+id/addEmployeePhone"
+        android:hint="@string/hintPassword"
         android:layout_below="@+id/addEmployeeEmail"
         android:layout_alignRight="@+id/addEmployeeEmail"
         android:layout_alignEnd="@+id/addEmployeeEmail" />
@@ -51,27 +53,26 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <TextView
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="14sp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/textView3"
+        android:text="Hi  You have been invited to be a team member in an OTS Team created by me. Use this link to download and install the App from Google Play.    Your password is your number phone  "
+        android:id="@+id/messageToEmployee"
         android:layout_below="@+id/buttonAddToList"
-        android:layout_alignRight="@+id/buttonAddEmployeeSubmit"
-        android:layout_alignEnd="@+id/buttonAddEmployeeSubmit"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/listViewAddEmployee"
-        android:layout_alignRight="@+id/textView3"
-        android:layout_alignEnd="@+id/textView3"
+        android:layout_alignRight="@+id/messageToEmployee"
+        android:layout_alignEnd="@+id/messageToEmployee"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView3"
+        android:layout_below="@+id/messageToEmployee"
         android:layout_above="@+id/buttonAddEmployeeSubmit" />
 
 </RelativeLayout>

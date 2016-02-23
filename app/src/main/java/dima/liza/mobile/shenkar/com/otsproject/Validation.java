@@ -2,16 +2,13 @@ package dima.liza.mobile.shenkar.com.otsproject;
 
 import android.content.Context;
 import android.widget.Toast;
-import dima.liza.mobile.shenkar.com.otsproject.activity.SignUpManagerActivity;
-
 
 /**
- * Created by Girya on 12/16/2015.
+ * Created by Girya on 2/23/2016.
  */
-public class ManagerAuthorization implements IAuthorization{
-    @Override
-    public    boolean signUp(String email, String password, String phoneNumber, Context act) {
-        //TO DO Liza - Along with password, add whitespaces validation to all other fields
+public  class Validation {
+
+    public static boolean emailValidation(String email,Context act){
         if(email == null) {
             Toast.makeText(act, "Please enter an e-mail", Toast.LENGTH_LONG).show();
             return false;
@@ -20,6 +17,9 @@ public class ManagerAuthorization implements IAuthorization{
             Toast.makeText(act, "Please enter a valid email address", Toast.LENGTH_LONG).show();
             return false;
         }
+        return true;
+    }
+    public static boolean passwordValidation(String password,Context act){
         if(password == null) {
             Toast.makeText(act, "Please enter a password", Toast.LENGTH_LONG).show();
             return false;
@@ -36,10 +36,13 @@ public class ManagerAuthorization implements IAuthorization{
             Toast.makeText(act, "Password must not contain whitespaces", Toast.LENGTH_LONG).show();
             return false;
         }
-        if (!(password.matches("[a-zA-Z0-9@*#]{6,15}"))){
+        if (!(password.matches("[a-zA-Z0-9@*#]{6,15}"))) {
             Toast.makeText(act, "Password can only contain Letters, numbers or '*', '#' and '@'", Toast.LENGTH_LONG).show();
             return false;
         }
+        return true;
+    }
+    public static boolean phoneNumberValidation(String phoneNumber,Context act){
         if(phoneNumber == null) {
             Toast.makeText(act, "Please enter a phone number", Toast.LENGTH_LONG).show();
             return false;
@@ -52,12 +55,6 @@ public class ManagerAuthorization implements IAuthorization{
             Toast.makeText(act,"Phone number must contain only digits", Toast.LENGTH_LONG).show();
             return false;
         }
-        return true;
-    }
-
-    @Override
-    public boolean signIn(String email, String password, String phoneNumber) {
-
         return true;
     }
 }

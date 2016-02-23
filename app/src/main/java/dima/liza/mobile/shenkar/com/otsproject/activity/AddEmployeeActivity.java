@@ -1,8 +1,13 @@
 package dima.liza.mobile.shenkar.com.otsproject.activity;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -21,10 +26,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.Validation;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.AdapterEmployeeToAdd;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.EmployeeToAdd;
+import dima.liza.mobile.shenkar.com.otsproject.employee.data.NotificationControl;
 
 public class AddEmployeeActivity extends AppCompatActivity {
+
+
+    ProgressDialog  progressDialog;
     EditText editTextEmail,editTextPhone;
     ListView listView;
     List<EmployeeToAdd> listEmployeeToAdd;
@@ -46,10 +56,10 @@ public class AddEmployeeActivity extends AppCompatActivity {
     }
 
     public void onClickAddEmployeeSubmit(View view) {
-        ProgressDialog  pd = new ProgressDialog(this);
-        pd.setTitle("Adding employee to data base");
-        pd.setMessage("Please wait");
-        pd.show();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Adding employee to data base");
+        progressDialog.setMessage("Please wait");
+        progressDialog.show();
         ParseUser currentUser = ParseUser.getCurrentUser();
         EmployeeToAdd employeeToAdd;
          numOfNewEmployee = listEmployeeToAdd.size();
@@ -69,15 +79,20 @@ public class AddEmployeeActivity extends AppCompatActivity {
                         // todo send email to user
                         Toast.makeText(AddEmployeeActivity.this, "Add new employee done", Toast.LENGTH_LONG).show();
                         if (numOfAddNewEmployee == numOfNewEmployee) {
-                            // todo notificate user add done
+                            NotificationControl.notificationNow("Add employee done",numOfNewEmployee+" added",
+                                    R.drawable.ic_launcher,1,AddEmployeeActivity.this);
+
                             Toast.makeText(AddEmployeeActivity.this, "Add all new employee done", Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
                             finish();
                         }
 
                     } else {
                         Toast.makeText(AddEmployeeActivity.this, "Add new employee fail", Toast.LENGTH_LONG).show();
                         Log.d(TAG, "ParseException:", e);
-                        // push notification to user that add fail
+                        NotificationControl.notificationNow("Add employee fail", "Oops! Try again later.Error is a:" + e.getMessage(),
+                                R.drawable.ic_launcher, 2, AddEmployeeActivity.this);
+                        progressDialog.dismiss();
                     }
                 }
             });
@@ -89,12 +104,21 @@ public class AddEmployeeActivity extends AppCompatActivity {
     public void onClickAddToList(View view) {
         String emailToAdd = editTextEmail.getText().toString();
         String phoneToAdd =  editTextPhone.getText().toString();
-        //  todo validation
+
+        if(!Validation.emailValidation(emailToAdd,this)){
+            return;
+        }
+        if(!Validation.phoneNumberValidation(phoneToAdd,this)){
+            return;
+        }
+
         EmployeeToAdd newEmployee = new EmployeeToAdd(emailToAdd,phoneToAdd);
        listEmployeeToAdd.add(newEmployee);
     //    adapter.notifyDataSetChanged();
      // adapter.notifyAll();
 
         // TODO clean after adding and update table
+        editTextEmail.setText("");
+        editTextPhone.setText("");
     }
 }
