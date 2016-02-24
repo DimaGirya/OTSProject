@@ -28,7 +28,7 @@
         <activity android:name=".activity.SignInActivity" >
         </activity>
         <activity android:name=".activity.EditTeamActivity" >
-            s-pe  
+            s-pe
         </activity>
         <activity android:name=".activity.AddEmployeeActivity" >
         </activity>
