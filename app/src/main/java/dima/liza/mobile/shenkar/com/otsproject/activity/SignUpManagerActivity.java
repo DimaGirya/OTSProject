@@ -80,6 +80,7 @@ public class SignUpManagerActivity extends AppCompatActivity {
                         Toast.makeText(SignUpManagerActivity.this, "SIGN UP DONE", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(SignUpManagerActivity.this, EditTeamActivity.class);
                         startActivity(intent);
+                        finish();
                     } else {
                         Log.d(TAG, "ParseException:", e);
                         Toast.makeText(SignUpManagerActivity.this, "Sign up failed", Toast.LENGTH_LONG).show();

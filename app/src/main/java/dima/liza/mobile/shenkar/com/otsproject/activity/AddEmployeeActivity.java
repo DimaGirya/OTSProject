@@ -1,20 +1,21 @@
 package dima.liza.mobile.shenkar.com.otsproject.activity;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.View;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -24,7 +25,6 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.parse.SignUpCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +35,10 @@ import dima.liza.mobile.shenkar.com.otsproject.employee.data.AdapterEmployeeToAd
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.EmployeeToAdd;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.NotificationControl;
 
-public class AddEmployeeActivity extends AppCompatActivity {
+public class AddEmployeeActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    ProgressDialog  progressDialog;
+    ProgressDialog progressDialog;
     EditText editTextEmail,editTextPhone;
     ListView listView;
     List<EmployeeToAdd> listEmployeeToAdd;
@@ -48,27 +49,86 @@ public class AddEmployeeActivity extends AppCompatActivity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_employee);
+        setContentView(R.layout.activity_add_employee_activity_nav);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
         editTextEmail = (EditText) findViewById(R.id.addEmployeeEmail);
         editTextPhone = (EditText) findViewById(R.id.addEmployeePhone);
         listEmployeeToAdd = new ArrayList();
         adapter =  new AdapterEmployeeToAdd(this,listEmployeeToAdd);
         listView = (ListView) findViewById(R.id.listViewAddEmployee);
         listView.setAdapter(adapter);
-        //     listView.setAdapter();
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.add_employee_activity_nav, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
 
@@ -102,7 +162,13 @@ public class AddEmployeeActivity extends AppCompatActivity {
             alert.show();
         }
         else{
-            AddEmployeeActivity.super.onBackPressed();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
+           // AddEmployeeActivity.super.onBackPressed();
         }
     }
 
@@ -116,8 +182,8 @@ public class AddEmployeeActivity extends AppCompatActivity {
         progressDialog.show();
         ParseUser currentUser = ParseUser.getCurrentUser();
         EmployeeToAdd employeeToAdd;
-         numOfNewEmployee = listEmployeeToAdd.size();
-         numOfAddNewEmployee = 0;
+        numOfNewEmployee = listEmployeeToAdd.size();
+        numOfAddNewEmployee = 0;
         for (int i = 0; i < listEmployeeToAdd.size(); i++) {
             ParseObject newEmployee = new ParseObject("newEmployee");
             employeeToAdd = listEmployeeToAdd.get(i);
@@ -133,8 +199,8 @@ public class AddEmployeeActivity extends AppCompatActivity {
                         // todo send email to user
                         Toast.makeText(AddEmployeeActivity.this, "Add new employee done", Toast.LENGTH_LONG).show();
                         if (numOfAddNewEmployee == numOfNewEmployee) {
-                            NotificationControl.notificationNow("Add employee done",numOfNewEmployee+" added",
-                                    R.drawable.ic_launcher,1,AddEmployeeActivity.this);
+                            NotificationControl.notificationNow("Add employee done", numOfNewEmployee + " added",
+                                    R.drawable.ic_launcher, 1, AddEmployeeActivity.this);
 
                             Toast.makeText(AddEmployeeActivity.this, "Add all new employee done", Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();
@@ -159,7 +225,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
         String emailToAdd = editTextEmail.getText().toString();
         String phoneToAdd =  editTextPhone.getText().toString();
 
-        if(!Validation.emailValidation(emailToAdd,this)){
+        if(!Validation.emailValidation(emailToAdd, this)){
             return;
         }
         if(!Validation.phoneNumberValidation(phoneToAdd,this)){
@@ -167,7 +233,7 @@ public class AddEmployeeActivity extends AppCompatActivity {
         }
 
         EmployeeToAdd newEmployee = new EmployeeToAdd(emailToAdd,phoneToAdd);
-       listEmployeeToAdd.add(newEmployee);
+        listEmployeeToAdd.add(newEmployee);
 
 
 

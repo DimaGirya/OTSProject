@@ -74,14 +74,5 @@
     need to change to FloatingActionButton
     addTaskActionButton
    -->
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/addTaskActionButton"
-        android:onClick="onClickAddTask"
-        android:id="@+id/addTaskActionButton"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/buttonDeleteMembers"
-        android:layout_toEndOf="@+id/buttonDeleteMembers" />
 
 </RelativeLayout>
