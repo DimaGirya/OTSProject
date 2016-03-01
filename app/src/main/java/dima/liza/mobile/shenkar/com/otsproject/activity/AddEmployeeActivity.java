@@ -32,8 +32,10 @@ import java.util.List;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.Validation;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.AdapterEmployeeToAdd;
+import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.EmployeeToAdd;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.NotificationControl;
+import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccessEmployee;
 
 public class AddEmployeeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -201,7 +203,12 @@ public class AddEmployeeActivity extends AppCompatActivity
                         if (numOfAddNewEmployee == numOfNewEmployee) {
                             NotificationControl.notificationNow("Add employee done", numOfNewEmployee + " added",
                                     R.drawable.ic_launcher, 1, AddEmployeeActivity.this);
-
+                            DataAccessEmployee dataAccessEmployee = DataAccessEmployee.getInstatnce(AddEmployeeActivity.this);
+                       Employee employee;
+                        for(int i = 0; i <listEmployeeToAdd.size();i++){
+                            employee = new Employee(listEmployeeToAdd.get(i));
+                            dataAccessEmployee.insertEmployee(employee);
+                        }
                             Toast.makeText(AddEmployeeActivity.this, "Add all new employee done", Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();
                             finish();

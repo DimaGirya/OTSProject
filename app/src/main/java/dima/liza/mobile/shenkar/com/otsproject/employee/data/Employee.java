@@ -7,50 +7,68 @@ public class Employee {
     private String name;
     private String email;
     private String phoneNumber;
-    private int id;
+    private String status;
+    private int taskCount;
 
-    public Employee() {
-
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    // String password;
-    public Employee(String name, String email, String phoneNumber,int id) {
+    public Employee(String name, String email, String phoneNumber, String status, int taskCount) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.id = id;
+        this.status = status;
+        this.taskCount = taskCount;
+    }
 
+    public Employee(EmployeeToAdd employeeToAdd){
+        name = email = employeeToAdd.getEmail();
+        phoneNumber = employeeToAdd.getPhone();
+        status = "Not sign up";
+        taskCount = 0;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getTaskCount() {
+        return taskCount;
+    }
+
+    public void setTaskCount(int taskCount) {
+        this.taskCount = taskCount;
+    }
+
+    public void incrementTaskCount(){
+        taskCount++;
+    }
+    public void decrementTaskCount(){
+        taskCount--;
     }
 }

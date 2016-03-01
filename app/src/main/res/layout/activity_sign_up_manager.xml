@@ -34,10 +34,10 @@
         android:hint="@string/hintPassword"
         android:ems="10"
         android:id="@+id/editPasswordSignUpManager"
-        android:layout_marginTop="73dp"
-        android:layout_below="@+id/editEmailSignUpManager"
-        android:layout_centerHorizontal="true"
-        android:password="true" />
+        android:password="true"
+        android:layout_below="@+id/editPhoneSignUpManager"
+        android:layout_alignLeft="@+id/editEmailSignUpManager"
+        android:layout_alignStart="@+id/editEmailSignUpManager" />
 
     <EditText style=""
         android:layout_width="wrap_content"
@@ -46,10 +46,19 @@
         android:hint="@string/hintPhone"
         android:ems="10"
         android:id="@+id/editPhoneSignUpManager"
-        android:layout_below="@+id/editPasswordSignUpManager"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="65dp"
-        android:phoneNumber="false" />
+        android:phoneNumber="false"
+        android:layout_below="@+id/editTextManagerName"
+        android:layout_alignLeft="@+id/editPasswordSignUpManager"
+        android:layout_alignStart="@+id/editPasswordSignUpManager" />
+    <EditText style=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/name"
+        android:ems="10"
+        android:id="@+id/editTextManagerName"
+        android:layout_below="@+id/editEmailSignUpManager"
+        android:layout_alignLeft="@+id/editPasswordSignUpManager"
+        android:layout_alignStart="@+id/editPasswordSignUpManager" />
 
     <Button
         android:layout_width="wrap_content"
@@ -57,10 +66,10 @@
         android:text="@string/signUpButton"
         android:id="@+id/buttonSignUp"
         android:onClick="signUpManagerClicked"
-        android:layout_below="@+id/editPhoneSignUpManager"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="48dp" />
+        android:layout_marginBottom="85dp" />
 
     <Button
         android:onClick="signInManagerClickedInSignUp"
@@ -71,5 +80,7 @@
         android:layout_alignTop="@+id/buttonSignUp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+
 
 </RelativeLayout>
