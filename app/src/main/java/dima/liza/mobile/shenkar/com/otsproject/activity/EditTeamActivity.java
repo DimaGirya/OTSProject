@@ -125,12 +125,14 @@ public class EditTeamActivity extends AppCompatActivity
     private void getEmployeesFromServer(boolean allEmployee,String lastUpdate) {    // warning asynchronous function!
         ParseQuery<ParseUser> queryEmployee  = ParseUser.getQuery();
         queryEmployee.whereEqualTo("manager", currentUser.getEmail());
-        if(lastUpdate == null){      // need to get all employess
+        queryEmployee.whereNotEqualTo("email",currentUser.getEmail());
+        if(lastUpdate == null){      // need to get all employees
             ParseQuery<ParseObject> queryNewEmployee = ParseQuery.getQuery("NewEmployee");  // get all employee from class NewEmployee
             queryNewEmployee.whereEqualTo("Manager", currentUser.getEmail());
             queryNewEmployee.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> objects, ParseException e) {
+                    Log.e(TAG,"NewEmployee objects size"+objects.size());
                     if(e == null){
                        List<EmployeeToAdd>  list = new ArrayList();
                         for(int i  = 0;i< objects.size();i++) {
@@ -153,14 +155,22 @@ public class EditTeamActivity extends AppCompatActivity
             queryEmployee.findInBackground(new FindCallback<ParseUser>() {
                 @Override
                 public void done(List<ParseUser> objects, ParseException e) {
-                    Employee employee;
-                    for(int i = 0; i < objects.size();i++){
-                        dataAccessEmployee.deleteEmployee(objects.get(i).getEmail());   //warning
-                        employee = new Employee(objects.get(i).getUsername(),objects.get(i).getEmail(),objects.get(i).getString("phoneNumber"),"registered",objects.get(i).getInt("taskCounter"));
-                        dataAccessEmployee.insertEmployee(employee);
+                    if(e==null) {
+                        Log.e(TAG, "List<ParseUser> objects size" + objects.size());
+                        Employee employee;
+                        for (int i = 0; i < objects.size(); i++) {
+                            dataAccessEmployee.deleteEmployee(objects.get(i).getEmail());   //warning
+                            employee = new Employee(objects.get(i).getUsername(), objects.get(i).getEmail(), objects.get(i).getString("phoneNumber"), "registered", objects.get(i).getInt("taskCounter"));
+                            dataAccessEmployee.insertEmployee(employee);
+                            Log.e(TAG, "Task counter:" + objects.get(i).getInt("taskCounter"));
+                        }
+                    }else{
+                        Toast.makeText(EditTeamActivity.this,"Connection problem.Try again later",Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "FindCallback exception", e);
                     }
                 }
             });
+        // update time of last update to current time
         Calendar calendar = Calendar.getInstance();
         lastUpdateData = getSharedPreferences("DateDataUpdate",MODE_PRIVATE);
         SharedPreferences.Editor ed = lastUpdateData.edit();

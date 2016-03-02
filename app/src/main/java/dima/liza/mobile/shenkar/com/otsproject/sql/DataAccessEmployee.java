@@ -73,7 +73,7 @@ import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
             String whereClause = DbContract.EmployeeEntry.COLUMN_EMPLOYEE_EMAIL + " = ? ";
             String whereArgs[] = new String[1];
             whereArgs[0] = employee.getEmail();
-            values.put(DbContract.EmployeeEntry.COLUMN_EMPLOYEE_STATUS, employee.getStatus());
+            values.put(DbContract.EmployeeEntry.COLUMN_EMPLOYEE_STATUS,status);
             database = dbHelper.getReadableDatabase();
             try {
                 if(database.update(DbContract.EmployeeEntry.TABLE_NAME, values, whereClause, whereArgs)!=1){
@@ -93,7 +93,7 @@ import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
             String whereClause = DbContract.EmployeeEntry.COLUMN_EMPLOYEE_EMAIL + " = ? ";
             String whereArgs[] = new String[1];
             whereArgs[0] = employee.getEmail();
-            values.put(DbContract.EmployeeEntry.COLUMN_EMPLOYEE_TASK_COUNT, employee.getTaskCount());
+            values.put(DbContract.EmployeeEntry.COLUMN_EMPLOYEE_TASK_COUNT, counter);
             database = dbHelper.getReadableDatabase();
             try {
                 if(database.update(DbContract.EmployeeEntry.TABLE_NAME, values, whereClause, whereArgs)!=1){
@@ -150,18 +150,18 @@ import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
         public List<Employee> getAllEmployee() {
             try {
                 database = dbHelper.getReadableDatabase();
-                List<Employee> studentGrades = new ArrayList<Employee>();
+                List<Employee> employees = new ArrayList<Employee>();
                 String select  = "SELECT * FROM "+ DbContract.EmployeeEntry.TABLE_NAME;
 
                 Cursor cursor =  database.rawQuery(select,null);
                 cursor.moveToFirst();
                 while (!cursor.isAfterLast()) {
                     Employee employee = getEmployeeFromCursor(cursor);
-                    studentGrades.add(employee);
+                    employees.add(employee);
                     cursor.moveToNext();
                 }
                 cursor.close();
-                return studentGrades;
+                return employees;
             } catch (Exception e) {
                 Log.d(TAG, "Exception:", e);
             }

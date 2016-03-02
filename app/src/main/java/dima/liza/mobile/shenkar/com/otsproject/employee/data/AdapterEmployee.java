@@ -57,7 +57,7 @@ import dima.liza.mobile.shenkar.com.otsproject.R;
             }
             viewRowEmployee.nameEmployee.setText(listEmployee.get(position).getName());
             //  viewRowEmployee.numberOfTasks.setText(listEmployee.get(position).getTaskCount());
-            viewRowEmployee.numberOfTasks.setText("0"); // new employee. number of task is 0
+            viewRowEmployee.numberOfTasks.setText(String.valueOf(listEmployee.get(position).getTaskCount())); // new employee. number of task is 0
             viewRowEmployee.status.setText(listEmployee.get(position).getStatus());
             return convertView;
         }
