@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
@@ -26,6 +27,7 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+        //add user name field
         email = (EditText) findViewById(R.id.SignInEmail);
         password = (EditText) findViewById(R.id.SignInPassword);
     }
@@ -44,6 +46,13 @@ public class SignInActivity extends AppCompatActivity {
             public void done(ParseUser user, ParseException e) {
                 if (user != null) {
                     // Hooray! The user is logged in.
+                    if (user.getBoolean("isManager") == true){
+                        //Intent intent = new Intent (this,ManagerTeamTasks.class);
+                        //startActivity(intent);
+                    } else { // //user is existing employee
+                    // Intent intent = new Intent (this,EmployeeTasks.class);
+                    // startActivity(intent);
+                    }
                 } else {
                     ParseQuery<ParseObject> query = ParseQuery.getQuery("newEmployee");
                     query.whereEqualTo("email", emailStr);
@@ -52,13 +61,22 @@ public class SignInActivity extends AppCompatActivity {
                         public void done(List<ParseObject> employee, ParseException e) {
                             if (e == null) {
                                 if(employee.size()==0){
-
+                                    // //user doesn't exist
+                                   Toast.makeText(SignInActivity.this, "Wrong Log-In details", Toast.LENGTH_LONG).show();
                                 }
                                 else {
-
+                                    ParseObject newEmployee = employee.get(0);
+                                    ParseUser user = new ParseUser();
+                                    user.setUsername(newEmployee.getString("email")); //temp! need to implement username from input.
+                                    user.setPassword(newEmployee.getString("numberPhone")); //temp! need to implement change of password by user
+                                    user.setEmail(newEmployee.getString("email"));
+                                    user.put("phoneNumber", newEmployee.getString("numberPhone"));
+                                    user.put("isManager",false);
+                                    user.put("manager", newEmployee.getString("manager"));
+                                    // LogIn() //need to implement
                                 }
                             } else {
-
+                                Toast.makeText(SignInActivity.this, "Something went wrong, try again later.", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -66,10 +84,5 @@ public class SignInActivity extends AppCompatActivity {
                 }
             }
         });
-        // check if user exist
-        // check if user is manager or employee
-        // if user is employee check if user is new employee
-        // if user is new employee pop up to change password
-        // authorize log in and go to next screen
     }
 }

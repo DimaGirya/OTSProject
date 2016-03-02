@@ -41,7 +41,7 @@ public class SignUpManagerActivity extends AppCompatActivity {
             Log.d(TAG,"Exception:",e);
         //    Toast.makeText(this,"Any  error, See the log!",Toast.LENGTH_LONG).show();
         }
-        ParseUser  currentUser = ParseUser.getCurrentUser();
+        ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             Toast.makeText(this, "Welcome back", Toast.LENGTH_LONG).show();
             Intent intent = new Intent (this,EditTeamActivity.class);
