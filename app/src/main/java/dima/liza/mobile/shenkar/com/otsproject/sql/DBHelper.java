@@ -23,7 +23,7 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
             final String SQL_CREATE_EMPLOYEE_TABLE = "CREATE TABLE "
                     + DbContract.EmployeeEntry.TABLE_NAME + " (" + DbContract.EmployeeEntry._ID+ " INTEGER PRIMARY KEY,"
-                    + DbContract.EmployeeEntry.COLUMN_EMPLOYEE_EMAIL +" UNIQUE," + DbContract.EmployeeEntry.COLUMN_EMPLOYEE_NAME
+                    + DbContract.EmployeeEntry.COLUMN_EMPLOYEE_EMAIL +" UNIQUE ON CONFLICT REPLACE," + DbContract.EmployeeEntry.COLUMN_EMPLOYEE_NAME
                     + "," + DbContract.EmployeeEntry.COLUMN_EMPLOYEE_PHONE_NUMBER +"," +DbContract.EmployeeEntry.COLUMN_EMPLOYEE_TASK_COUNT
                     + "," + DbContract.EmployeeEntry.COLUMN_EMPLOYEE_STATUS
                     + " TEXT NOT NULL)";

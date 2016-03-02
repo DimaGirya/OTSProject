@@ -98,12 +98,18 @@ public class EditTeamActivity extends AppCompatActivity
             getEmployeesFromServer(false, lastUpdateEmployeeList);
 
         }
+
+    }
+
+    @Override
+    protected void onResume() {
         listEmployee = dataAccessEmployee.getAllEmployee();
         adapter = new AdapterEmployee(this, listEmployee);
         listView = (ListView) findViewById(R.id.listViewTeamMembers);
         listView.setAdapter(adapter);
-    }
+        super.onResume();
 
+    }
     private String getLastUpdateEmployeeList() {
         if(!Validation.doesDatabaseExist(this, "otsProject.db")){
                 return null;
@@ -134,8 +140,10 @@ public class EditTeamActivity extends AppCompatActivity
                             dataAccessEmployee.insertEmployee(new Employee(list.get(i)));
                         }
                     }
-                    Toast.makeText(EditTeamActivity.this,"Connection problem.Try again later",Toast.LENGTH_LONG).show();
-                    Log.d(TAG, "findInBackground exception", e);
+                    else {
+                        Toast.makeText(EditTeamActivity.this, "Connection problem.Try again later", Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "findInBackground exception:", e);
+                    }
                 }
             });
         }
@@ -148,7 +156,7 @@ public class EditTeamActivity extends AppCompatActivity
                     Employee employee;
                     for(int i = 0; i < objects.size();i++){
                         dataAccessEmployee.deleteEmployee(objects.get(i).getEmail());   //warning
-                        employee = new Employee(objects.get(i).getUsername(),objects.get(i).getEmail(),objects.get(i).getString("phoneNumber"),"registered",0);
+                        employee = new Employee(objects.get(i).getUsername(),objects.get(i).getEmail(),objects.get(i).getString("phoneNumber"),"registered",objects.get(i).getInt("taskCounter"));
                         dataAccessEmployee.insertEmployee(employee);
                     }
                 }
@@ -240,6 +248,13 @@ public class EditTeamActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        if (id == R.id.action_log_of) {
+            ParseUser.logOut();
+            this.deleteDatabase("otsProject.db");
+            Intent intent = new Intent(this,SignInActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

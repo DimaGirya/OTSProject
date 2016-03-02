@@ -39,7 +39,7 @@ public class SignUpManagerActivity extends AppCompatActivity {
         }
         catch (Exception e){
             Log.d(TAG,"Exception:",e);
-            Toast.makeText(this,"Any  error, See the log!",Toast.LENGTH_LONG).show();
+        //    Toast.makeText(this,"Any  error, See the log!",Toast.LENGTH_LONG).show();
         }
         ParseUser  currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
