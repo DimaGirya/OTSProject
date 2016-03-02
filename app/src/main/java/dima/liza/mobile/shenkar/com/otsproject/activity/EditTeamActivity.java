@@ -28,11 +28,16 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.Validation;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.AdapterEmployee;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
+import dima.liza.mobile.shenkar.com.otsproject.employee.data.EmployeeToAdd;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccessEmployee;
 
 public class EditTeamActivity extends AppCompatActivity
@@ -43,6 +48,7 @@ public class EditTeamActivity extends AppCompatActivity
     ListAdapter adapter;
     ParseUser currentUser;
     SharedPreferences teamNameSharedPreferences;
+    SharedPreferences lastUpdateData;
     String teamNameStr;
     ProgressDialog progressDialog;
     DataAccessEmployee dataAccessEmployee;
@@ -79,10 +85,81 @@ public class EditTeamActivity extends AppCompatActivity
         teamName.setText(savedText);
         dataAccessEmployee = DataAccessEmployee.getInstatnce(this);
         //todo check logic
+        if(!Validation.isOnline(this)){ // device is offline
+            if(Validation.doesDatabaseExist(this, "otsProject.db")) {  // data exist but may be not updated
+                Toast.makeText(EditTeamActivity.this,"Connection problem.Try again later",Toast.LENGTH_LONG).show();
+            }
+            else{
+                //todo notifi user no data to show
+                return;
+            }
+        }else{          // device is online
+            String lastUpdateEmployeeList = getLastUpdateEmployeeList();
+            getEmployeesFromServer(false, lastUpdateEmployeeList);
+
+        }
         listEmployee = dataAccessEmployee.getAllEmployee();
-        adapter =  new AdapterEmployee(this,listEmployee);
+        adapter = new AdapterEmployee(this, listEmployee);
         listView = (ListView) findViewById(R.id.listViewTeamMembers);
         listView.setAdapter(adapter);
+    }
+
+    private String getLastUpdateEmployeeList() {
+        if(!Validation.doesDatabaseExist(this, "otsProject.db")){
+                return null;
+            }
+        lastUpdateData = getSharedPreferences("DateDataUpdate",MODE_PRIVATE);
+        String lastUpdate = lastUpdateData.getString("lastEmployeeDateUpdate","");
+        if(lastUpdate.equals("")){
+            return null;
+        }
+        return lastUpdate;
+    }
+
+    private void getEmployeesFromServer(boolean allEmployee,String lastUpdate) {    // warning asynchronous function!
+        ParseQuery<ParseUser> queryEmployee  = ParseUser.getQuery();
+        queryEmployee.whereEqualTo("manager", currentUser.getEmail());
+        if(lastUpdate == null){      // need to get all employess
+            ParseQuery<ParseObject> queryNewEmployee = ParseQuery.getQuery("NewEmployee");  // get all employee from class NewEmployee
+            queryNewEmployee.whereEqualTo("Manager", currentUser.getEmail());
+            queryNewEmployee.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> objects, ParseException e) {
+                    if(e == null){
+                       List<EmployeeToAdd>  list = new ArrayList();
+                        for(int i  = 0;i< objects.size();i++) {
+                            list.add( new EmployeeToAdd(objects.get(i).getString("email"),objects.get(i).getString("numberPhone")));
+                        }
+                        for(int i = 0; i <objects.size();i++){
+                            dataAccessEmployee.insertEmployee(new Employee(list.get(i)));
+                        }
+                    }
+                    Toast.makeText(EditTeamActivity.this,"Connection problem.Try again later",Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "findInBackground exception", e);
+                }
+            });
+        }
+        else {
+            queryEmployee.whereGreaterThan("updateAt", lastUpdate);
+        }
+            queryEmployee.findInBackground(new FindCallback<ParseUser>() {
+                @Override
+                public void done(List<ParseUser> objects, ParseException e) {
+                    Employee employee;
+                    for(int i = 0; i < objects.size();i++){
+                        dataAccessEmployee.deleteEmployee(objects.get(i).getEmail());   //warning
+                        employee = new Employee(objects.get(i).getUsername(),objects.get(i).getEmail(),objects.get(i).getString("phoneNumber"),"registered",0);
+                        dataAccessEmployee.insertEmployee(employee);
+                    }
+                }
+            });
+        Calendar calendar = Calendar.getInstance();
+        lastUpdateData = getSharedPreferences("DateDataUpdate",MODE_PRIVATE);
+        SharedPreferences.Editor ed = lastUpdateData.edit();
+        Date date =  calendar.getTime();
+        ed.putString("lastEmployeeDateUpdate", date.toString());
+        Log.i(TAG,"Date:"+date.toString());
+        // need to update time of last update to current time
     }
 
     public void onClickSaveTeamName(View view) {
@@ -100,6 +177,7 @@ public class EditTeamActivity extends AppCompatActivity
         query.whereEqualTo("Manager",currentUser.getEmail());
         Log.d(TAG, "findInBackground start");
         query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 Log.d(TAG, "findInBackground done");
                 if (e == null) {
@@ -121,14 +199,15 @@ public class EditTeamActivity extends AppCompatActivity
                                     Log.d(TAG, "SharedPreferences done");
                                     progressDialog.dismiss();
                                 } else {
-                                    //todo
+                                    Toast.makeText(EditTeamActivity.this,"Connection problem.Try again later",Toast.LENGTH_LONG).show();
                                     Log.d(TAG, "saveInBackground exception", e);
                                 }
                             }
                         });
                     }
                 } else {
-                    //  objectRetrievalFailed();
+                    Toast.makeText(EditTeamActivity.this,"Connection problem.Try again later",Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "findInBackground exception", e);
                 }
             }
         });
@@ -209,6 +288,7 @@ public class EditTeamActivity extends AppCompatActivity
     public void onClickAddTask(View view) {
 
     }
+
 
 }
 

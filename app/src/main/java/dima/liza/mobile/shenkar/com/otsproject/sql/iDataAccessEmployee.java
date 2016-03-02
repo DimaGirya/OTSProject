@@ -12,5 +12,6 @@ public interface iDataAccessEmployee {
     boolean updateEmployeeStatus(Employee employee,String status);
     boolean updateEmployeeTaskCounter(Employee employee,int counter);
     boolean deleteEmployee(Employee employee);
+    boolean deleteEmployee(String email);
      List<Employee> getAllEmployee();
 }

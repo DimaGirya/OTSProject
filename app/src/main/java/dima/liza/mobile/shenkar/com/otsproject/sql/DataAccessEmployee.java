@@ -127,6 +127,26 @@ import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
         }
 
         @Override
+        public boolean deleteEmployee(String email) {
+        database = dbHelper.getReadableDatabase();
+        String whereClause = DbContract.EmployeeEntry.COLUMN_EMPLOYEE_EMAIL + " = ? ";
+        String whereArgs[] = new String[1];
+        whereArgs[0] = email;
+        try {
+
+            if(database.delete(DbContract.EmployeeEntry.TABLE_NAME, whereClause, whereArgs)!=1){
+                return false;
+            }
+            return true;
+        }
+        catch(Exception e){
+            Log.e(TAG,"Exception:",e);
+            return false;
+        }
+    }
+
+
+        @Override
         public List<Employee> getAllEmployee() {
             try {
                 database = dbHelper.getReadableDatabase();
