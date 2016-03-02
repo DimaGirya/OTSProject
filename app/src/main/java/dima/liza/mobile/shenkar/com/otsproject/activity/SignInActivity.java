@@ -41,30 +41,40 @@ public class SignInActivity extends AppCompatActivity {
         //todo make waiting dialog
         final String emailStr = email.getText().toString();
         final String passwordStr = password.getText().toString();
-        ParseUser.logInInBackground(emailStr, passwordStr, new LogInCallback() {
+        signIn(emailStr, passwordStr);
+    }
+
+    void signIn( final String emailAdd, final String passw){
+        ParseUser.logInInBackground(emailAdd, passw, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
                 if (user != null) {
-                    // Hooray! The user is logged in.
+                    // user found in Parse Users class.
                     if (user.getBoolean("isManager") == true){
-                        //Intent intent = new Intent (this,ManagerTeamTasks.class);
-                        //startActivity(intent);
-                    } else { // //user is existing employee
-                    // Intent intent = new Intent (this,EmployeeTasks.class);
-                    // startActivity(intent);
+                        //Toast.makeText(SignInActivity.this, "TEST manager true", Toast.LENGTH_LONG).show();
+                        //uncomment lines 56-57 when ManagerTeamTasks is ready
+                        /* Intent intent = new Intent (this,ManagerTeamTasks.class);
+                        startActivity(intent); */
+                    } else {
+                        //uncomment lines 60-61 when EmployeeTasks is ready
+                        /* Intent intent = new Intent (this,EmployeeTasks.class);
+                        startActivity(intent); */
+                        Toast.makeText(SignInActivity.this, "TEST manager false, existing user", Toast.LENGTH_LONG).show();
                     }
                 } else {
+                    //check if user is in newEmployee Parse class
                     ParseQuery<ParseObject> query = ParseQuery.getQuery("newEmployee");
-                    query.whereEqualTo("email", emailStr);
-                    query.whereEqualTo("numberPhone", passwordStr);
+                    query.whereEqualTo("email", emailAdd);
+                    query.whereEqualTo("numberPhone", passw);
                     query.findInBackground(new FindCallback<ParseObject>() {
                         public void done(List<ParseObject> employee, ParseException e) {
                             if (e == null) {
                                 if(employee.size()==0){
-                                    // //user doesn't exist
-                                   Toast.makeText(SignInActivity.this, "Wrong Log-In details", Toast.LENGTH_LONG).show();
+                                    //user does not exist
+                                    Toast.makeText(SignInActivity.this, "Wrong Log-In details", Toast.LENGTH_LONG).show();
                                 }
                                 else {
+                                    //user found, move to Users Parse class
                                     ParseObject newEmployee = employee.get(0);
                                     ParseUser user = new ParseUser();
                                     user.setUsername(newEmployee.getString("email")); //temp! need to implement username from input.
@@ -73,7 +83,9 @@ public class SignInActivity extends AppCompatActivity {
                                     user.put("phoneNumber", newEmployee.getString("numberPhone"));
                                     user.put("isManager",false);
                                     user.put("manager", newEmployee.getString("manager"));
-                                    // LogIn() //need to implement
+                                    //TODO: Delete from newEmployee class!
+                                    Toast.makeText(SignInActivity.this, "moved to users. logging in", Toast.LENGTH_LONG).show();
+                                    signIn(newEmployee.getString("email"), newEmployee.getString("numberPhone"));
                                 }
                             } else {
                                 Toast.makeText(SignInActivity.this, "Something went wrong, try again later.", Toast.LENGTH_LONG).show();
