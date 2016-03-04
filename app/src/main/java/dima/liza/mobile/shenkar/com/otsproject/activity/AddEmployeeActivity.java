@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseException;
@@ -49,8 +50,8 @@ public class AddEmployeeActivity extends AppCompatActivity
     int numOfNewEmployee;
     int numOfAddNewEmployee;
     private static String TAG  = "AddEmployeeActivity";
-
-
+    TextView userName,userEmail;
+    ParseUser currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +76,7 @@ public class AddEmployeeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+         currentUser = ParseUser.getCurrentUser();
 
         editTextEmail = (EditText) findViewById(R.id.addEmployeeEmail);
         editTextPhone = (EditText) findViewById(R.id.addEmployeePhone);
@@ -83,9 +84,17 @@ public class AddEmployeeActivity extends AppCompatActivity
         adapter =  new AdapterEmployeeToAdd(this,listEmployeeToAdd);
         listView = (ListView) findViewById(R.id.listViewAddEmployee);
         listView.setAdapter(adapter);
+
     }
 
-
+    @Override
+    public boolean onPreparePanel(int featureId, View view, Menu menu) {
+        userName = (TextView) findViewById(R.id.userNameNav);
+        userEmail = (TextView) findViewById(R.id.userEmailNav);
+        userName.setText(currentUser.getUsername());
+        userEmail.setText(currentUser.getEmail());
+        return super.onPreparePanel(featureId, view, menu);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

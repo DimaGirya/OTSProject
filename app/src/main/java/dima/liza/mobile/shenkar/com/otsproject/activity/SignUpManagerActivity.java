@@ -45,7 +45,9 @@ public class SignUpManagerActivity extends AppCompatActivity {
         if (currentUser != null) {
             Toast.makeText(this, "Welcome back", Toast.LENGTH_LONG).show();
             Intent intent = new Intent (this,EditTeamActivity.class);
+            intent.putExtra("caller","SignUpManagerActivity");
             startActivity(intent);
+            finish();
         } else {
             setContentView(R.layout.activity_sign_up_manager);
             editTextEmail = (EditText) findViewById(R.id.editEmailSignUpManager);
@@ -118,6 +120,7 @@ public class SignUpManagerActivity extends AppCompatActivity {
                     ed.commit();
                     Log.d(TAG, "Create Team teamNameSharedPreferences finish");
                     Intent intent = new Intent(SignUpManagerActivity.this, EditTeamActivity.class);
+                    intent.putExtra("caller","SignUpManagerActivity");
                     startActivity(intent);
                     pd.dismiss();
                     Log.d(TAG, "Create Team done");

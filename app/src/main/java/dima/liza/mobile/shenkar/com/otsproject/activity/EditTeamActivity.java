@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
@@ -52,6 +53,7 @@ public class EditTeamActivity extends AppCompatActivity
     String teamNameStr;
     ProgressDialog progressDialog;
     DataAccessEmployee dataAccessEmployee;
+    TextView userName,userEmail;
     final String TAG = "EditTeamActivity";
 
     @Override
@@ -98,7 +100,15 @@ public class EditTeamActivity extends AppCompatActivity
             getEmployeesFromServer(false, lastUpdateEmployeeList);
 
         }
+    }
 
+    @Override
+    public boolean onPreparePanel(int featureId, View view, Menu menu) {
+        userName = (TextView) findViewById(R.id.userNameNav);
+        userEmail = (TextView) findViewById(R.id.userEmailNav);
+        userName.setText(currentUser.getUsername());
+        userEmail.setText(currentUser.getEmail());
+        return super.onPreparePanel(featureId, view, menu);
     }
 
     @Override
@@ -151,6 +161,7 @@ public class EditTeamActivity extends AppCompatActivity
         }
         else {
             queryEmployee.whereGreaterThan("updateAt", lastUpdate);
+
         }
             queryEmployee.findInBackground(new FindCallback<ParseUser>() {
                 @Override
@@ -313,8 +324,6 @@ public class EditTeamActivity extends AppCompatActivity
     public void onClickAddTask(View view) {
 
     }
-
-
 }
 
 
