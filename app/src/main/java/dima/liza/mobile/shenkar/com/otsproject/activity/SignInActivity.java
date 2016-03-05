@@ -14,6 +14,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.ParseException;
+import com.parse.SignUpCallback;
 
 
 import java.util.List;
@@ -51,15 +52,13 @@ public class SignInActivity extends AppCompatActivity {
                 if (user != null) {
                     // user found in Parse Users class.
                     if (user.getBoolean("isManager") == true){
-                        //Toast.makeText(SignInActivity.this, "TEST manager true", Toast.LENGTH_LONG).show();
-                        //uncomment lines 56-57 when ManagerTeamTasks is ready
+                        //TODO: uncomment lines 56-57 when ManagerTeamTasks is ready
                         /* Intent intent = new Intent (this,ManagerTeamTasks.class);
                         startActivity(intent); */
                     } else {
-                        //uncomment lines 60-61 when EmployeeTasks is ready
+                        //TODO: uncomment lines 60-61 when EmployeeTasks is ready
                         /* Intent intent = new Intent (this,EmployeeTasks.class);
                         startActivity(intent); */
-                        Toast.makeText(SignInActivity.this, "TEST manager false, existing user", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     //check if user is in newEmployee Parse class
@@ -74,25 +73,32 @@ public class SignInActivity extends AppCompatActivity {
                                     Toast.makeText(SignInActivity.this, "Wrong Log-In details", Toast.LENGTH_LONG).show();
                                 }
                                 else {
-                                    //user found, move to Users Parse class
-                                    ParseObject newEmployee = employee.get(0);
+                                    //user found, move to Users Parse class (sign up
+                                    final ParseObject newEmployee = employee.get(0);
                                     ParseUser user = new ParseUser();
-                                    user.setUsername(newEmployee.getString("email")); //temp! need to implement username from input.
-                                    user.setPassword(newEmployee.getString("numberPhone")); //temp! need to implement change of password by user
+                                    user.setUsername(newEmployee.getString("email")); //temp, need to implement username from input.
+                                    user.setPassword(newEmployee.getString("numberPhone")); //temp, need to implement change of password by user
                                     user.setEmail(newEmployee.getString("email"));
                                     user.put("phoneNumber", newEmployee.getString("numberPhone"));
-                                    user.put("isManager",false);
+                                    user.put("isManager", false);
                                     user.put("manager", newEmployee.getString("manager"));
-                                    //TODO: Delete from newEmployee class!
-                                    Toast.makeText(SignInActivity.this, "moved to users. logging in", Toast.LENGTH_LONG).show();
-                                    signIn(newEmployee.getString("email"), newEmployee.getString("numberPhone"));
+                                    user.signUpInBackground(new SignUpCallback() {
+                                        public void done(ParseException e) {
+                                            if (e == null) {
+                                                // sign up succeed, delete user from newEmloyee parse class
+                                                newEmployee.deleteInBackground();
+                                            } else {
+                                                // Sign up didn't succeed
+                                                Toast.makeText(SignInActivity.this, "signup failed", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
                                 }
                             } else {
                                 Toast.makeText(SignInActivity.this, "Something went wrong, try again later.", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
-                    // Signup failed. Look at the ParseException to see what happened.
                 }
             }
         });
