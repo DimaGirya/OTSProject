@@ -46,7 +46,7 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void done(ParseUser user, ParseException e) {
                 if (user != null) {
-                    // user found in Parse Users class.
+                    //user found in Parse Users class.
                     if (user.getBoolean("isManager") == true) {
                         //TODO: uncomment lines 52-54 when ManagerTeamTasks is ready
                         /* Intent intent = new Intent (this,ManagerTeamTasks.class);
