@@ -42,37 +42,36 @@ public class SignInActivity extends AppCompatActivity {
         //todo make waiting dialog
         final String emailStr = email.getText().toString();
         final String passwordStr = password.getText().toString();
-        signIn(emailStr, passwordStr);
-    }
-
-    void signIn( final String emailAdd, final String passw){
-        ParseUser.logInInBackground(emailAdd, passw, new LogInCallback() {
+        ParseUser.logInInBackground(emailStr, passwordStr, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
                 if (user != null) {
                     // user found in Parse Users class.
-                    if (user.getBoolean("isManager") == true){
-                        //TODO: uncomment lines 56-57 when ManagerTeamTasks is ready
+                    if (user.getBoolean("isManager") == true) {
+                        //TODO: uncomment lines 52-54 when ManagerTeamTasks is ready
                         /* Intent intent = new Intent (this,ManagerTeamTasks.class);
-                        startActivity(intent); */
+                        startActivity(intent);
+                        finish(); */
+                        Toast.makeText(SignInActivity.this, "TEST - MANAGER logged in", Toast.LENGTH_LONG).show();
                     } else {
-                        //TODO: uncomment lines 60-61 when EmployeeTasks is ready
+                        //TODO: uncomment lines 57-59 when EmployeeTasks is ready
                         /* Intent intent = new Intent (this,EmployeeTasks.class);
-                        startActivity(intent); */
+                        startActivity(intent);
+                        finish(); */
+                        Toast.makeText(SignInActivity.this, "TEST - EMPLOYEE logged in", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     //check if user is in newEmployee Parse class
                     ParseQuery<ParseObject> query = ParseQuery.getQuery("newEmployee");
-                    query.whereEqualTo("email", emailAdd);
-                    query.whereEqualTo("numberPhone", passw);
+                    query.whereEqualTo("email", emailStr);
+                    query.whereEqualTo("numberPhone", passwordStr);
                     query.findInBackground(new FindCallback<ParseObject>() {
                         public void done(List<ParseObject> employee, ParseException e) {
                             if (e == null) {
-                                if(employee.size()==0){
+                                if (employee.size() == 0) {
                                     //user does not exist
                                     Toast.makeText(SignInActivity.this, "Wrong Log-In details", Toast.LENGTH_LONG).show();
-                                }
-                                else {
+                                } else {
                                     //user found, move to Users Parse class (sign up
                                     final ParseObject newEmployee = employee.get(0);
                                     ParseUser user = new ParseUser();
@@ -86,6 +85,7 @@ public class SignInActivity extends AppCompatActivity {
                                         public void done(ParseException e) {
                                             if (e == null) {
                                                 // sign up succeed, delete user from newEmloyee parse class
+                                                Toast.makeText(SignInActivity.this, "TEST - NEW EMPLOYEE signed up", Toast.LENGTH_LONG).show();
                                                 newEmployee.deleteInBackground();
                                             } else {
                                                 // Sign up didn't succeed
