@@ -39,4 +39,6 @@
     <string name="selectEmployee">Select employee</string>
     <string name="selectLocation">Select location</string>
     <string name="selectCategory">Select category</string>
+    <string name="taskDateTime">Task date time</string>
+    <string name="waiting">waiting</string>
 </resources>

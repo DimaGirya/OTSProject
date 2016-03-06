@@ -1,5 +1,6 @@
 package dima.liza.mobile.shenkar.com.otsproject.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,6 +22,12 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.Date;
 
@@ -51,7 +58,8 @@ public class AddTaskActivity extends AppCompatActivity
     private ArrayAdapter<String> adapterCategoryDropDown;
     private ArrayAdapter<String> adapterLocationDropDown;
     private String selectedEmployee,selectedLocation,selectedCategory;
-
+    private ProgressDialog progressDialog;
+    ParseUser currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +76,7 @@ public class AddTaskActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        currentUser = ParseUser.getCurrentUser();
         checkbox = (CheckBox) findViewById(R.id.checkBoxRequirePhoto);
         taskDescription = (EditText) findViewById(R.id.editTextTaskDescription);
         employeeDropDown = (Spinner) findViewById(R.id.employeesDropDown);
@@ -197,7 +206,56 @@ public class AddTaskActivity extends AppCompatActivity
             Toast.makeText(this,"Task add validation fail",Toast.LENGTH_LONG).show();
             return;
         }
-        Toast.makeText(this,"Task add validation ok",Toast.LENGTH_LONG).show();
+    //    Toast.makeText(this,"Task add validation ok",Toast.LENGTH_LONG).show();
+        ParseObject task = new ParseObject("Task");
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Sending task to employee");
+        progressDialog.setMessage("Please wait");
+        progressDialog.show();
+        task.put("taskManager", currentUser.getEmail());
+        task.put("isDone", false);
+        task.put("status",getString(R.string.waiting));
+      //  task.put("taskDate",dateOfTask.getTime());
+        task.put("taskEmployee",selectedEmployee);
+        task.put("taskDescription",taskDescription.getText().toString());
+        task.put("taskCategory",selectedCategory);
+        task.put("taskLocation",selectedLocation);
+        task.put("requirePhoto",requirePhoto);
+        switch (priority){
+            case LOW_PRIORITY: {
+                task.put("priority","low");
+                break;
+            }
+            case NORMAL_PRIORITY: {
+                task.put("priority","normal");
+                break;
+            }
+            case URGENT_PRIORITY: {
+                task.put("priority","urgent");
+                break;
+            }
+            default:
+                task.put("priority","not_set");
+                Log.d(TAG,"priority not_set");
+        }
+        task.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e==null){
+                    progressDialog.dismiss();
+                    Toast.makeText(AddTaskActivity.this,"Task send to employee",Toast.LENGTH_LONG).show();
+                    finish();
+                }
+                else{
+                    progressDialog.dismiss();
+                    Toast.makeText(AddTaskActivity.this,"Task not add.Try again later",Toast.LENGTH_LONG).show();
+                    Log.d(TAG,"ParseException:",e);
+                }
+            }
+        });
+
+
+
 }
 
     private boolean validationTask() {

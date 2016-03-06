@@ -119,7 +119,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/Priority"
+        android:text="@string/taskDateTime"
         android:id="@+id/textViewTime"
         android:layout_below="@+id/checkBoxRequirePhoto"
         android:layout_alignParentLeft="true"
