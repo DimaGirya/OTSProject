@@ -14,4 +14,5 @@ public interface iDataAccessEmployee {
     boolean deleteEmployee(Employee employee);
     boolean deleteEmployee(String email);
      List<Employee> getAllEmployee();
+    String[] getAllRegisteredEmployeesName();
 }

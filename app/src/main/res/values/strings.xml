@@ -22,4 +22,21 @@
     <string name="title_activity_edit_team_activity_nav">EditTeamActivityNav</string>
     <string name="name">name</string>
     <string name="log_of">log off</string>
+    <string name="title_activity_task">TaskActivity</string>
+    <string name="title_activity_add_task">AddTaskActivity</string>
+    <string name="taskDescriptionField">Write here the description of the task</string>
+    <string name="lowPriority">Low</string>
+    <string name="normalPriority">Normal</string>
+    <string name="urgentPriority">Urgent</string>
+    <string name="Priority">Priority</string>
+    <string name="RequirePhoto">Require photo</string>
+    <string name="tomorrowRadioButton">tomorrow</string>
+    <string name="todayRadioButton">today</string>
+    <string name="otherRadioButton">other</string>
+    <string name="setTime">Set time</string>
+    <string name="setDate">Set date</string>
+    <string name="saveAndSent">Save/Send</string>
+    <string name="selectEmployee">Select employee</string>
+    <string name="selectLocation">Select location</string>
+    <string name="selectCategory">Select category</string>
 </resources>

@@ -133,7 +133,6 @@ import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
         String whereArgs[] = new String[1];
         whereArgs[0] = email;
         try {
-
             if(database.delete(DbContract.EmployeeEntry.TABLE_NAME, whereClause, whereArgs)!=1){
                 return false;
             }
@@ -173,7 +172,43 @@ import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
             return null;
         }
 
-        private Employee getEmployeeFromCursor(Cursor cursor) {
+    @Override
+    public String[] getAllRegisteredEmployeesName() {
+        try {
+            database = dbHelper.getReadableDatabase();
+// String whereClause = DbContract.EmployeeEntry.COLUMN_EMPLOYEE_EMAIL + " = ? ";
+   //         String whereArgs[] = new String[1];
+            List<Employee> employees = new ArrayList<Employee>();
+            String select  = "SELECT * FROM "+ DbContract.EmployeeEntry.TABLE_NAME +" WHERE "
+                    +DbContract.EmployeeEntry.COLUMN_EMPLOYEE_STATUS + "=?";
+            String selectionArgs[] = new String[1];
+            selectionArgs[0] = "registered";
+            Cursor cursor =  database.rawQuery(select,selectionArgs);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                Employee employee = getEmployeeFromCursor(cursor);
+                employees.add(employee);
+                cursor.moveToNext();
+            }
+            cursor.close();
+            String [] employeesName = new String[employees.size()+1];
+            for(int i = 1;i<employees.size()+1;i++){
+                employeesName[i] =  employees.get(i-1).getName();
+            }
+            return employeesName;
+        } catch (Exception e) {
+            Log.d(TAG, "Exception:", e);
+        }
+        finally {
+            if (database != null) {
+                database.close();
+            }
+        }
+        Log.d(TAG, "Return null:");
+        return null;
+    }
+
+    private Employee getEmployeeFromCursor(Cursor cursor) {
             String email = cursor.getString(cursor.getColumnIndex(DbContract.EmployeeEntry.COLUMN_EMPLOYEE_EMAIL));
             String name =  cursor.getString(cursor.getColumnIndex(DbContract.EmployeeEntry.COLUMN_EMPLOYEE_NAME));
             String phoneNumber = cursor.getString(cursor.getColumnIndex(DbContract.EmployeeEntry.COLUMN_EMPLOYEE_PHONE_NUMBER));

@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,8 +64,8 @@ public class AddEmployeeActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(AddEmployeeActivity.this,AddTaskActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -263,4 +264,7 @@ public class AddEmployeeActivity extends AppCompatActivity
         editTextEmail.setText("");
         editTextPhone.setText("");
     }
+
+
+
 }
