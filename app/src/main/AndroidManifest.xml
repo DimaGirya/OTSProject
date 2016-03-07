@@ -35,10 +35,6 @@
             android:label="@string/title_activity_edit_team_activity_nav"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.TaskActivity"
-            android:label="@string/title_activity_task"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".activity.AddTaskActivity"
             android:label="@string/title_activity_add_task"
             android:theme="@style/AppTheme.NoActionBar" >

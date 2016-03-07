@@ -21,6 +21,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.Parse;
@@ -59,6 +60,7 @@ public class AddTaskActivity extends AppCompatActivity
     private ArrayAdapter<String> adapterLocationDropDown;
     private String selectedEmployee,selectedLocation,selectedCategory;
     private ProgressDialog progressDialog;
+    private TextView userName,userEmail;
     ParseUser currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -350,4 +352,13 @@ public class AddTaskActivity extends AppCompatActivity
     public void onNothingSelected(AdapterView<?> parent) {
         Log.d(TAG,"Something's wrong.onNothingSelected called");
     }
+    @Override
+    public boolean onPreparePanel(int featureId, View view, Menu menu) {
+        userName = (TextView) findViewById(R.id.userNameNav);
+        userEmail = (TextView) findViewById(R.id.userEmailNav);
+        userName.setText(currentUser.getUsername());
+        userEmail.setText(currentUser.getEmail());
+        return super.onPreparePanel(featureId, view, menu);
+    }
+
 }
