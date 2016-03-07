@@ -41,4 +41,7 @@
     <string name="selectCategory">Select category</string>
     <string name="taskDateTime">Task date time</string>
     <string name="waiting">waiting</string>
+    <string name="taskLocation">Task location</string>
+    <string name="addTask">Add task</string>
+    <string name="taskCategory">Task category</string>
 </resources>
