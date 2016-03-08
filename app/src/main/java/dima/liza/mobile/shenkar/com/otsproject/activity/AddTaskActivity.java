@@ -1,6 +1,7 @@
 package dima.liza.mobile.shenkar.com.otsproject.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -135,7 +136,13 @@ public class AddTaskActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-
+        if (id == R.id.action_log_of) {
+            ParseUser.logOut();
+            this.deleteDatabase("otsProject.db");
+            Intent intent = new Intent(this,SignInActivity.class);
+            startActivity(intent);
+            finish();
+        }
         return super.onOptionsItemSelected(item);
     }
 

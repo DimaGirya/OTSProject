@@ -44,4 +44,5 @@
     <string name="taskLocation">Task location</string>
     <string name="addTask">Add task</string>
     <string name="taskCategory">Task category</string>
+    <string name="title_activity_task_show">TaskShowActivity</string>
 </resources>

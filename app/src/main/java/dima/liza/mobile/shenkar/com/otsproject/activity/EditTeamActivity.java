@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -317,12 +316,10 @@ public class EditTeamActivity extends AppCompatActivity
     }
 
     public void onCLickEditTeamDone(View view) {
-
+        Intent intent = new Intent(EditTeamActivity.this,TaskShowActivity.class);
+        startActivity(intent);
     }
 
-    public void onClickAddTask(View view) {
-
-    }
 }
 
 
