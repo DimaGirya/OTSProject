@@ -1,11 +1,16 @@
 package dima.liza.mobile.shenkar.com.otsproject.activity;
 
+import android.app.DatePickerDialog;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.text.format.Time;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,10 +24,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.parse.Parse;
@@ -31,7 +38,10 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.lang.reflect.GenericArrayType;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccessEmployee;
@@ -39,6 +49,7 @@ import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccessEmployee;
 public class AddTaskActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,AdapterView.OnItemSelectedListener {
     private EditText taskDescription;
+    private TextView textTime,textDate;
     private CheckBox checkbox;
     private Button setTime, setDate;
     private Spinner employeeDropDown, categoryDropDown, taskLocationDropDown;
@@ -48,9 +59,8 @@ public class AddTaskActivity extends AppCompatActivity
     private final static int NORMAL_PRIORITY = 1;
     private final static int URGENT_PRIORITY = 2;
     private int priority = LOW_PRIORITY;
-    private Date dateOfTask;
-    private Date time;
-    private Date date;
+    private String dateInput;
+    private int year,month,day,hour,minute;
     private final int TOMORROW = 0;
     private final int TODAY = 1;
     private final int OTHER_DATE = 2;
@@ -89,6 +99,8 @@ public class AddTaskActivity extends AppCompatActivity
         setTime.setClickable(false);
         setDate = (Button) findViewById(R.id.buttonSetDate);
         setDate.setClickable(false);
+        textTime = (TextView)findViewById(R.id.timeTask);
+        textDate = (TextView)findViewById(R.id.dateTask);
         dataAccessEmployee = DataAccessEmployee.getInstatnce(this);
         String[] employeesName = dataAccessEmployee.getAllRegisteredEmployeesName();
         employeesName[0] = getString(R.string.selectEmployee);
@@ -106,6 +118,7 @@ public class AddTaskActivity extends AppCompatActivity
         adapterCategoryDropDown.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         taskLocationDropDown.setAdapter(adapterLocationDropDown);
         taskLocationDropDown.setOnItemSelectedListener(this);
+        tomorrowDeadlineSelect();
     }
 
     @Override
@@ -202,11 +215,36 @@ public class AddTaskActivity extends AppCompatActivity
     }
 
     public void onClickSetTime(View view) {
-
+        TimePickerDialog tpd = new TimePickerDialog(this, myCallBack,0, 0, true);
+        DialogFragment dialogFragment = new DialogFragment();
+        tpd.show();
     }
 
-    public void onClickSetDate(View view) {
+    TimePickerDialog.OnTimeSetListener myCallBack = new TimePickerDialog.OnTimeSetListener() {
+        public void onTimeSet(TimePicker view, int hourOfDay, int minuteOfHour) {
+            hour = hourOfDay;
+            minute = minuteOfHour;
+            textTime.setText(hour+":"+minute);
+            Log.i(TAG, "Time set " + hour + " hours " + minute + " minutes");
+        }
+    };
 
+    public void onClickSetDate(View view) {
+        Calendar calendar = Calendar.getInstance();
+        int yearArg = calendar.get(Calendar.YEAR);
+        int monthArg = calendar.get(Calendar.MONTH);
+        int dayArg = calendar.get(Calendar.DAY_OF_MONTH);
+        DatePickerDialog.OnDateSetListener myCallBack = new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int yearInput, int monthInput, int dayInput) {
+                year = yearInput;
+                month = monthInput;
+                day = dayInput;
+                textDate.setText(day+"."+month+"."+year);
+                Log.i(TAG, "Date set " + day + " day " + month + " month" + year + " year");
+            }
+        };
+        DatePickerDialog tpd = new DatePickerDialog(this, myCallBack, yearArg, monthArg, dayArg);
+        tpd.show();
     }
 
     public void onClickSubmitTask(View view) {
@@ -247,18 +285,20 @@ public class AddTaskActivity extends AppCompatActivity
                 task.put("priority","not_set");
                 Log.d(TAG,"priority not_set");
         }
+        GregorianCalendar gc = new GregorianCalendar(year,month,day,hour,minute);
+        task.put("taskDate",gc.getTime());
+        Log.d(TAG, "Time:" + gc.getTime().toString());
         task.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e==null){
+                if (e == null) {
                     progressDialog.dismiss();
-                    Toast.makeText(AddTaskActivity.this,"Task send to employee",Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddTaskActivity.this, "Task send to employee", Toast.LENGTH_LONG).show();
                     finish();
-                }
-                else{
+                } else {
                     progressDialog.dismiss();
-                    Toast.makeText(AddTaskActivity.this,"Task not add.Try again later",Toast.LENGTH_LONG).show();
-                    Log.d(TAG,"ParseException:",e);
+                    Toast.makeText(AddTaskActivity.this, "Task not add.Try again later", Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "ParseException:", e);
                 }
             }
         });
@@ -285,13 +325,6 @@ public class AddTaskActivity extends AppCompatActivity
             return false;
         }
 
-
-        if(flagDate==OTHER_DATE){
-            if(time==null && date == null){ //warning
-                Toast.makeText(this,"You not select a date or time",Toast.LENGTH_LONG).show();
-                return false;
-            }
-        }
         return true;
     }
 
@@ -308,15 +341,19 @@ public class AddTaskActivity extends AppCompatActivity
         switch (view.getId()) {
             case R.id.tomorrowRadioButton:
                 if (checked) {
-                    flagDate = TOMORROW;
-                    setTime.setClickable(false);
-                    setDate.setClickable(false);
-                    Log.i(TAG, "TOMORROW");
+                    tomorrowDeadlineSelect();
                 }
                 break;
             case R.id.todayRadioButton:
                 if (checked) {
                     flagDate = TODAY;
+                    Calendar calendar = Calendar.getInstance();
+                    int year = calendar.get(Calendar.YEAR);
+                    int month = calendar.get(Calendar.MONTH);
+                    int day = calendar.get(Calendar.DAY_OF_MONTH);
+                    textTime.setText("17:00");
+                    textDate.setText(day+"."+month+"."+year);
+
                     setTime.setClickable(false);
                     setDate.setClickable(false);
                     Log.i(TAG, "TODAY");
@@ -334,6 +371,21 @@ public class AddTaskActivity extends AppCompatActivity
                 Log.i(TAG, "Something's wrong in onClick onClickRadioGroupTimeDate");
             }
         }
+    }
+
+    private void tomorrowDeadlineSelect() {
+        flagDate = TOMORROW;
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.add(Calendar.DATE, 1);
+        int year = gc.get(Calendar.YEAR);
+        int month = gc.get(Calendar.MONTH);
+        int day = gc.get(Calendar.DAY_OF_MONTH);
+        textTime.setText("17:00");
+        textDate.setText(day+"."+month+"."+year);
+        //textTime;
+        setTime.setClickable(false);
+        setDate.setClickable(false);
+        Log.i(TAG, "TOMORROW");
     }
 
     @Override
