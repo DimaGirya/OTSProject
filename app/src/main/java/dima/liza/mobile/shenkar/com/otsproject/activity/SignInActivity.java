@@ -49,9 +49,9 @@ public class SignInActivity extends AppCompatActivity {
                     //user found in Parse Users class.
                     if (user.getBoolean("isManager") == true) {
                         //TODO: uncomment lines 52-54 when ManagerTeamTasks is ready
-                        /* Intent intent = new Intent (this,ManagerTeamTasks.class);
+                         Intent intent = new Intent (SignInActivity.this,ShowTaskActivity.class);
                         startActivity(intent);
-                        finish(); */
+                        finish();
                         Toast.makeText(SignInActivity.this, "TEST - MANAGER logged in", Toast.LENGTH_LONG).show();
                     } else {
                         //TODO: uncomment lines 57-59 when EmployeeTasks is ready

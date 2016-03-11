@@ -37,10 +37,14 @@
         <activity
             android:name=".activity.AddTaskActivity"
             android:label="@string/title_activity_add_task"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.TaskShowActivity"
             android:label="@string/title_activity_task_show"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.ShowTaskActivity"
+            android:label="@string/title_activity_show_task"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

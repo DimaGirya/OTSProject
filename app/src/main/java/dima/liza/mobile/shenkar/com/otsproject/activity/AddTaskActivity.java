@@ -7,10 +7,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.text.format.Time;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,19 +29,16 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.lang.reflect.GenericArrayType;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import dima.liza.mobile.shenkar.com.otsproject.R;
-import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccessEmployee;
+import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 
 public class AddTaskActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,AdapterView.OnItemSelectedListener {
@@ -66,7 +60,7 @@ public class AddTaskActivity extends AppCompatActivity
     private final int OTHER_DATE = 2;
     private int flagDate = TOMORROW;
     private Boolean requirePhoto = false;
-    private DataAccessEmployee dataAccessEmployee;
+    private DataAccess dataAccess;
     private ArrayAdapter<String> adapterCategoryDropDown;
     private ArrayAdapter<String> adapterLocationDropDown;
     private String selectedEmployee,selectedLocation,selectedCategory;
@@ -101,8 +95,8 @@ public class AddTaskActivity extends AppCompatActivity
         setDate.setClickable(false);
         textTime = (TextView)findViewById(R.id.timeTask);
         textDate = (TextView)findViewById(R.id.dateTask);
-        dataAccessEmployee = DataAccessEmployee.getInstatnce(this);
-        String[] employeesName = dataAccessEmployee.getAllRegisteredEmployeesName();
+        dataAccess = DataAccess.getInstatnce(this);
+        String[] employeesName = dataAccess.getAllRegisteredEmployeesName();
         employeesName[0] = getString(R.string.selectEmployee);
         adapterEmployeeDropDown = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, employeesName);
         adapterEmployeeDropDown.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

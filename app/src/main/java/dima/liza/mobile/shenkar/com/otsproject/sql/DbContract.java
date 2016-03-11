@@ -14,5 +14,16 @@ public class DbContract {
         public static final String COLUMN_EMPLOYEE_STATUS= "EmployeeStatus";
         public static final String COLUMN_EMPLOYEE_TASK_COUNT= "EmployeeTaskCount";
     }
+    public  static final class TaskEntry implements BaseColumns {
+        public static final String TABLE_NAME = "Task";
+        public static final String COLUMN_DESCRIPTION = "TaskDescription";
+        public static final String COLUMN_EMPLOYEE = "Employee";
+        public static final String COLUMN_DEADLINE = "Deadline";
+        public static final String COLUMN_STATUS = "Status";
+        public static final String COLUMN_CATEGORY = "Category";
+        public static final String COLUMN_LOCATION = "Location";
+        public static final String COLUMN_PHOTO_REQUIRE = "PhotoRequire";
+        public static final String COLUMN_TASK_ID = "TaskParseId";
+    }
 
 }

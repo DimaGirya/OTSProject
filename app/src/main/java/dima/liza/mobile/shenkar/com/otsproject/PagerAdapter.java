@@ -1,7 +1,10 @@
 package dima.liza.mobile.shenkar.com.otsproject;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v7.app.NotificationCompat;
 
 import dima.liza.mobile.shenkar.com.otsproject.tabs.TabFragment1;
 import dima.liza.mobile.shenkar.com.otsproject.tabs.TabFragment2;

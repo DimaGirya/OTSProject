@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +19,6 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,13 +30,13 @@ import com.parse.SaveCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import dima.liza.mobile.shenkar.com.otsproject.NotificationControl;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.Validation;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.AdapterEmployeeToAdd;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.EmployeeToAdd;
-import dima.liza.mobile.shenkar.com.otsproject.employee.data.NotificationControl;
-import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccessEmployee;
+import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 
 public class AddEmployeeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -218,11 +216,11 @@ public class AddEmployeeActivity extends AppCompatActivity
                         if (numOfAddNewEmployee == numOfNewEmployee) {
                             NotificationControl.notificationNow("Add employee done", numOfNewEmployee + " added",
                                     R.drawable.ic_launcher, 1, AddEmployeeActivity.this);
-                            DataAccessEmployee dataAccessEmployee = DataAccessEmployee.getInstatnce(AddEmployeeActivity.this);
+                            DataAccess dataAccess = DataAccess.getInstatnce(AddEmployeeActivity.this);
                        Employee employee;
                         for(int i = 0; i <listEmployeeToAdd.size();i++){
                             employee = new Employee(listEmployeeToAdd.get(i));
-                            dataAccessEmployee.insertEmployee(employee);
+                            dataAccess.insertEmployee(employee);
                         }
                             Toast.makeText(AddEmployeeActivity.this, "Add all new employee done", Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();

@@ -27,8 +27,16 @@ public class DBHelper extends SQLiteOpenHelper {
                     + "," + DbContract.EmployeeEntry.COLUMN_EMPLOYEE_PHONE_NUMBER +"," +DbContract.EmployeeEntry.COLUMN_EMPLOYEE_TASK_COUNT
                     + "," + DbContract.EmployeeEntry.COLUMN_EMPLOYEE_STATUS
                     + " TEXT NOT NULL)";
-            db.execSQL(SQL_CREATE_EMPLOYEE_TABLE);
+            final String SQL_CREATE_TASK_TABLE = "CREATE TABLE "
+                    +DbContract.TaskEntry.TABLE_NAME + " (" + DbContract.EmployeeEntry._ID+ " INTEGER PRIMARY KEY,"
+                    + DbContract.TaskEntry.COLUMN_TASK_ID  +" UNIQUE ON CONFLICT REPLACE," + DbContract.TaskEntry.COLUMN_DESCRIPTION +","
+                    + DbContract.TaskEntry.COLUMN_EMPLOYEE + "," + DbContract.TaskEntry.COLUMN_CATEGORY + "," +DbContract.TaskEntry.COLUMN_LOCATION
+                    + "," + DbContract.TaskEntry.COLUMN_STATUS + "," + DbContract.TaskEntry.COLUMN_DEADLINE + ","+ DbContract.TaskEntry.COLUMN_PHOTO_REQUIRE + " INTEGER)";
+            Log.i(TAG,SQL_CREATE_EMPLOYEE_TABLE);
+            Log.i(TAG,SQL_CREATE_TASK_TABLE);
 
+            db.execSQL(SQL_CREATE_EMPLOYEE_TABLE);
+            db.execSQL(SQL_CREATE_TASK_TABLE);
 
         } catch (SQLException e) {
             Log.d(TAG, "Exception:", e);
@@ -38,6 +46,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + DbContract.EmployeeEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DbContract.TaskEntry.TABLE_NAME);
         onCreate(db);
     }
 }

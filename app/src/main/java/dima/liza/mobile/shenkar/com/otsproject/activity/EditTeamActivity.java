@@ -38,7 +38,7 @@ import dima.liza.mobile.shenkar.com.otsproject.Validation;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.AdapterEmployee;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.EmployeeToAdd;
-import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccessEmployee;
+import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 
 public class EditTeamActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,7 +51,7 @@ public class EditTeamActivity extends AppCompatActivity
     SharedPreferences lastUpdateData;
     String teamNameStr;
     ProgressDialog progressDialog;
-    DataAccessEmployee dataAccessEmployee;
+    DataAccess dataAccess;
     TextView userName,userEmail;
     final String TAG = "EditTeamActivity";
 
@@ -84,7 +84,7 @@ public class EditTeamActivity extends AppCompatActivity
         teamNameSharedPreferences = getSharedPreferences("Team", MODE_PRIVATE);
         String savedText = teamNameSharedPreferences.getString("TeamName","");
         teamName.setText(savedText);
-        dataAccessEmployee = DataAccessEmployee.getInstatnce(this);
+        dataAccess = DataAccess.getInstatnce(this);
         //todo check logic
         if(!Validation.isOnline(this)){ // device is offline
             if(Validation.doesDatabaseExist(this, "otsProject.db")) {  // data exist but may be not updated
@@ -112,7 +112,7 @@ public class EditTeamActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
-        listEmployee = dataAccessEmployee.getAllEmployee();
+        listEmployee = dataAccess.getAllEmployee();
         adapter = new AdapterEmployee(this, listEmployee);
         listView = (ListView) findViewById(R.id.listViewTeamMembers);
         listView.setAdapter(adapter);
@@ -148,7 +148,7 @@ public class EditTeamActivity extends AppCompatActivity
                             list.add( new EmployeeToAdd(objects.get(i).getString("email"),objects.get(i).getString("numberPhone")));
                         }
                         for(int i = 0; i <objects.size();i++){
-                            dataAccessEmployee.insertEmployee(new Employee(list.get(i)));
+                            dataAccess.insertEmployee(new Employee(list.get(i)));
                         }
                     }
                     else {
@@ -169,9 +169,9 @@ public class EditTeamActivity extends AppCompatActivity
                         Log.e(TAG, "List<ParseUser> objects size" + objects.size());
                         Employee employee;
                         for (int i = 0; i < objects.size(); i++) {
-                            dataAccessEmployee.deleteEmployee(objects.get(i).getEmail());   //warning
+                            dataAccess.deleteEmployee(objects.get(i).getEmail());   //warning
                             employee = new Employee(objects.get(i).getUsername(), objects.get(i).getEmail(), objects.get(i).getString("phoneNumber"), "registered", objects.get(i).getInt("taskCounter"));
-                            dataAccessEmployee.insertEmployee(employee);
+                            dataAccess.insertEmployee(employee);
                             Log.e(TAG, "Task counter:" + objects.get(i).getInt("taskCounter"));
                         }
                     }else{
@@ -316,7 +316,7 @@ public class EditTeamActivity extends AppCompatActivity
     }
 
     public void onCLickEditTeamDone(View view) {
-        Intent intent = new Intent(EditTeamActivity.this,TaskShowActivity.class);
+        Intent intent = new Intent(EditTeamActivity.this,ShowTaskActivity.class);
         startActivity(intent);
     }
 

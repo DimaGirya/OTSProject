@@ -6,25 +6,30 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
+import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
 
 /**
  * Created by Girya on 01/03/2016.
  */
 
-    public class DataAccessEmployee implements iDataAccessEmployee {
+    public class DataAccess implements iDataAccess {
 
         private static final String TAG = "SQL_DATA_ACCESS";
         SQLiteDatabase database;
-        private static DataAccessEmployee instance;
+        private static DataAccess instance;
         private Context context;
         private DBHelper dbHelper;
 
 
-        private DataAccessEmployee(Context context) {	//private constructor(singleton)
+        private DataAccess(Context context) {	//private constructor(singleton)
             try {
                 this.context = context;
                 dbHelper = new DBHelper(this.context);
@@ -35,9 +40,9 @@ import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
         }
 
 
-        public static DataAccessEmployee getInstatnce(Context context) {
+        public static DataAccess getInstatnce(Context context) {
             if (instance == null)
-                instance = new DataAccessEmployee(context);
+                instance = new DataAccess(context);
             return instance;
         }
 
@@ -176,8 +181,6 @@ import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
     public String[] getAllRegisteredEmployeesName() {
         try {
             database = dbHelper.getReadableDatabase();
-// String whereClause = DbContract.EmployeeEntry.COLUMN_EMPLOYEE_EMAIL + " = ? ";
-   //         String whereArgs[] = new String[1];
             List<Employee> employees = new ArrayList<Employee>();
             String select  = "SELECT * FROM "+ DbContract.EmployeeEntry.TABLE_NAME +" WHERE "
                     +DbContract.EmployeeEntry.COLUMN_EMPLOYEE_STATUS + "=?";
@@ -206,6 +209,94 @@ import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
         }
         Log.d(TAG, "Return null:");
         return null;
+    }
+
+    @Override
+    public List<Task> getAllTask(Boolean getPastTask) {
+        try {
+            database = dbHelper.getReadableDatabase();
+            List<Task> tasks = new ArrayList<Task>();
+            String select  = "SELECT * FROM "+ DbContract.TaskEntry.TABLE_NAME;
+            Log.d(TAG, select);
+            Cursor cursor =  database.rawQuery(select,null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                Task task = getTaskFromCursor(cursor);
+                tasks.add(task);
+                cursor.moveToNext();
+            }
+            cursor.close();
+            return tasks;
+        } catch (Exception e) {
+            Log.d(TAG, "Exception:", e);
+        }
+        finally {
+            if (database != null) {
+                database.close();
+            }
+        }
+        return null;
+    }
+
+    private Task getTaskFromCursor(Cursor cursor) {
+        String taskDescription = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_DESCRIPTION)); //problem
+        String employee =  cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_EMPLOYEE));
+        String deadlineStr = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_DEADLINE)); //warning
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        Date deadline = null;
+        try {
+            deadline = format.parse(deadlineStr);
+        } catch (ParseException e) {
+           Log.d(TAG,"ParseException in sql",e);
+        }
+
+        String status = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_STATUS));
+        String category = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_CATEGORY));
+        String location = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_LOCATION));
+        int temp =  cursor.getInt(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_PHOTO_REQUIRE));
+        boolean photoRequire;
+        if(temp==0) {
+          photoRequire = false;
+        }
+        else {
+          photoRequire = true;
+        }
+        String parseId  = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_TASK_ID));
+
+        return new Task(taskDescription,employee,deadline,status,category,location, photoRequire,parseId);
+    }
+
+
+
+    @Override
+    public boolean insertTask(Task task) {
+        ContentValues content = new ContentValues();
+        content.put(DbContract.TaskEntry.COLUMN_CATEGORY,task.getCategory());
+        content.put(DbContract.TaskEntry.COLUMN_EMPLOYEE,task.getEmployee());
+        content.put(DbContract.TaskEntry.COLUMN_DEADLINE,task.getDeadline().toString()); //warning
+        content.put(DbContract.TaskEntry.COLUMN_DESCRIPTION,task.getTaskDescription());
+        content.put(DbContract.TaskEntry.COLUMN_LOCATION,task.getLocation());
+        content.put(DbContract.TaskEntry.COLUMN_STATUS,task.getStatus());
+        content.put(DbContract.TaskEntry.COLUMN_PHOTO_REQUIRE,task.isPhotoRequire());
+        content.put(DbContract.TaskEntry.COLUMN_TASK_ID,task.getParseId());
+        try {
+            database = dbHelper.getReadableDatabase();
+            if (database.insert(DbContract.TaskEntry.TABLE_NAME, null, content) == -1) {
+                Log.e(TAG, "Task not add to database:");
+                return false;
+            } else {
+                Log.e(TAG, "Task add to database:");
+                return true;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Exception:", e);
+            return false;
+        } finally {
+            if (database != null) {
+                database.close();
+
+            }
+        }
     }
 
     private Employee getEmployeeFromCursor(Cursor cursor) {
