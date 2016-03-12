@@ -216,7 +216,14 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
         try {
             database = dbHelper.getReadableDatabase();
             List<Task> tasks = new ArrayList<Task>();
-            String select  = "SELECT * FROM "+ DbContract.TaskEntry.TABLE_NAME;
+            String select;
+            if(getPastTask == true){
+                select  = "SELECT * FROM "+ DbContract.TaskEntry.TABLE_NAME;
+            }
+            else{
+                select  = "SELECT * FROM "+ DbContract.TaskEntry.TABLE_NAME + " WHERE ( NOT ("+ DbContract.TaskEntry.COLUMN_STATUS  +"= 'done' ) )";
+            }
+
             Log.d(TAG, select);
             Cursor cursor =  database.rawQuery(select,null);
             cursor.moveToFirst();
@@ -239,15 +246,15 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
     }
 
     private Task getTaskFromCursor(Cursor cursor) {
-        String taskDescription = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_DESCRIPTION)); //problem
+        String taskDescription = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_DESCRIPTION));
         String employee =  cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_EMPLOYEE));
-        String deadlineStr = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_DEADLINE)); //warning
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        String deadlineStr = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_DEADLINE));
+        SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance();
         Date deadline = null;
         try {
-            deadline = format.parse(deadlineStr);
-        } catch (ParseException e) {
-           Log.d(TAG,"ParseException in sql",e);
+            deadline = dateFormat.parse(deadlineStr);
+        } catch (Exception e) {
+            Log.d(TAG,"Parse date exception.Parse string:"+deadlineStr,e);
         }
 
         String status = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_STATUS));
@@ -263,7 +270,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
         }
         String parseId  = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_TASK_ID));
 
-        return new Task(taskDescription,employee,deadline,status,category,location, photoRequire,parseId);
+        return new Task(taskDescription,employee,deadline,status,category,location, photoRequire,parseId,deadlineStr);
     }
 
 
@@ -272,13 +279,15 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
     public boolean insertTask(Task task) {
         ContentValues content = new ContentValues();
         content.put(DbContract.TaskEntry.COLUMN_CATEGORY,task.getCategory());
-        content.put(DbContract.TaskEntry.COLUMN_EMPLOYEE,task.getEmployee());
-        content.put(DbContract.TaskEntry.COLUMN_DEADLINE,task.getDeadline().toString()); //warning
-        content.put(DbContract.TaskEntry.COLUMN_DESCRIPTION,task.getTaskDescription());
+        content.put(DbContract.TaskEntry.COLUMN_EMPLOYEE, task.getEmployee());
+        SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance();
+        String deadlineStr = dateFormat.format(task.getDeadline());
+        content.put(DbContract.TaskEntry.COLUMN_DEADLINE, deadlineStr);
+        content.put(DbContract.TaskEntry.COLUMN_DESCRIPTION, task.getTaskDescription());
         content.put(DbContract.TaskEntry.COLUMN_LOCATION,task.getLocation());
         content.put(DbContract.TaskEntry.COLUMN_STATUS,task.getStatus());
         content.put(DbContract.TaskEntry.COLUMN_PHOTO_REQUIRE,task.isPhotoRequire());
-        content.put(DbContract.TaskEntry.COLUMN_TASK_ID,task.getParseId());
+        content.put(DbContract.TaskEntry.COLUMN_TASK_ID, task.getParseId());
         try {
             database = dbHelper.getReadableDatabase();
             if (database.insert(DbContract.TaskEntry.TABLE_NAME, null, content) == -1) {

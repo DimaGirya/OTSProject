@@ -129,11 +129,23 @@ public class AddEmployeeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         switch (id){
+            case R.id.teamTasksDrawer: {
+                Intent intent = new Intent(this,ShowTaskManagerActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.editTeamDrawer: {
+                Intent intent = new Intent(this,EditTeamActivity.class);
+                startActivity(intent);
+                break;
+            }
             case R.id.taskCategoryOption:{
+                Toast.makeText(this,"Task category option todo Liza",Toast.LENGTH_LONG).show();
                 Log.i(TAG,"taskCategoryOption");
                 break;
             }
             case R.id.taskLocationOption:{
+                Toast.makeText(this,"Task location option todo Liza",Toast.LENGTH_LONG).show();
                 Log.i(TAG,"taskLocationOption");
                 break;
             }
@@ -141,11 +153,11 @@ public class AddEmployeeActivity extends AppCompatActivity
                 Log.d(TAG,"onNavigationItemSelected no such id");
         }
 
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     @Override
     public void onBackPressed() {

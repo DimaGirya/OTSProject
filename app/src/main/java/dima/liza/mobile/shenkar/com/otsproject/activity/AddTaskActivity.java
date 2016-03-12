@@ -35,6 +35,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import dima.liza.mobile.shenkar.com.otsproject.R;
@@ -54,6 +55,7 @@ public class AddTaskActivity extends AppCompatActivity
     private final static int URGENT_PRIORITY = 2;
     private int priority = LOW_PRIORITY;
     private String dateInput;
+    private  Date dateTask;
     private int year,month,day,hour,minute;
     private final int TOMORROW = 0;
     private final int TODAY = 1;
@@ -159,11 +161,23 @@ public class AddTaskActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         switch (id){
+            case R.id.teamTasksDrawer: {
+                Intent intent = new Intent(this,ShowTaskManagerActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.editTeamDrawer: {
+                Intent intent = new Intent(this,EditTeamActivity.class);
+                startActivity(intent);
+                break;
+            }
             case R.id.taskCategoryOption:{
+                Toast.makeText(this,"Task category option todo Liza",Toast.LENGTH_LONG).show();
                 Log.i(TAG,"taskCategoryOption");
                 break;
             }
             case R.id.taskLocationOption:{
+                Toast.makeText(this,"Task location option todo Liza",Toast.LENGTH_LONG).show();
                 Log.i(TAG,"taskLocationOption");
                 break;
             }
@@ -176,6 +190,7 @@ public class AddTaskActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
 
 
@@ -242,12 +257,12 @@ public class AddTaskActivity extends AppCompatActivity
     }
 
     public void onClickSubmitTask(View view) {
-     // String emplolyee =  employeeDropDown.get
+
+        GregorianCalendar gc = new GregorianCalendar(year,month,day,hour,minute);
+         dateTask =  gc.getTime();
         if(!validationTask()){
-            Toast.makeText(this,"Task add validation fail",Toast.LENGTH_LONG).show();
             return;
         }
-    //    Toast.makeText(this,"Task add validation ok",Toast.LENGTH_LONG).show();
         ParseObject task = new ParseObject("Task");
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Sending task to employee");
@@ -256,7 +271,6 @@ public class AddTaskActivity extends AppCompatActivity
         task.put("taskManager", currentUser.getEmail());
         task.put("isDone", false);
         task.put("status",getString(R.string.waiting));
-      //  task.put("taskDate",dateOfTask.getTime());
         task.put("taskEmployee",selectedEmployee);
         task.put("taskDescription",taskDescription.getText().toString());
         task.put("taskCategory",selectedCategory);
@@ -279,8 +293,8 @@ public class AddTaskActivity extends AppCompatActivity
                 task.put("priority","not_set");
                 Log.d(TAG,"priority not_set");
         }
-        GregorianCalendar gc = new GregorianCalendar(year,month,day,hour,minute);
-        task.put("taskDate",gc.getTime());
+
+        task.put("taskDate",dateTask);
         Log.d(TAG, "Time:" + gc.getTime().toString());
         task.saveInBackground(new SaveCallback() {
             @Override
@@ -316,6 +330,11 @@ public class AddTaskActivity extends AppCompatActivity
         }
         if(selectedLocation.equals(getString(R.string.selectLocation))){
             Toast.makeText(this,"You not select a location",Toast.LENGTH_LONG).show();
+            return false;
+        }
+        //dateTask
+        if(dateTask.before(Calendar.getInstance().getTime())){
+            Toast.makeText(this,"You can't select date from past",Toast.LENGTH_LONG).show();
             return false;
         }
 

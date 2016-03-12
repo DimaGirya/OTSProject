@@ -47,4 +47,8 @@
     <string name="title_activity_task_show">TaskShowActivity</string>
     <string name="deadline">Deadline:</string>
     <string name="title_activity_show_task">ShowTaskActivity</string>
+    <string name="numberOfTask">Number of task:</string>
+    <string name="showOnlyActualTask">Show only actual tasks</string>
+    <string name="editTeam">Edit Team</string>
+    <string name="teamTasks">Team Tasks</string>
 </resources>

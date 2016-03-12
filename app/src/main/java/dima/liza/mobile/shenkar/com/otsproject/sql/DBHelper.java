@@ -28,7 +28,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     + "," + DbContract.EmployeeEntry.COLUMN_EMPLOYEE_STATUS
                     + " TEXT NOT NULL)";
             final String SQL_CREATE_TASK_TABLE = "CREATE TABLE "
-                    +DbContract.TaskEntry.TABLE_NAME + " (" + DbContract.EmployeeEntry._ID+ " INTEGER PRIMARY KEY,"
+                    +DbContract.TaskEntry.TABLE_NAME + " (" + DbContract.TaskEntry._ID+ " INTEGER PRIMARY KEY,"
                     + DbContract.TaskEntry.COLUMN_TASK_ID  +" UNIQUE ON CONFLICT REPLACE," + DbContract.TaskEntry.COLUMN_DESCRIPTION +","
                     + DbContract.TaskEntry.COLUMN_EMPLOYEE + "," + DbContract.TaskEntry.COLUMN_CATEGORY + "," +DbContract.TaskEntry.COLUMN_LOCATION
                     + "," + DbContract.TaskEntry.COLUMN_STATUS + "," + DbContract.TaskEntry.COLUMN_DEADLINE + ","+ DbContract.TaskEntry.COLUMN_PHOTO_REQUIRE + " INTEGER)";

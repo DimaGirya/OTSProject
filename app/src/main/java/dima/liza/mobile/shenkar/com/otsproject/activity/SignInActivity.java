@@ -3,7 +3,6 @@ package dima.liza.mobile.shenkar.com.otsproject.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -49,7 +48,7 @@ public class SignInActivity extends AppCompatActivity {
                     //user found in Parse Users class.
                     if (user.getBoolean("isManager") == true) {
                         //TODO: uncomment lines 52-54 when ManagerTeamTasks is ready
-                         Intent intent = new Intent (SignInActivity.this,ShowTaskActivity.class);
+                         Intent intent = new Intent (SignInActivity.this,ShowTaskManagerActivity.class);
                         startActivity(intent);
                         finish();
                         Toast.makeText(SignInActivity.this, "TEST - MANAGER logged in", Toast.LENGTH_LONG).show();

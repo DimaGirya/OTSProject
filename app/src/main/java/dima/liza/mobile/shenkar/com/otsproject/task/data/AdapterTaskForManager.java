@@ -1,15 +1,19 @@
 package dima.liza.mobile.shenkar.com.otsproject.task.data;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.activity.ShowTaskManagerActivity;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.ViewRowEmployee;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.ViewRowTask;
@@ -17,8 +21,8 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.ViewRowTask;
 /**
  * Created by Girya on 09/03/2016.
  */
-public class AdapterTaskForManager extends BaseAdapter {
-
+public class AdapterTaskForManager extends BaseAdapter /*implements  AdapterView.OnItemLongClickListener*/ {
+    private static String TAG = "AdapterTaskForManager";
     private Context context;
     List<Task> listOfTask;
 
@@ -51,7 +55,8 @@ public class AdapterTaskForManager extends BaseAdapter {
             TextView taskEmployee = (TextView)convertView.findViewById(R.id.taskCategoryOrEmployee);
             TextView taskDeadline = (TextView)convertView.findViewById(R.id.taskDeadline);
             TextView taskStatus = (TextView)convertView.findViewById(R.id.taskStatus);
-            viewRowTask = new ViewRowTask(taskDescription,taskEmployee,taskDeadline,taskStatus);
+            TextView taskId = (TextView)convertView.findViewById(R.id.taskId);
+            viewRowTask = new ViewRowTask(taskDescription,taskEmployee,taskDeadline,taskStatus,taskId);
            convertView.setTag(viewRowTask);
         }
         else
@@ -62,6 +67,25 @@ public class AdapterTaskForManager extends BaseAdapter {
         viewRowTask.categoryOrEmployee.setText(listOfTask.get(position).getEmployee());
         viewRowTask.deadline.setText(String.valueOf(listOfTask.get(position).getDeadline())); // new employee. number of task is 0
         viewRowTask.status.setText(listOfTask.get(position).getStatus());
+        viewRowTask.taskId.setText(listOfTask.get(position).getParseId());
         return convertView;
     }
+
+
+
+
+
+
+/*
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+        View v = (View) view.getParent();
+        TextView temp = (TextView)view.findViewById(R.id.taskId);
+        String str = temp.getText().toString();
+        Log.d(TAG, str);
+
+        return true;
+    }
+    */
 }

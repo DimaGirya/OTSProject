@@ -3,6 +3,14 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/teamTasksDrawer"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/teamTasks" />
+        <item
+            android:id="@+id/editTeamDrawer"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/editTeam" />
+        <item
             android:id="@+id/taskLocationOption"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/taskLocation" />

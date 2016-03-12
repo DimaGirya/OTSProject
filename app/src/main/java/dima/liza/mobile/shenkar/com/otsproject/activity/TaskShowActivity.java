@@ -23,7 +23,7 @@ import com.parse.ParseUser;
 import dima.liza.mobile.shenkar.com.otsproject.PagerAdapter;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 
-
+//todo or delete
 public class TaskShowActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,TabLayout.OnTabSelectedListener {
     private static final String TAG = "TaskShowActivity" ;

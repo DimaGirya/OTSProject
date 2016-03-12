@@ -286,11 +286,23 @@ public class EditTeamActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         switch (id){
+            case R.id.teamTasksDrawer: {
+                Intent intent = new Intent(this,ShowTaskManagerActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.editTeamDrawer: {
+                Intent intent = new Intent(this,EditTeamActivity.class);
+                startActivity(intent);
+                break;
+            }
             case R.id.taskCategoryOption:{
+                Toast.makeText(this,"Task category option todo Liza",Toast.LENGTH_LONG).show();
                 Log.i(TAG,"taskCategoryOption");
                 break;
             }
             case R.id.taskLocationOption:{
+                Toast.makeText(this,"Task location option todo Liza",Toast.LENGTH_LONG).show();
                 Log.i(TAG,"taskLocationOption");
                 break;
             }
@@ -303,8 +315,6 @@ public class EditTeamActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
     public void onClickInviteMembers(View view) {
         Intent intent = new Intent(this, AddEmployeeActivity.class);
         startActivity(intent);
@@ -316,7 +326,7 @@ public class EditTeamActivity extends AppCompatActivity
     }
 
     public void onCLickEditTeamDone(View view) {
-        Intent intent = new Intent(EditTeamActivity.this,ShowTaskActivity.class);
+        Intent intent = new Intent(EditTeamActivity.this,ShowTaskManagerActivity.class);
         startActivity(intent);
     }
 

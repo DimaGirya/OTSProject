@@ -43,7 +43,7 @@
             android:label="@string/title_activity_task_show"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.ShowTaskActivity"
+            android:name=".activity.ShowTaskManagerActivity"
             android:label="@string/title_activity_show_task"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

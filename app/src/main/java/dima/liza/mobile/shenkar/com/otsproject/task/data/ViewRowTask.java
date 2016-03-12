@@ -10,11 +10,12 @@ public class ViewRowTask {
     TextView categoryOrEmployee;
     TextView deadline;
     TextView status;
-
-    public ViewRowTask(TextView taskDescription, TextView categoryOrEmployee,  TextView deadline,TextView status) {
+    TextView taskId;
+    public ViewRowTask(TextView taskDescription, TextView categoryOrEmployee,  TextView deadline,TextView status,TextView taskId) {
         this.taskDescription = taskDescription;
         this.categoryOrEmployee = categoryOrEmployee;
         this.status = status;
         this.deadline = deadline;
+        this.taskId = taskId;
     }
 }

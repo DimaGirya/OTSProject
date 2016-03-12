@@ -48,7 +48,8 @@ public class AdapterTaskForEmployee extends BaseAdapter {
             TextView taskEmployee = (TextView)convertView.findViewById(R.id.taskCategoryOrEmployee);
             TextView taskDeadline = (TextView)convertView.findViewById(R.id.taskDeadline);
             TextView taskStatus = (TextView)convertView.findViewById(R.id.taskStatus);
-            viewRowTask = new ViewRowTask(taskDescription,taskEmployee,taskDeadline,taskStatus);
+            TextView taskId = (TextView)convertView.findViewById(R.id.taskId);
+            viewRowTask = new ViewRowTask(taskDescription,taskEmployee,taskDeadline,taskStatus,taskId);
             convertView.setTag(viewRowTask);
         }
         else
