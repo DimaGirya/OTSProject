@@ -149,8 +149,26 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
         }
     }
 
+    @Override
+    public int numberOfRegisteredEmployee() {
+        try {
+            String employees[] = getAllRegisteredEmployeesName();
+            Log.d(TAG, "getAllRegisteredEmployeesName return:" +  (employees.length-1));
+            return employees.length-1;  // -1 = -manager
 
-        @Override
+        } catch (Exception e) {
+            Log.d(TAG, "numberOfRegisteredEmployee Exception:", e);
+        }
+        finally {
+            if (database != null) {
+                database.close();
+            }
+        }
+        return 0;
+    }
+
+
+    @Override
         public List<Employee> getAllEmployee() {
             try {
                 database = dbHelper.getReadableDatabase();

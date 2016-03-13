@@ -30,6 +30,7 @@ import com.parse.SaveCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
 import dima.liza.mobile.shenkar.com.otsproject.NotificationControl;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.Validation;
@@ -46,6 +47,7 @@ public class AddEmployeeActivity extends AppCompatActivity
     ListView listView;
     List<EmployeeToAdd> listEmployeeToAdd;
     ListAdapter adapter;
+    DataAccess dataAccess;
     int numOfNewEmployee;
     int numOfAddNewEmployee;
     private static String TAG  = "AddEmployeeActivity";
@@ -57,13 +59,12 @@ public class AddEmployeeActivity extends AppCompatActivity
         setContentView(R.layout.activity_add_employee_activity_nav);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        dataAccess = DataAccess.getInstatnce(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AddEmployeeActivity.this,AddTaskActivity.class);
-                startActivity(intent);
+                    ManagerValidation.checkRegisteredEmployee(AddEmployeeActivity.this, dataAccess);
             }
         });
 
@@ -180,7 +181,6 @@ public class AddEmployeeActivity extends AppCompatActivity
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    // Do nothing
                     dialog.dismiss();
                 }
             });
@@ -195,7 +195,6 @@ public class AddEmployeeActivity extends AppCompatActivity
             } else {
                 super.onBackPressed();
             }
-           // AddEmployeeActivity.super.onBackPressed();
         }
     }
 
@@ -203,6 +202,10 @@ public class AddEmployeeActivity extends AppCompatActivity
 
 
     public void onClickAddEmployeeSubmit(View view) {
+        if(listEmployeeToAdd.size()==0){
+            Toast.makeText(this,"No employees to add",Toast.LENGTH_LONG).show();
+            return;
+        }
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Adding employee to data base");
         progressDialog.setMessage("Please wait");

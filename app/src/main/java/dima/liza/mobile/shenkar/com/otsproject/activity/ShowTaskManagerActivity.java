@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.AdapterTaskForManager;
@@ -65,8 +66,7 @@ public class ShowTaskManagerActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ShowTaskManagerActivity.this,AddTaskActivity.class);
-                startActivity(intent);
+                ManagerValidation.checkRegisteredEmployee(ShowTaskManagerActivity.this, dataAccess);
             }
         });
         dataAccess = DataAccess.getInstatnce(this);

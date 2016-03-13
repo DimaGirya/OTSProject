@@ -33,6 +33,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.Validation;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.AdapterEmployee;
@@ -61,13 +62,13 @@ public class EditTeamActivity extends AppCompatActivity
         setContentView(R.layout.activity_edit_team_activity_nav);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        dataAccess = DataAccess.getInstatnce(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(EditTeamActivity.this,AddTaskActivity.class);
-                startActivity(intent);
+                ManagerValidation.checkRegisteredEmployee(EditTeamActivity.this, dataAccess);
             }
         });
 
@@ -84,7 +85,7 @@ public class EditTeamActivity extends AppCompatActivity
         teamNameSharedPreferences = getSharedPreferences("Team", MODE_PRIVATE);
         String savedText = teamNameSharedPreferences.getString("TeamName","");
         teamName.setText(savedText);
-        dataAccess = DataAccess.getInstatnce(this);
+
         //todo check logic
         if(!Validation.isOnline(this)){ // device is offline
             if(Validation.doesDatabaseExist(this, "otsProject.db")) {  // data exist but may be not updated
@@ -192,6 +193,7 @@ public class EditTeamActivity extends AppCompatActivity
 
     public void onClickSaveTeamName(View view) {
         Log.d(TAG, "On click save team name start");
+
         teamNameStr = teamName.getText().toString();
         if(teamNameStr.isEmpty()){
             Toast.makeText(this, "Please enter a team name", Toast.LENGTH_LONG).show();

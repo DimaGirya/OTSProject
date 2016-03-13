@@ -1,8 +1,13 @@
 package dima.liza.mobile.shenkar.com.otsproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.widget.Toast;
+
+import dima.liza.mobile.shenkar.com.otsproject.activity.AddTaskActivity;
+import dima.liza.mobile.shenkar.com.otsproject.activity.ShowTaskManagerActivity;
 import dima.liza.mobile.shenkar.com.otsproject.activity.SignUpManagerActivity;
+import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 
 
 /**
@@ -28,5 +33,15 @@ public class ManagerValidation {
     public boolean signIn(String email, String password, String phoneNumber) {
 
         return true;
+    }
+
+    public static void checkRegisteredEmployee(Context context,DataAccess dataAccess) {
+        if(dataAccess.numberOfRegisteredEmployee()>0) {
+            Intent intent = new Intent(context, AddTaskActivity.class);
+            context.startActivity(intent);
+        }
+        else{
+            Toast.makeText(context,"You don't have registered workers",Toast.LENGTH_LONG).show();
+        }
     }
 }

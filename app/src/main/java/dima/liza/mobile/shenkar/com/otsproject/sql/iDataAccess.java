@@ -14,6 +14,7 @@ public interface iDataAccess {
     boolean updateEmployeeTaskCounter(Employee employee,int counter);
     boolean deleteEmployee(Employee employee);
     boolean deleteEmployee(String email);
+    int numberOfRegisteredEmployee();
      List<Employee> getAllEmployee();
     String[] getAllRegisteredEmployeesName();
 
