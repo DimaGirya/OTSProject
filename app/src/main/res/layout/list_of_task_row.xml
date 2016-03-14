@@ -5,36 +5,36 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:layout_width="80dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:padding="2dp"
-        android:id="@+id/taskDescription" />
+        android:id="@+id/taskHeader" />
 
     <TextView
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:padding="2dp"
         android:id="@+id/taskCategoryOrEmployee" />
     <TextView
-        android:textSize="18sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:padding="2dp"
-        android:id="@+id/taskDeadline" />
-    <TextView
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:padding="2dp"
         android:id="@+id/taskStatus" />
     <TextView
-        android:textSize="18sp"
+        android:textSize="14sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:padding="2dp"
+        android:id="@+id/taskDeadline" />
+    <TextView
+        android:textSize="14sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"

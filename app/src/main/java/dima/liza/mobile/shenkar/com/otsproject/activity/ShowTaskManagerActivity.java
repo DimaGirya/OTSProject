@@ -102,10 +102,12 @@ public class ShowTaskManagerActivity extends AppCompatActivity
                     String category;
                     String location;
                     String parseId;
+                    String taskHeader;
                     boolean photoRequire;
                     SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance();
                     for (int i = 0; i < objects.size(); i++) {
                         taskDescription = objects.get(i).getString("taskDescription");
+                        taskHeader =  objects.get(i).getString("taskHeader");
                         employee = objects.get(i).getString("taskEmployee");
                         deadline = objects.get(i).getDate("taskDate");
                         deadlineStr = dateFormat.format(deadline);
@@ -114,7 +116,7 @@ public class ShowTaskManagerActivity extends AppCompatActivity
                         location = objects.get(i).getString("taskLocation");
                         parseId = objects.get(i).getObjectId();
                         photoRequire = objects.get(i).getBoolean("photoRequire");
-                        dataAccess.insertTask(new Task(taskDescription, employee, deadline, status, category, location, photoRequire, parseId, deadlineStr));
+                        dataAccess.insertTask(new Task(taskHeader,taskDescription, employee, deadline, status, category, location, photoRequire, parseId, deadlineStr));
                     }
                     onResume();
                 } else {

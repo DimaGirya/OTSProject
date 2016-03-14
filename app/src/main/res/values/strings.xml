@@ -51,4 +51,6 @@
     <string name="showOnlyActualTask">Show only actual tasks</string>
     <string name="editTeam">Edit Team</string>
     <string name="teamTasks">Team Tasks</string>
+    <string name="taskHeader">Task header</string>
+    <string name="title_activity_task_show_employee">TaskShowEmployeeActivity</string>
 </resources>

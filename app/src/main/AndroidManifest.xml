@@ -45,6 +45,10 @@
         <activity
             android:name=".activity.ShowTaskManagerActivity"
             android:label="@string/title_activity_show_task"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.TaskShowEmployeeActivity"
+            android:label="@string/title_activity_task_show_employee"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

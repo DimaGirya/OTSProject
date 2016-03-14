@@ -54,9 +54,9 @@ public class SignInActivity extends AppCompatActivity {
                         Toast.makeText(SignInActivity.this, "TEST - MANAGER logged in", Toast.LENGTH_LONG).show();
                     } else {
                         //TODO: uncomment lines 57-59 when EmployeeTasks is ready
-                        /* Intent intent = new Intent (this,EmployeeTasks.class);
+                         Intent intent = new Intent (SignInActivity.this,TaskShowEmployeeActivity.class);
                         startActivity(intent);
-                        finish(); */
+                        finish();
                         Toast.makeText(SignInActivity.this, "TEST - EMPLOYEE logged in", Toast.LENGTH_LONG).show();
                     }
                 } else {

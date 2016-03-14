@@ -43,11 +43,20 @@ public class SignUpManagerActivity extends AppCompatActivity {
         }
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
-            Toast.makeText(this, "Welcome back", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent (this,EditTeamActivity.class);
-            intent.putExtra("caller","SignUpManagerActivity");
-            startActivity(intent);
-            finish();
+            if(currentUser.getBoolean("isManager")) {
+                Toast.makeText(this, "Welcome back", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, TaskShowActivity.class);
+                intent.putExtra("caller", "SignUpManagerActivity");
+                startActivity(intent);
+                finish();
+            }
+            else{
+                Toast.makeText(this, "Welcome back", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this,TaskShowEmployeeActivity.class);
+                intent.putExtra("caller", "SignUpManagerActivity");
+                startActivity(intent);
+                finish();
+            }
         } else {
             setContentView(R.layout.activity_sign_up_manager);
             editTextEmail = (EditText) findViewById(R.id.editEmailSignUpManager);

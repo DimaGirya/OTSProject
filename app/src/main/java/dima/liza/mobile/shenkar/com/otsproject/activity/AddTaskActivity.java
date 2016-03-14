@@ -43,7 +43,8 @@ import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 
 public class AddTaskActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,AdapterView.OnItemSelectedListener {
-    private EditText taskDescription;
+    private static final int HEADER_TASK_MAX_LENGTH = 20 ;
+    private EditText taskDescription,taskHeader;
     private TextView textTime,textDate;
     private CheckBox checkbox;
     private Button setTime, setDate;
@@ -88,6 +89,7 @@ public class AddTaskActivity extends AppCompatActivity
         currentUser = ParseUser.getCurrentUser();
         checkbox = (CheckBox) findViewById(R.id.checkBoxRequirePhoto);
         taskDescription = (EditText) findViewById(R.id.editTextTaskDescription);
+        taskHeader = (EditText)findViewById(R.id.editTextTaskHeader);
         employeeDropDown = (Spinner) findViewById(R.id.employeesDropDown);
         categoryDropDown = (Spinner) findViewById(R.id.categoryDropDown);
         taskLocationDropDown = (Spinner) findViewById(R.id.taskLocationDropDown);
@@ -271,6 +273,7 @@ public class AddTaskActivity extends AppCompatActivity
         task.put("taskManager", currentUser.getEmail());
         task.put("isDone", false);
         task.put("status",getString(R.string.waiting));
+        task.put("taskHeader",taskHeader.getText().toString());
         task.put("taskEmployee",selectedEmployee);
         task.put("taskDescription",taskDescription.getText().toString());
         task.put("taskCategory",selectedCategory);
@@ -316,6 +319,14 @@ public class AddTaskActivity extends AppCompatActivity
 }
 
     private boolean validationTask() {
+        if(taskHeader.getText().toString().isEmpty()){
+            Toast.makeText(this,"Task header field is empty",Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if(taskHeader.getText().toString().length()>HEADER_TASK_MAX_LENGTH){
+            Toast.makeText(this,"Task header maximum:"+HEADER_TASK_MAX_LENGTH,Toast.LENGTH_LONG).show();
+            return false;
+        }
         if(taskDescription.getText().toString().isEmpty()){
             Toast.makeText(this,"Task description field is empty",Toast.LENGTH_LONG).show();
             return false;

@@ -51,7 +51,7 @@ public class AdapterTaskForManager extends BaseAdapter /*implements  AdapterView
         ViewRowTask viewRowTask;
         if(convertView==null){
            convertView = LayoutInflater.from(context).inflate(R.layout.list_of_task_row, null);
-            TextView taskDescription = (TextView)convertView.findViewById(R.id.taskDescription);
+            TextView taskDescription = (TextView)convertView.findViewById(R.id.taskHeader);
             TextView taskEmployee = (TextView)convertView.findViewById(R.id.taskCategoryOrEmployee);
             TextView taskDeadline = (TextView)convertView.findViewById(R.id.taskDeadline);
             TextView taskStatus = (TextView)convertView.findViewById(R.id.taskStatus);
@@ -63,7 +63,7 @@ public class AdapterTaskForManager extends BaseAdapter /*implements  AdapterView
         {
             viewRowTask = (ViewRowTask) convertView.getTag();
         }
-        viewRowTask.taskDescription.setText(listOfTask.get(position).getTaskDescription());
+        viewRowTask.taskHeader.setText(listOfTask.get(position).getTaskHeader());
         viewRowTask.categoryOrEmployee.setText(listOfTask.get(position).getEmployee());
         viewRowTask.deadline.setText(String.valueOf(listOfTask.get(position).getDeadline())); // new employee. number of task is 0
         viewRowTask.status.setText(listOfTask.get(position).getStatus());

@@ -63,7 +63,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
                     return true;
                 }
             } catch (Exception e) {
-                Log.e(TAG, "Exception:", e);
+                Log.d(TAG, "Exception:", e);
                 return false;
             } finally {
                 if (database != null) {
@@ -87,7 +87,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
                 return true;
             }
             catch(Exception e){
-                Log.e(TAG, "Exception:", e);
+                Log.d(TAG, "Exception:", e);
                 return false;
             }
         }
@@ -107,7 +107,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
                 return true;
             }
             catch(Exception e){
-                Log.e(TAG, "Exception:", e);
+                Log.d(TAG, "Exception:", e);
                 return false;
             }
         }
@@ -126,7 +126,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
                 return true;
             }
             catch(Exception e){
-                Log.e(TAG,"Exception:",e);
+                Log.d(TAG, "Exception:", e);
                 return false;
             }
         }
@@ -144,7 +144,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
             return true;
         }
         catch(Exception e){
-            Log.e(TAG,"Exception:",e);
+            Log.d(TAG,"Exception:",e);
             return false;
         }
     }
@@ -274,7 +274,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
         } catch (Exception e) {
             Log.d(TAG,"Parse date exception.Parse string:"+deadlineStr,e);
         }
-
+        String taskHeader = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_HEADER_TASK));
         String status = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_STATUS));
         String category = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_CATEGORY));
         String location = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_LOCATION));
@@ -288,7 +288,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
         }
         String parseId  = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_TASK_ID));
 
-        return new Task(taskDescription,employee,deadline,status,category,location, photoRequire,parseId,deadlineStr);
+        return new Task(taskHeader,taskDescription,employee,deadline,status,category,location, photoRequire,parseId,deadlineStr);
     }
 
 
@@ -296,6 +296,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
     @Override
     public boolean insertTask(Task task) {
         ContentValues content = new ContentValues();
+        content.put(DbContract.TaskEntry.COLUMN_HEADER_TASK,task.getTaskHeader());
         content.put(DbContract.TaskEntry.COLUMN_CATEGORY,task.getCategory());
         content.put(DbContract.TaskEntry.COLUMN_EMPLOYEE, task.getEmployee());
         SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance();
@@ -309,14 +310,14 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
         try {
             database = dbHelper.getReadableDatabase();
             if (database.insert(DbContract.TaskEntry.TABLE_NAME, null, content) == -1) {
-                Log.e(TAG, "Task not add to database:");
+                Log.d(TAG, "Task not add to database:");
                 return false;
             } else {
-                Log.e(TAG, "Task add to database:");
+                Log.d(TAG, "Task add to database:");
                 return true;
             }
         } catch (Exception e) {
-            Log.e(TAG, "Exception:", e);
+            Log.d(TAG, "Exception:", e);
             return false;
         } finally {
             if (database != null) {

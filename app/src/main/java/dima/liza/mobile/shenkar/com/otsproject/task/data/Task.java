@@ -6,6 +6,7 @@ import java.util.Date;
  * Created by Girya on 09/03/2016.
  */
 public class Task {
+    private String taskHeader;
     private String taskDescription;
     private String employee;
     private Date deadline;
@@ -24,7 +25,8 @@ public class Task {
         this.deadlineStr = deadlineStr;
     }
 
-    public Task(String taskDescription, String employee, Date deadline, String status, String category, String location, boolean photoRequire,String parseId,String deadlineStr) {
+    public Task(String taskHeader,String taskDescription, String employee, Date deadline, String status, String category, String location, boolean photoRequire,String parseId,String deadlineStr) {
+        this.taskHeader = taskHeader;
         this.taskDescription = taskDescription;
         this.employee = employee;
         this.deadline = deadline;
@@ -102,5 +104,11 @@ public class Task {
         this.photoRequire = photoRequire;
     }
 
+    public void setTaskHeader(String taskHeader) {
+        this.taskHeader = taskHeader;
+    }
 
+    public String getTaskHeader() {
+        return taskHeader;
+    }
 }

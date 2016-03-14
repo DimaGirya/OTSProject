@@ -12,28 +12,37 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_add_task"
     tools:context="dima.liza.mobile.shenkar.com.otsproject.activity.AddTaskActivity">
-
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editTextTaskHeader"
+        android:hint="@string/taskHeader"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/editTextTaskDescription"
+        android:layout_alignEnd="@+id/editTextTaskDescription" />
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editTextTaskDescription"
         android:hint="@string/taskDescriptionField"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/editTextTaskHeader"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignRight="@+id/employeesDropDown"
+        android:layout_alignEnd="@+id/employeesDropDown" />
     <Spinner
         android:id="@+id/employeesDropDown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"
-        android:layout_below="@+id/editTextTaskDescription"
-        android:layout_alignParentLeft="true"
         android:padding="0dp"
         android:textSize="12sp"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/editTextTaskDescription"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
     <Spinner
         android:padding="0dp"
         android:textSize="12sp"
@@ -44,7 +53,9 @@
         android:spinnerMode="dropdown"
         android:layout_below="@+id/employeesDropDown"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/buttonSaveAndSentTask"
+        android:layout_alignEnd="@+id/buttonSaveAndSentTask" />
     <Spinner
         android:padding="0dp"
         android:textSize="12sp"
@@ -53,9 +64,9 @@
         android:layout_height="wrap_content"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"
-        android:layout_below="@+id/categoryDropDown"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignTop="@+id/categoryDropDown"
+        android:layout_toEndOf="@+id/buttonSaveAndSentTask"
+        android:layout_toRightOf="@+id/buttonSaveAndSentTask" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -63,7 +74,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/Priority"
         android:id="@+id/textViewPriority"
-        android:layout_above="@+id/radioGroupPriority"
+        android:layout_below="@+id/categoryDropDown"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -72,10 +83,9 @@
         android:orientation="horizontal"
         android:layout_height="30dp"
         android:weightSum="1"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/radioGroupPriority">
+        android:id="@+id/radioGroupPriority"
+        android:layout_below="@+id/textViewPriority"
+        android:layout_centerHorizontal="true">
         <RadioButton
             android:id="@+id/lowPriorityRadioButton"
             android:layout_width="wrap_content"
@@ -107,12 +117,11 @@
         android:layout_height="wrap_content"
         android:text="@string/RequirePhoto"
         android:id="@+id/checkBoxRequirePhoto"
-        android:layout_below="@+id/radioGroupPriority"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:checked="false"
         android:onClick="onClickRequirePhoto"
-        />
+        android:layout_below="@+id/radioGroupPriority"
+        android:layout_alignRight="@+id/textViewTime"
+        android:layout_alignEnd="@+id/textViewTime" />
 
 
     <TextView
@@ -165,9 +174,9 @@
         android:text="@string/setTime"
         android:id="@+id/buttonSetTime"
         android:onClick="onClickSetTime"
-        android:layout_above="@+id/buttonSaveAndSentTask"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/textViewDeadline"
+        android:layout_alignLeft="@+id/checkBoxRequirePhoto"
+        android:layout_alignStart="@+id/checkBoxRequirePhoto" />
 
     <Button
         android:layout_width="wrap_content"
@@ -175,8 +184,9 @@
         android:text="@string/setDate"
         android:id="@+id/buttonSetDate"
         android:onClick="onClickSetDate"
-        android:layout_above="@+id/buttonSaveAndSentTask"
-        android:layout_toRightOf="@+id/buttonSetTime" />
+        android:layout_alignTop="@+id/buttonSetTime"
+        android:layout_toRightOf="@+id/buttonSetTime"
+        android:layout_toEndOf="@+id/buttonSetTime" />
 
     <Button
         android:layout_width="wrap_content"
@@ -184,12 +194,11 @@
         android:text="@string/saveAndSent"
         android:id="@+id/buttonSaveAndSentTask"
         android:onClick="onClickSubmitTask"
-        android:layout_marginBottom="34dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/buttonSetDate"
-        android:layout_alignEnd="@+id/buttonSetDate" />
+        android:layout_below="@+id/buttonSetTime"
+        android:layout_alignLeft="@+id/buttonSetTime"
+        android:layout_alignStart="@+id/buttonSetTime"
+        android:layout_toLeftOf="@+id/dateTask"
+        android:layout_toStartOf="@+id/dateTask" />
 
 
 
@@ -199,27 +208,26 @@
         android:text="@string/deadline"
         android:id="@+id/textViewDeadline"
         android:layout_below="@+id/radioGroupTime"
-        android:layout_alignRight="@+id/textViewPriority"
-        android:layout_alignEnd="@+id/textViewPriority"
-        android:layout_alignBottom="@+id/timeTask" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/timeTask"
-        android:layout_alignRight="@+id/textViewTime"
-        android:layout_alignEnd="@+id/textViewTime"
-        android:layout_alignBottom="@+id/dateTask"
-        android:layout_below="@+id/radioGroupTime" />
+        android:layout_alignTop="@+id/textViewDeadline"
+        android:layout_toRightOf="@+id/buttonSetTime"
+        android:layout_toEndOf="@+id/buttonSetTime" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/dateTask"
-        android:layout_below="@+id/radioGroupTime"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignTop="@+id/timeTask"
+        android:layout_toRightOf="@+id/buttonSetDate"
+        android:layout_toEndOf="@+id/buttonSetDate" />
 
 
 </RelativeLayout>

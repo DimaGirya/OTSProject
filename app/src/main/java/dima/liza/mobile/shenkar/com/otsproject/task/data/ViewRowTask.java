@@ -6,13 +6,13 @@ import android.widget.TextView;
  * Created by Girya on 09/03/2016.
  */
 public class ViewRowTask {
-    TextView taskDescription;
+    TextView taskHeader;
     TextView categoryOrEmployee;
     TextView deadline;
     TextView status;
     TextView taskId;
-    public ViewRowTask(TextView taskDescription, TextView categoryOrEmployee,  TextView deadline,TextView status,TextView taskId) {
-        this.taskDescription = taskDescription;
+    public ViewRowTask(TextView taskHeader, TextView categoryOrEmployee,  TextView deadline,TextView status,TextView taskId) {
+        this.taskHeader = taskHeader;
         this.categoryOrEmployee = categoryOrEmployee;
         this.status = status;
         this.deadline = deadline;

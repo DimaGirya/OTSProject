@@ -24,6 +24,7 @@ public class DbContract {
         public static final String COLUMN_LOCATION = "Location";
         public static final String COLUMN_PHOTO_REQUIRE = "PhotoRequire";
         public static final String COLUMN_TASK_ID = "TaskParseId";
+        public static final String COLUMN_HEADER_TASK = "HeaderTask";
     }
 
 }
