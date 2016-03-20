@@ -165,6 +165,10 @@ public class ShowTaskManagerActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             case ID_EDIT_TASK:{
+                Intent intent = new Intent(this,AddTaskActivity.class);
+                intent.putExtra("editTask",true);
+                intent.putExtra("taskId",taskSelectedId);
+                startActivity(intent);
                 Log.d(TAG,"ID_EDIT_TASK");
                 Log.d(TAG,taskSelectedId);
                 break;

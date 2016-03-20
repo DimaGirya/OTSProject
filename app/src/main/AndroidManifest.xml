@@ -51,6 +51,10 @@
             android:label="@string/title_activity_task_show_employee"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <service
+            android:name=".SynchronizationService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

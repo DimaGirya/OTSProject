@@ -1,36 +1,24 @@
 package dima.liza.mobile.shenkar.com.otsproject;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.activity.ShowTaskManagerActivity;
-import dima.liza.mobile.shenkar.com.otsproject.activity.SignUpManagerActivity;
 import dima.liza.mobile.shenkar.com.otsproject.activity.TaskShowEmployeeActivity;
-import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
-import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
 
 public class SynchronizationService extends Service {
     private static final String TAG = "SynchronizationService";
@@ -52,7 +40,7 @@ public class SynchronizationService extends Service {
     @Override
     public void onCreate() {
         lastUpdate = getLastUpdateDate();
-        Log.i(TAG, "Service: onCreate");
+        Log.i(TAG, "SynchronizationService: onCreate");
 
 
         ParseUser currentUser = ParseUser.getCurrentUser();
@@ -65,12 +53,12 @@ public class SynchronizationService extends Service {
         mBuilder.setContentTitle("Hello " + currentUserName);
         PendingIntent contentIntent;
         if(isManager) {
-             contentIntent = PendingIntent.getActivity(this, 0,
+            contentIntent = PendingIntent.getActivity(this, 0,
                     new Intent(this, ShowTaskManagerActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
             mBuilder.setContentText("You not have new task status update");
         }
         else{
-             contentIntent = PendingIntent.getActivity(this, 0,
+            contentIntent = PendingIntent.getActivity(this, 0,
                     new Intent(this, TaskShowEmployeeActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
             mBuilder.setContentText("You not have new task yet");
         }
@@ -96,7 +84,6 @@ public class SynchronizationService extends Service {
                 }
             };
         };
-       // handler.sendEmptyMessage(STATUS_NONE);
         service();
     }
 
@@ -231,7 +218,7 @@ public class SynchronizationService extends Service {
 
     private void updateEmployeeList() {
         Log.d(TAG,"updateEmployeeList");
-      NotificationControl.notificationNow("updateEmployeeList","updateEmployeeList",R.drawable.ic_launcher,2,this);
+        NotificationControl.notificationNow("updateEmployeeList","updateEmployeeList",R.drawable.ic_launcher,2,this);
     }
 
     @Override
@@ -243,7 +230,7 @@ public class SynchronizationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        return Service.START_STICKY;
+        return SynchronizationService.START_STICKY;
     }
 
 }

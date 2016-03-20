@@ -24,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -41,6 +42,7 @@ import java.util.GregorianCalendar;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
+import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
 
 public class AddTaskActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,AdapterView.OnItemSelectedListener {
@@ -56,7 +58,6 @@ public class AddTaskActivity extends AppCompatActivity
     private final static int NORMAL_PRIORITY = 1;
     private final static int URGENT_PRIORITY = 2;
     private int priority = LOW_PRIORITY;
-    private String dateInput;
     private  Date dateTask;
     private int year,month,day,hour,minute;
     private final int TOMORROW = 0;
@@ -64,6 +65,7 @@ public class AddTaskActivity extends AppCompatActivity
     private final int OTHER_DATE = 2;
     private int flagDate = TOMORROW;
     private Boolean requirePhoto = false;
+    private Boolean updateTask;
     private DataAccess dataAccess;
     private ArrayAdapter<String> adapterCategoryDropDown;
     private ArrayAdapter<String> adapterLocationDropDown;
@@ -101,23 +103,64 @@ public class AddTaskActivity extends AppCompatActivity
         textTime = (TextView)findViewById(R.id.timeTask);
         textDate = (TextView)findViewById(R.id.dateTask);
         dataAccess = DataAccess.getInstatnce(this);
-        String[] employeesName = dataAccess.getAllRegisteredEmployeesName();
-        employeesName[0] = getString(R.string.selectEmployee);
-        adapterEmployeeDropDown = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, employeesName);
-        adapterEmployeeDropDown.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        employeeDropDown.setAdapter(adapterEmployeeDropDown);
-        employeeDropDown.setOnItemSelectedListener(this);
+
         String[] category = {getString(R.string.selectCategory),"General", "Cleaning", "Electricity", "Computers", "Other"};
+
+        String[] location = {getString(R.string.selectLocation),"location 1", "location 2", "location 3", "location 4"};
+        String[] employeesName;
+        Intent intent = getIntent();
+        updateTask = intent.getBooleanExtra("editTask",false);
+        if(updateTask){   //edit task mode
+            String taskId = intent.getStringExtra("taskId");
+            Task editTask = dataAccess.getTaskById(taskId);
+            if(editTask==null){
+                Toast.makeText(this,"Error",Toast.LENGTH_LONG).show();
+                Log.d(TAG,"taskId is null");
+                finish();
+            }
+            taskDescription.setText(editTask.getTaskDescription());
+            taskHeader.setText(editTask.getTaskHeader());
+            checkbox.setChecked(editTask.isPhotoRequire());
+             category[0] = editTask.getCategory();
+            location[0] = editTask.getLocation();
+            employeesName = new String[1];
+            employeesName[0] = editTask.getEmployee();
+            RadioGroup radioGroupTime = (RadioGroup)findViewById(R.id.radioGroupTime);
+            radioGroupTime.check(R.id.otherDateTimeRadioButton);
+            flagDate = OTHER_DATE;
+            Date taskDate = editTask.getDeadline();
+            Log.d(TAG,"taskDate:"+taskDate.toString());
+            GregorianCalendar calendar = new GregorianCalendar();
+            calendar.setTime(taskDate);
+            day = calendar.get(calendar.DAY_OF_MONTH);
+            hour = calendar.get(calendar.HOUR_OF_DAY);
+            year = calendar.get(calendar.YEAR);
+                    textDate.setText(day+"."+month+"."+year);
+            hour = calendar.get(calendar.HOUR_OF_DAY);
+            minute = calendar.get(calendar.MINUTE);
+            textTime.setText(hour+":"+minute);
+
+        }else{
+            employeesName = dataAccess.getAllRegisteredEmployeesName();
+            employeesName[0] = getString(R.string.selectEmployee);
+            tomorrowDeadlineSelect();
+
+        }
         adapterCategoryDropDown = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, category);
         adapterCategoryDropDown.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categoryDropDown.setAdapter(adapterCategoryDropDown);
         categoryDropDown.setOnItemSelectedListener(this);
-        String[] location = {getString(R.string.selectLocation),"location 1", "location 2", "location 3", "location 4"};
+
+
+        adapterEmployeeDropDown = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, employeesName);
+        adapterEmployeeDropDown.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        employeeDropDown.setAdapter(adapterEmployeeDropDown);
+        employeeDropDown.setOnItemSelectedListener(this);
+
         adapterLocationDropDown = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, location);
         adapterCategoryDropDown.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         taskLocationDropDown.setAdapter(adapterLocationDropDown);
         taskLocationDropDown.setOnItemSelectedListener(this);
-        tomorrowDeadlineSelect();
     }
 
     @Override
@@ -302,6 +345,11 @@ public class AddTaskActivity extends AppCompatActivity
 
         task.put("taskDate",dateTask);
         Log.d(TAG, "Time:" + gc.getTime().toString());
+        if(updateTask){
+            Intent intent = getIntent();
+            String taskId = intent.getStringExtra("taskId");
+            task.setObjectId(taskId);
+        }
         task.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {

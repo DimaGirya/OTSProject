@@ -47,6 +47,7 @@ public class UpdateData {
         Log.d(TAG,"dataAccess.getAllTask(true).size():"+dataAccess.getAllTask(true).size());
         ParseQuery<ParseObject> queryTask = ParseQuery.getQuery("Task");
         queryTask.whereEqualTo("taskManager", currentUser.get("manager"));
+        queryTask.whereEqualTo("taskEmployee",currentUser.getUsername());
         if(wasUpdated) {
             if (isManager) {
                 Log.d(TAG,"Update task for Manager");
@@ -54,6 +55,7 @@ public class UpdateData {
             } else {
                 Log.d(TAG, "Update task for Employee");
                 queryTask.whereEqualTo("updateForEmployee", true);  //wtf??? Not work!!
+                queryTask.whereEqualTo("taskEmployee",currentUser.getEmail());
             }
         }
         queryTask.findInBackground(new FindCallback<ParseObject>() {
@@ -90,24 +92,26 @@ public class UpdateData {
                         photoRequire = object.getBoolean("photoRequire");
                         //todo compare task before end after and notification change
                         Task oldTask = dataAccess.getTaskById(parseId);
-                        Task newTask = new Task(taskHeader, taskDescription, employee, deadline, status, category, location, photoRequire, parseId, deadlineStr);
-                        if(oldTask.getDeadline().compareTo(newTask.getDeadline())!=0){
-                            NotificationControl.notificationNow("Deadline of task change",taskHeader,R.drawable.ic_menu_send, parseId.hashCode(),context);
-                        }
-                        if(!taskDescription.equals(oldTask.getTaskDescription())){
-                            NotificationControl.notificationNow("Task description  change",taskHeader,R.drawable.ic_menu_send, taskDescription.hashCode(),context);
-                        }
-                        if(!taskHeader.equals(oldTask.getTaskHeader())) {
-                            NotificationControl.notificationNow("Task description  change",taskHeader,R.drawable.ic_menu_send, taskHeader.hashCode(),context);
-                        }
-                        if(!status.equals("cancel")) {
-                            NotificationControl.notificationNow("Task cancel ",taskHeader,R.drawable.ic_menu_send, status.hashCode(),context);
-                        }
-                        if(!category.equals(oldTask.getCategory())) {
-                            NotificationControl.notificationNow("Task category  change",taskHeader,R.drawable.ic_menu_send, category.hashCode(),context);
-                        }
-                        if(!location.equals(oldTask.getLocation())){
-                            NotificationControl.notificationNow("Task location  change",taskHeader,R.drawable.ic_menu_send, location.hashCode(),context);
+                            Task newTask = new Task(taskHeader, taskDescription, employee, deadline, status, category, location, photoRequire, parseId, deadlineStr);
+                            if(oldTask!=null) {
+                            if (oldTask.getDeadline().compareTo(newTask.getDeadline()) != 0) {
+                                NotificationControl.notificationNow("Deadline of task change", taskHeader, R.drawable.ic_menu_send, parseId.hashCode(), context);
+                            }
+                            if (!taskDescription.equals(oldTask.getTaskDescription())) {
+                                NotificationControl.notificationNow("Task description  change", taskHeader, R.drawable.ic_menu_send, taskDescription.hashCode(), context);
+                            }
+                            if (!taskHeader.equals(oldTask.getTaskHeader())) {
+                                NotificationControl.notificationNow("Task description  change", taskHeader, R.drawable.ic_menu_send, taskHeader.hashCode(), context);
+                            }
+                            if (!status.equals("cancel")) {
+                                NotificationControl.notificationNow("Task cancel ", taskHeader, R.drawable.ic_menu_send, status.hashCode(), context);
+                            }
+                            if (!category.equals(oldTask.getCategory())) {
+                                NotificationControl.notificationNow("Task category  change", taskHeader, R.drawable.ic_menu_send, category.hashCode(), context);
+                            }
+                            if (!location.equals(oldTask.getLocation())) {
+                                NotificationControl.notificationNow("Task location  change", taskHeader, R.drawable.ic_menu_send, location.hashCode(), context);
+                            }
                         }
 
                         dataAccess.insertTask(newTask);
