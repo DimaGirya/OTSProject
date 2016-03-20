@@ -53,4 +53,5 @@
     <string name="teamTasks">Team Tasks</string>
     <string name="taskHeader">Task header</string>
     <string name="title_activity_task_show_employee">TaskShowEmployeeActivity</string>
+    <string name="title_activity_report_task">ReportTask</string>
 </resources>
