@@ -28,9 +28,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
@@ -40,7 +37,6 @@ import dima.liza.mobile.shenkar.com.otsproject.UpdateData;
 import dima.liza.mobile.shenkar.com.otsproject.Validation;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.AdapterEmployee;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
-import dima.liza.mobile.shenkar.com.otsproject.employee.data.EmployeeToAdd;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 
 public class EditTeamActivity extends AppCompatActivity
