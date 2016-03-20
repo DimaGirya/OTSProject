@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 
 public class AddTaskActivity extends AppCompatActivity
@@ -150,6 +151,7 @@ public class AddTaskActivity extends AppCompatActivity
         if (id == R.id.action_log_of) {
             ParseUser.logOut();
             this.deleteDatabase("otsProject.db");
+            stopService(new Intent(this, SynchronizationService.class));
             Intent intent = new Intent(this,SignInActivity.class);
             startActivity(intent);
             finish();
@@ -279,6 +281,7 @@ public class AddTaskActivity extends AppCompatActivity
         task.put("taskCategory",selectedCategory);
         task.put("taskLocation",selectedLocation);
         task.put("requirePhoto",requirePhoto);
+        task.put("updateForEmployee",true);
         switch (priority){
             case LOW_PRIORITY: {
                 task.put("priority","low");

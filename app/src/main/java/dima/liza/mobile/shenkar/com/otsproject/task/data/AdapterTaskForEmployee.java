@@ -60,6 +60,7 @@ public class AdapterTaskForEmployee extends BaseAdapter {
         viewRowTask.categoryOrEmployee.setText(listOfTask.get(position).getCategory());
         viewRowTask.deadline.setText(String.valueOf(listOfTask.get(position).getDeadline())); // new employee. number of task is 0
         viewRowTask.status.setText(listOfTask.get(position).getStatus());
+        viewRowTask.taskId.setText(listOfTask.get(position).getParseId());
         return convertView;
     }
 }

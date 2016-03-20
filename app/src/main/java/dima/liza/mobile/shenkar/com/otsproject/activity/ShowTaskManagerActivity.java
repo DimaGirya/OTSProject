@@ -35,6 +35,8 @@ import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
+import dima.liza.mobile.shenkar.com.otsproject.UpdateData;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.AdapterTaskForManager;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
@@ -86,6 +88,9 @@ public class ShowTaskManagerActivity extends AppCompatActivity
         currentUser = ParseUser.getCurrentUser();
         getPastTask = checkBox.isChecked();
         isManager = currentUser.getBoolean("isManager");
+        UpdateData updateData = UpdateData.getInstance();
+        updateData.updateTaskList(this,isManager);
+        /*
         ParseQuery<ParseObject> queryTask = ParseQuery.getQuery("Task");
         queryTask.whereEqualTo("taskManager", currentUser.getEmail());
         queryTask.findInBackground(new FindCallback<ParseObject>() {
@@ -125,7 +130,7 @@ public class ShowTaskManagerActivity extends AppCompatActivity
                 }
             }
         });
-
+        */
     }
     @Override
     protected void onResume() {
@@ -215,6 +220,7 @@ public class ShowTaskManagerActivity extends AppCompatActivity
         if (id == R.id.action_log_of) {
             ParseUser.logOut();
             this.deleteDatabase("otsProject.db");
+            stopService(new Intent(this, SynchronizationService.class));
             Intent intent = new Intent(this,SignInActivity.class);
             startActivity(intent);
             finish();

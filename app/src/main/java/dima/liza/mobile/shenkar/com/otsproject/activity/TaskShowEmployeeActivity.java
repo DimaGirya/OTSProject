@@ -27,6 +27,8 @@ import java.util.Date;
 import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
+import dima.liza.mobile.shenkar.com.otsproject.UpdateData;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.AdapterTaskForEmployee;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
@@ -63,6 +65,10 @@ public class TaskShowEmployeeActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listViewTask);
         currentUser = ParseUser.getCurrentUser();
         getPastTask = checkBox.isChecked();
+        UpdateData updateData = UpdateData.getInstance();
+        updateData.updateTaskList(this,false);
+        onResume();
+        /*
         ParseQuery<ParseObject> queryTask = ParseQuery.getQuery("Task");
         queryTask.whereEqualTo("taskEmployee", currentUser.getEmail());
         queryTask.findInBackground(new FindCallback<ParseObject>() {
@@ -100,7 +106,7 @@ public class TaskShowEmployeeActivity extends AppCompatActivity {
                 }
             }
         });
-
+        */
     }
 
     @Override
@@ -135,6 +141,7 @@ public class TaskShowEmployeeActivity extends AppCompatActivity {
         if (id == R.id.action_log_of) {
             ParseUser.logOut();
             this.deleteDatabase("otsProject.db");
+            stopService(new Intent(this, SynchronizationService.class));
             Intent intent = new Intent(this,SignInActivity.class);
             startActivity(intent);
             finish();

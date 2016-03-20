@@ -1,11 +1,17 @@
 package dima.liza.mobile.shenkar.com.otsproject;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
+import com.parse.ParseUser;
+
 import java.io.File;
+
+import dima.liza.mobile.shenkar.com.otsproject.activity.SignInActivity;
 
 /**
  * Created by Girya on 2/23/2016.

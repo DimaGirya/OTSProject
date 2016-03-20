@@ -33,6 +33,7 @@ import java.util.List;
 import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
 import dima.liza.mobile.shenkar.com.otsproject.NotificationControl;
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 import dima.liza.mobile.shenkar.com.otsproject.Validation;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.AdapterEmployeeToAdd;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
@@ -117,6 +118,7 @@ public class AddEmployeeActivity extends AppCompatActivity
         if (id == R.id.action_log_of) {
             ParseUser.logOut();
             this.deleteDatabase("otsProject.db");
+            stopService(new Intent(this, SynchronizationService.class));
             Intent intent = new Intent(this,SignInActivity.class);
             startActivity(intent);
             finish();
@@ -221,6 +223,7 @@ public class AddEmployeeActivity extends AppCompatActivity
             newEmployee.put("numberPhone", employeeToAdd.getPhone());
             newEmployee.put("manager", currentUser.getEmail());
             newEmployee.put("isManager", false);
+            newEmployee.put("statusEmployeeChange",true);
             newEmployee.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
@@ -232,11 +235,11 @@ public class AddEmployeeActivity extends AppCompatActivity
                             NotificationControl.notificationNow("Add employee done", numOfNewEmployee + " added",
                                     R.drawable.ic_launcher, 1, AddEmployeeActivity.this);
                             DataAccess dataAccess = DataAccess.getInstatnce(AddEmployeeActivity.this);
-                       Employee employee;
-                        for(int i = 0; i <listEmployeeToAdd.size();i++){
-                            employee = new Employee(listEmployeeToAdd.get(i));
-                            dataAccess.insertEmployee(employee);
-                        }
+                            Employee employee;
+                            for (int i = 0; i < listEmployeeToAdd.size(); i++) {
+                                employee = new Employee(listEmployeeToAdd.get(i));
+                                dataAccess.insertEmployee(employee);
+                            }
                             Toast.makeText(AddEmployeeActivity.this, "Add all new employee done", Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();
                             finish();

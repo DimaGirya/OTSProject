@@ -35,6 +35,8 @@ import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
+import dima.liza.mobile.shenkar.com.otsproject.UpdateData;
 import dima.liza.mobile.shenkar.com.otsproject.Validation;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.AdapterEmployee;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
@@ -97,8 +99,7 @@ public class EditTeamActivity extends AppCompatActivity
             }
         }else{          // device is online
             String lastUpdateEmployeeList = getLastUpdateEmployeeList();
-            getEmployeesFromServer(false, lastUpdateEmployeeList);
-
+           UpdateData.getInstance().updateEmployeeList(this);
         }
     }
 
@@ -131,7 +132,7 @@ public class EditTeamActivity extends AppCompatActivity
         }
         return lastUpdate;
     }
-
+    /*
     private void getEmployeesFromServer(boolean allEmployee,String lastUpdate) {    // warning asynchronous function!
         ParseQuery<ParseUser> queryEmployee  = ParseUser.getQuery();
         queryEmployee.whereEqualTo("manager", currentUser.getEmail());
@@ -190,7 +191,7 @@ public class EditTeamActivity extends AppCompatActivity
         Log.i(TAG,"Date:"+date.toString());
         // need to update time of last update to current time
     }
-
+    */
     public void onClickSaveTeamName(View view) {
         Log.d(TAG, "On click save team name start");
 
@@ -274,6 +275,7 @@ public class EditTeamActivity extends AppCompatActivity
         if (id == R.id.action_log_of) {
             ParseUser.logOut();
             this.deleteDatabase("otsProject.db");
+            stopService(new Intent(this, SynchronizationService.class));
             Intent intent = new Intent(this,SignInActivity.class);
             startActivity(intent);
             finish();

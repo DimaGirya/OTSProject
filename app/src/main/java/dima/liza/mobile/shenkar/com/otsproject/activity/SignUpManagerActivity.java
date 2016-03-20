@@ -18,6 +18,7 @@ import com.parse.SignUpCallback;
 
 import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 
 
 public class SignUpManagerActivity extends AppCompatActivity {
@@ -45,7 +46,7 @@ public class SignUpManagerActivity extends AppCompatActivity {
         if (currentUser != null) {
             if(currentUser.getBoolean("isManager")) {
                 Toast.makeText(this, "Welcome back", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(this, TaskShowActivity.class);
+                Intent intent = new Intent(this, ShowTaskManagerActivity.class);
                 intent.putExtra("caller", "SignUpManagerActivity");
                 startActivity(intent);
                 finish();
@@ -129,8 +130,10 @@ public class SignUpManagerActivity extends AppCompatActivity {
                     ed.commit();
                     Log.d(TAG, "Create Team teamNameSharedPreferences finish");
                     Intent intent = new Intent(SignUpManagerActivity.this, EditTeamActivity.class);
-                    intent.putExtra("caller","SignUpManagerActivity");
+                    intent.putExtra("caller", "SignUpManagerActivity");
                     startActivity(intent);
+                    Intent serviceIntent = new Intent(SignUpManagerActivity.this, SynchronizationService.class);
+                    startService(serviceIntent);
                     pd.dismiss();
                     Log.d(TAG, "Create Team done");
                     finish();

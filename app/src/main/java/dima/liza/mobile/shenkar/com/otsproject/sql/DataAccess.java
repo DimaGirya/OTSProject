@@ -327,6 +327,32 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
         }
     }
 
+    @Override
+    public Task getTaskById(String parseId) {
+        try {
+            database = dbHelper.getReadableDatabase();
+            List<Task> tasks = new ArrayList<Task>();
+            String select;
+            String whereArgs[] = new String[1];
+            whereArgs[0] = parseId;
+            select  = "SELECT * FROM "+ DbContract.TaskEntry.TABLE_NAME + " WHERE "+DbContract.TaskEntry.COLUMN_TASK_ID +"= ?";
+            Log.d(TAG, select + " " + parseId);
+            Cursor cursor =  database.rawQuery(select,whereArgs);
+            cursor.moveToFirst();
+            Task task = getTaskFromCursor(cursor);
+            cursor.close();
+            return task;
+        } catch (Exception e) {
+            Log.d(TAG, "Exception:", e);
+        }
+        finally {
+            if (database != null) {
+                database.close();
+            }
+        }
+        return null;
+    }
+
     private Employee getEmployeeFromCursor(Cursor cursor) {
             String email = cursor.getString(cursor.getColumnIndex(DbContract.EmployeeEntry.COLUMN_EMPLOYEE_EMAIL));
             String name =  cursor.getString(cursor.getColumnIndex(DbContract.EmployeeEntry.COLUMN_EMPLOYEE_NAME));

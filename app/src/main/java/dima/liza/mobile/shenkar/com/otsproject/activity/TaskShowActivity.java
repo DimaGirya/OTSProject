@@ -22,6 +22,7 @@ import com.parse.ParseUser;
 
 import dima.liza.mobile.shenkar.com.otsproject.PagerAdapter;
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 
 //todo or delete
 public class TaskShowActivity extends AppCompatActivity
@@ -108,11 +109,11 @@ public class TaskShowActivity extends AppCompatActivity
         if (id == R.id.action_log_of) {
             ParseUser.logOut();
             this.deleteDatabase("otsProject.db");
+            stopService(new Intent(this, SynchronizationService.class));
             Intent intent = new Intent(this,SignInActivity.class);
             startActivity(intent);
             finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 

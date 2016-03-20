@@ -3,6 +3,7 @@ package dima.liza.mobile.shenkar.com.otsproject.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import com.parse.SignUpCallback;
 import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 
 public class SignInActivity extends AppCompatActivity {
     private static String TAG  = "SignInActivity";
@@ -39,27 +41,34 @@ public class SignInActivity extends AppCompatActivity {
 
     public void SignInClicked(View view) {
         //todo make waiting dialog
+        Log.d(TAG,"SignInClicked" );
         final String emailStr = email.getText().toString();
         final String passwordStr = password.getText().toString();
         ParseUser.logInInBackground(emailStr, passwordStr, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
+                Log.d(TAG, "Parse Response");
                 if (user != null) {
                     //user found in Parse Users class.
-                    if (user.getBoolean("isManager") == true) {
+                    if (user.getBoolean("isManager")) {
                         //TODO: uncomment lines 52-54 when ManagerTeamTasks is ready
-                         Intent intent = new Intent (SignInActivity.this,ShowTaskManagerActivity.class);
+                        Intent intent = new Intent(SignInActivity.this, ShowTaskManagerActivity.class);
                         startActivity(intent);
+                        Intent serviceIntent = new Intent(SignInActivity.this, SynchronizationService.class);
+                        startService(serviceIntent);
                         finish();
                         Toast.makeText(SignInActivity.this, "TEST - MANAGER logged in", Toast.LENGTH_LONG).show();
                     } else {
                         //TODO: uncomment lines 57-59 when EmployeeTasks is ready
-                         Intent intent = new Intent (SignInActivity.this,TaskShowEmployeeActivity.class);
+                        Intent intent = new Intent(SignInActivity.this, TaskShowEmployeeActivity.class);
                         startActivity(intent);
+                        Intent serviceIntent = new Intent(SignInActivity.this, SynchronizationService.class);
+                        startService(serviceIntent);
                         finish();
                         Toast.makeText(SignInActivity.this, "TEST - EMPLOYEE logged in", Toast.LENGTH_LONG).show();
                     }
-                } else {
+                }
+
                     //check if user is in newEmployee Parse class
                     ParseQuery<ParseObject> query = ParseQuery.getQuery("newEmployee");
                     query.whereEqualTo("email", emailStr);
@@ -99,7 +108,7 @@ public class SignInActivity extends AppCompatActivity {
                         }
                     });
                 }
-            }
+
         });
     }
 }
