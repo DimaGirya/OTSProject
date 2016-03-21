@@ -6,13 +6,17 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.ParseUser;
 
@@ -24,6 +28,7 @@ import dima.liza.mobile.shenkar.com.otsproject.UpdateData;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.AdapterTaskForEmployee;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
+import dima.liza.mobile.shenkar.com.otsproject.task.data.ViewRowTask;
 
 public class TaskShowEmployeeActivity extends AppCompatActivity {
     private static final String TAG = "TaskShowEmployeeActivity";
@@ -36,6 +41,8 @@ public class TaskShowEmployeeActivity extends AppCompatActivity {
     List<Task> listOfTask;
     DataAccess dataAccess;
     private String taskSelectedId;
+    private static final int ID_REPORT_TASK = 0;
+    private String taskSelectedIdParse;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +125,32 @@ public class TaskShowEmployeeActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        ListView lv = (ListView) v;
+        AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        Task task = (Task) lv.getItemAtPosition(acmi.position);
+        taskSelectedIdParse = task.getParseId();
+        menu.add(Menu.NONE, ID_REPORT_TASK, Menu.NONE, "Edit task");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case ID_REPORT_TASK:{
+                Intent intent = new Intent(this,ReportTaskActivity.class);
+        //        intent.putExtra("editTask",true);
+                intent.putExtra("taskId",taskSelectedIdParse);
+                startActivity(intent);
+             //   Log.d(TAG,"ID_EDIT_TASK");
+             //   Log.d(TAG,taskSelectedId);
+                break;
+            }
+        }
+        return super.onContextItemSelected(item);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -24,6 +24,7 @@ import com.parse.SignUpCallback;
 import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 
 public class SignInActivity extends AppCompatActivity {
     ProgressDialog  pd;
@@ -60,6 +61,8 @@ public class SignInActivity extends AppCompatActivity {
                 if (user != null) {
                     //user found in Parse Users class.
                     if (user.getBoolean("isManager") == true) {
+                        Intent serviceIntent = new Intent(SignInActivity.this, SynchronizationService.class);
+                        startService(serviceIntent);
                         Intent intent = new Intent(context, ShowTaskManagerActivity.class);
                         startActivity(intent);
                         pd.dismiss();
@@ -67,6 +70,8 @@ public class SignInActivity extends AppCompatActivity {
                     } else {
                         Intent intent = new Intent(context, TaskShowEmployeeActivity.class);
                         startActivity(intent);
+                        Intent serviceIntent = new Intent(SignInActivity.this, SynchronizationService.class);
+                        startService(serviceIntent);
                         pd.dismiss();
                         finish();
                     }
@@ -115,6 +120,8 @@ public class SignInActivity extends AppCompatActivity {
                                                                 // sign up succeed, delete user from newEmloyee parse class
                                                                 // Toast.makeText(SignInActivity.this, "NEW EMPLOYEE signed up", Toast.LENGTH_LONG).show();
                                                                 newEmployee.deleteInBackground();
+                                                                Intent serviceIntent = new Intent(SignInActivity.this, SynchronizationService.class);
+                                                                startService(serviceIntent);
                                                                 Intent intent = new Intent(context, TaskShowEmployeeActivity.class);
                                                                 startActivity(intent);
                                                                 pd.dismiss();

@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Category:"
-        android:id="@+id/textView4"
+        android:id="@+id/textViewCategory"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -25,20 +25,20 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
-        android:id="@+id/taskCatText"
+        android:id="@+id/taskCategoryText"
         android:layout_weight="0.04"
-        android:layout_alignBottom="@+id/textView4"
-        android:layout_toRightOf="@+id/textView5"
-        android:layout_toEndOf="@+id/textView5" />
+        android:layout_alignBottom="@+id/textViewCategory"
+        android:layout_toRightOf="@+id/textViewDescription"
+        android:layout_toEndOf="@+id/textViewDescription" />
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Description:"
-        android:id="@+id/textView5"
-        android:layout_marginTop="21dp"
-        android:layout_below="@+id/textView4"
+        android:text="Task header:"
+        android:id="@+id/textViewHeader"
+        android:layout_below="@+id/taskCategoryText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -47,8 +47,31 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
-        android:id="@+id/taskDescText"
-        android:layout_below="@+id/textView5"
+        android:id="@+id/textViewHeaderText"
+        android:layout_alignBottom="@+id/textViewHeader"
+        android:layout_toRightOf="@+id/textViewHeader"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Description:"
+        android:id="@+id/textViewDescription"
+        android:layout_marginTop="21dp"
+        android:layout_below="@+id/textViewCategory"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/taskDescriptionText"
+        android:layout_below="@+id/textViewDescription"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
@@ -60,8 +83,8 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Priority:"
         android:layout_marginTop="45dp"
-        android:id="@+id/textView6"
-        android:layout_below="@+id/taskDescText"
+        android:id="@+id/textViewPriority"
+        android:layout_below="@+id/taskDescriptionText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -72,92 +95,130 @@
         android:text="Small Text"
         android:id="@+id/taskPriorityText"
         android:layout_weight="0.04"
-        android:layout_alignBottom="@+id/textView6"
-        android:layout_toRightOf="@+id/textView6"
-        android:layout_toEndOf="@+id/textView6" />
+        android:layout_alignBottom="@+id/textViewPriority"
+        android:layout_toRightOf="@+id/textViewPriority"
+        android:layout_toEndOf="@+id/textViewPriority" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Task Status:"
-        android:id="@+id/textView3"
+        android:id="@+id/textViewStatus"
         android:layout_marginTop="25dp"
-        android:layout_below="@+id/textView6"
+        android:layout_below="@+id/textViewPriority"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="waiting"
-        android:id="@+id/waitingRB"
-        android:layout_below="@+id/textView3"
-        android:layout_alignRight="@+id/textView3"
-        android:layout_alignEnd="@+id/textView3"
-        android:layout_marginTop="23dp"
-        android:checked="true" />
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:id="@+id/radioGroupStatus"
+        android:orientation="horizontal"
+        android:layout_below="@+id/textViewStatus"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="accept"
-        android:id="@+id/acceptRB"
-        android:layout_alignTop="@+id/waitingRB"
-        android:layout_centerHorizontal="true"
-        android:checked="false" />
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="waiting"
+            android:id="@+id/waitingRadioButton"
+            android:checked="true"
+            android:onClick="onClickRadioGroupStatus"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="accept"
+            android:id="@+id/acceptRadioButton"
+            android:checked="false"
+            android:onClick="onClickRadioGroupStatus"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="reject"
+            android:id="@+id/rejectRadioButton"
+            android:checked="false"
+            android:onClick="onClickRadioGroupStatus"/>
 
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="reject"
-        android:id="@+id/rejectRB"
-        android:checked="false"
-        android:layout_alignTop="@+id/acceptRB"
-        android:layout_alignRight="@+id/taskDescText"
-        android:layout_alignEnd="@+id/taskDescText"
-        android:layout_marginRight="22dp"
-        android:layout_marginEnd="22dp" />
+    </RadioGroup>
 
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="waiting"
-        android:id="@+id/taskPwaitingRB"
-        android:layout_marginTop="26dp"
-        android:checked="true"
-        android:layout_below="@+id/textView7"
-        android:layout_alignLeft="@+id/waitingRB"
-        android:layout_alignStart="@+id/waitingRB" />
+
+
+
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Task Proggress"
-        android:id="@+id/textView7"
-        android:layout_centerVertical="true"
+        android:text="Task Progress"
+        android:id="@+id/textViewProgress"
+        android:layout_alignTop="@+id/textViewStatus"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="done"
-        android:id="@+id/doneRB"
-        android:checked="false"
-        android:layout_alignTop="@+id/taskPwaitingRB"
-        android:layout_alignRight="@+id/rejectRB"
-        android:layout_alignEnd="@+id/rejectRB" />
 
-    <RadioButton
+
+    <RadioGroup
+        android:layout_width="match_parent"
+
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:layout_below="@+id/textViewProgress"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/radioGroupProgress">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="waiting"
+            android:onClick="onClickRadioGroupProgress"
+            android:id="@+id/waitingProgressRadioButton"
+            android:checked="true" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="in progress"
+            android:onClick="onClickRadioGroupProgress"
+            android:id="@+id/progressRadioButton"
+            android:checked="false" />
+
+        <RadioButton
+            android:onClick="onClickRadioGroupProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="done"
+            android:id="@+id/doneRadioButton"
+            android:checked="false" />
+
+    </RadioGroup>
+
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="in progress"
-        android:id="@+id/inPrRB"
-        android:checked="false"
-        android:layout_alignTop="@+id/taskPwaitingRB"
-        android:layout_alignLeft="@+id/acceptRB"
-        android:layout_alignStart="@+id/acceptRB" />
+        android:text="Save and send"
+        android:id="@+id/reportTask"
+        android:layout_below="@+id/radioGroupProgress"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="onClickSaveTaskReport"
+        android:layout_marginTop="64dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Picture"
+        android:onClick="onClickAddPicture"
+        android:id="@+id/buttonAddPicture"
+        android:layout_below="@+id/radioGroupProgress"
+        android:layout_alignRight="@+id/reportTask"
+        android:layout_alignEnd="@+id/reportTask"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 
 </RelativeLayout>

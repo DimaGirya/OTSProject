@@ -47,14 +47,13 @@ public class UpdateData {
         Log.d(TAG,"dataAccess.getAllTask(true).size():"+dataAccess.getAllTask(true).size());
         ParseQuery<ParseObject> queryTask = ParseQuery.getQuery("Task");
         queryTask.whereEqualTo("taskManager", currentUser.get("manager"));
-        queryTask.whereEqualTo("taskEmployee",currentUser.getUsername());
         if(wasUpdated) {
             if (isManager) {
                 Log.d(TAG,"Update task for Manager");
                 queryTask.whereEqualTo("updateForManager", true);
             } else {
                 Log.d(TAG, "Update task for Employee");
-                queryTask.whereEqualTo("updateForEmployee", true);  //wtf??? Not work!!
+                queryTask.whereEqualTo("updateForEmployee", true);
                 queryTask.whereEqualTo("taskEmployee",currentUser.getEmail());
             }
         }

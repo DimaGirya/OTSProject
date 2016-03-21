@@ -11,6 +11,15 @@ public class ViewRowTask {
     TextView deadline;
     TextView status;
     TextView taskId;
+
+    public TextView getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(TextView taskId) {
+        this.taskId = taskId;
+    }
+
     public ViewRowTask(TextView taskHeader, TextView categoryOrEmployee,  TextView deadline,TextView status,TextView taskId) {
         this.taskHeader = taskHeader;
         this.categoryOrEmployee = categoryOrEmployee;

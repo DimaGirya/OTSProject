@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -150,11 +151,10 @@ public class ShowTaskManagerActivity extends AppCompatActivity
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        View view = (View) v.getParent();
-        TextView temp = (TextView)v.findViewById(R.id.taskId);
-        taskSelectedId = temp.getText().toString();
-        Log.d(TAG, "taskSelectedId:" + taskSelectedId);
-
+        ListView lv = (ListView) v;
+        AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        Task task = (Task) lv.getItemAtPosition(acmi.position);
+        taskSelectedId = task.getParseId();
             menu.add(Menu.NONE,ID_EDIT_TASK,Menu.NONE,"Edit task");
             menu.add(Menu.NONE,ID_CANCEL_TASK,Menu.NONE,"Cancel task");
 
@@ -197,6 +197,7 @@ public class ShowTaskManagerActivity extends AppCompatActivity
         }
         return super.onContextItemSelected(item);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

@@ -1,6 +1,7 @@
 package dima.liza.mobile.shenkar.com.otsproject.task.data;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import dima.liza.mobile.shenkar.com.otsproject.R;
  */
 public class AdapterTaskForEmployee extends BaseAdapter {
 
+    private static final String TAG = "AdapterTaskForEmployee";
     private Context context;
     List<Task> listOfTask;
 
@@ -36,7 +38,9 @@ public class AdapterTaskForEmployee extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return position;
+      //  Log.d(TAG,"getItemId:"+ listOfTask.get(position).getParseId().hashCode());
+       // return listOfTask.get(position).getParseId().hashCode();
+        return  position;
     }
 
     @Override
