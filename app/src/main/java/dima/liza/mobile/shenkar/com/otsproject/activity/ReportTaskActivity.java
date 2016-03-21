@@ -43,10 +43,12 @@ public class ReportTaskActivity extends AppCompatActivity {
     TextView taskCategoryTextView, taskDescriptionTextView, taskHeaderTextView ,taskPriorityTextView;
     TextView textViewProgress,textViewStatus;
     Button picture;
+    Button reportTask;
     ParseUser currentUser;
     DataAccess dataAccess;
     Task taskToReport;
     String taskIdToReport;
+    private boolean taskIsDone = false;
 
 
     @Override
@@ -66,6 +68,7 @@ public class ReportTaskActivity extends AppCompatActivity {
         });
         fab.hide();
         picture = (Button)findViewById(R.id.buttonAddPicture);
+        reportTask = (Button)findViewById(R.id.reportTask);
         taskCategoryTextView = (TextView) findViewById(R.id.taskCategoryText);
         taskDescriptionTextView = (TextView) findViewById(R.id.taskDescriptionText);
         taskPriorityTextView = (TextView) findViewById(R.id.taskPriorityText);
@@ -95,7 +98,9 @@ public class ReportTaskActivity extends AppCompatActivity {
         }
         dataAccess = DataAccess.getInstatnce(this);
         taskToReport = dataAccess.getTaskById(taskIdToReport);
-        picture.setClickable(taskToReport.isPhotoRequire());
+        if(!taskToReport.isPhotoRequire()){
+            picture.setVisibility(View.INVISIBLE);
+        }
         String status = taskToReport.getStatus();
 
         switch (status){
@@ -118,6 +123,8 @@ public class ReportTaskActivity extends AppCompatActivity {
                 //radioButtonReject.setChecked(true);
               //  radioGroupStatus.setClickable(false);
                // radioButtonWaitingInProgress.setChecked(true);
+                reportTask.setText("Go back");
+                taskIsDone = true;
                 radioGroupProgress.setVisibility(View.INVISIBLE);
                 radioGroupStatus.setVisibility(View.INVISIBLE);
                 textViewProgress.setText("You reject the task");
@@ -137,11 +144,15 @@ public class ReportTaskActivity extends AppCompatActivity {
                 radioGroupProgress.setVisibility(View.INVISIBLE);
                 textViewProgress.setText("Task Done");
                 textViewProgress.setVisibility(View.VISIBLE);
+                reportTask.setText("Go back");
+                taskIsDone = true;
                 statusOfTask = STATUS_DONE;
                 break;
             }
             case "cancel":{
                 statusOfTask = STATUS_CANCEL;
+                reportTask.setText("Go back");
+                taskIsDone = true;
                 radioGroupProgress.setVisibility(View.INVISIBLE);
                 radioGroupStatus.setVisibility(View.INVISIBLE);
                 textViewProgress.setText("Task cancel");
@@ -154,7 +165,7 @@ public class ReportTaskActivity extends AppCompatActivity {
             }
 
         }
-
+        Log.d(TAG,"statusOfTask:"+statusOfTask);
 
         taskDescriptionTextView.setText(taskToReport.getTaskDescription());
         taskHeaderTextView.setText(taskToReport.getTaskHeader());
@@ -170,19 +181,16 @@ public class ReportTaskActivity extends AppCompatActivity {
     }
 
     public void onClickSaveTaskReport(View view) {
+            if(taskIsDone){
+                finish();
+                return;
+            }
             if(statusOfTask == newStatusOfTask){
                 Toast.makeText(this,"Task status not change",Toast.LENGTH_LONG).show();
                 return;
             }
         String newTaskStatus = "none";
-        /*
-          private static final int STATUS_WAITING = 1;
-    private static final int STATUS_ACCEPT = 2;
-    private static final int STATUS_REJECT = 3;
-    private static final int STATUS_IN_PROGRESS = 4;
-    private static final int STATUS_DONE = 5;
-    private static final int STATUS_CANCEL = 6;
-         */
+
         switch(newStatusOfTask){
             case STATUS_WAITING:{
 
@@ -201,13 +209,13 @@ public class ReportTaskActivity extends AppCompatActivity {
                 break;
             }
             case STATUS_IN_PROGRESS:{
-                if(statusOfTask == STATUS_WAITING){
+                if(statusOfTask == STATUS_ACCEPT){
                     newTaskStatus = "inProgress";
                 }
                 break;
             }
             case STATUS_DONE:{
-                if(statusOfTask == STATUS_IN_PROGRESS){
+                if(statusOfTask == STATUS_IN_PROGRESS || statusOfTask == STATUS_ACCEPT){
                     newTaskStatus = "done";
                 }
                 break;
@@ -218,17 +226,21 @@ public class ReportTaskActivity extends AppCompatActivity {
             }
         }
         if(newTaskStatus.equals("none")){
-            Toast.makeText(this,"Error",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"You can't set this status to current task",Toast.LENGTH_LONG).show();
             Log.e(TAG,"Status none");
             return;
         }
         ParseObject task  = new ParseObject("Task");
         task.setObjectId(taskIdToReport);
         task.put("status", newTaskStatus);
+        task.put("updateForManager", true);
+        final String temp = newTaskStatus;
         task.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                if(e == null){
+                   taskToReport.setStatus(temp);
+                   dataAccess.updateTask(taskToReport);
                    Toast.makeText(ReportTaskActivity.this,"Status save",Toast.LENGTH_LONG).show();
                    finish();
                }else{

@@ -54,7 +54,7 @@ public class UpdateData {
             } else {
                 Log.d(TAG, "Update task for Employee");
                 queryTask.whereEqualTo("updateForEmployee", true);
-                queryTask.whereEqualTo("taskEmployee",currentUser.getEmail());
+                queryTask.whereEqualTo("taskEmployee",currentUser.getUsername());
             }
         }
         queryTask.findInBackground(new FindCallback<ParseObject>() {
