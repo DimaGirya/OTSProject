@@ -163,7 +163,7 @@ public class SynchronizationService extends Service {
 
                     NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
                     startForeground(NOTIFICATION_NUMBER,  mBuilder.build());
-                    checkDeadline();
+                    //checkDeadline();
                     updateDone();
                     try {
                         Thread.sleep(1000 * 60);
@@ -175,7 +175,8 @@ public class SynchronizationService extends Service {
         });
         t.start();
     }
-
+    //todo finish  checkDeadline()
+/*
     private void checkDeadline() {
         DataAccess dataAccess = DataAccess.getInstatnce(this);
         List<Task> taskList = dataAccess.getAllTask(false);
@@ -209,7 +210,7 @@ public class SynchronizationService extends Service {
             }
         }
     }
-
+*/
     private void updateDone() {
         Date date = Calendar.getInstance().getTime();
         sharedPreferences = getSharedPreferences("DateTimSave", MODE_PRIVATE);
