@@ -35,9 +35,11 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
@@ -135,10 +137,10 @@ public class AddTaskActivity extends AppCompatActivity
             day = calendar.get(calendar.DAY_OF_MONTH);
             hour = calendar.get(calendar.HOUR_OF_DAY);
             year = calendar.get(calendar.YEAR);
-                    textDate.setText(day+"."+month+"."+year);
+                    textDate.setText(day+getString(R.string.dot)+month+getString(R.string.dot)+year);
             hour = calendar.get(calendar.HOUR_OF_DAY);
             minute = calendar.get(calendar.MINUTE);
-            textTime.setText(hour+":"+minute);
+            textTime.setText(hour+getString(R.string.doubleDot)+minute);
 
         }else{
             employeesName = dataAccess.getAllRegisteredEmployeesName();
@@ -280,7 +282,7 @@ public class AddTaskActivity extends AppCompatActivity
         public void onTimeSet(TimePicker view, int hourOfDay, int minuteOfHour) {
             hour = hourOfDay;
             minute = minuteOfHour;
-            textTime.setText(hour+":"+minute);
+            textTime.setText(hour+getString(R.string.doubleDot)+minute);
             Log.i(TAG, "Time set " + hour + " hours " + minute + " minutes");
         }
     };
@@ -295,7 +297,7 @@ public class AddTaskActivity extends AppCompatActivity
                 year = yearInput;
                 month = monthInput;
                 day = dayInput;
-                textDate.setText(day+"."+month+"."+year);
+                textDate.setText(day+getString(R.string.dot)+month+getString(R.string.dot)+year);
                 Log.i(TAG, "Date set " + day + " day " + month + " month" + year + " year");
             }
         };
@@ -306,18 +308,19 @@ public class AddTaskActivity extends AppCompatActivity
     public void onClickSubmitTask(View view) {
 
         GregorianCalendar gc = new GregorianCalendar(year,month,day,hour,minute);
+        gc.setTimeZone(TimeZone.getDefault());
          dateTask =  gc.getTime();
         if(!validationTask()){
             return;
         }
-        ParseObject task = new ParseObject("Task");
+        final ParseObject task = new ParseObject("Task");
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Sending task to employee");
-        progressDialog.setMessage("Please wait");
+        progressDialog.setTitle(getString(R.string.sendTaskToEmployee));
+        progressDialog.setMessage(getString(R.string.pleaseWait));
         progressDialog.show();
         task.put("taskManager", currentUser.getEmail());
         task.put("isDone", false);
-        task.put("status",getString(R.string.waiting));
+        task.put("status","waiting");
         task.put("taskHeader",taskHeader.getText().toString());
         task.put("taskEmployee",selectedEmployee);
         task.put("taskDescription",taskDescription.getText().toString());
@@ -354,12 +357,27 @@ public class AddTaskActivity extends AppCompatActivity
             @Override
             public void done(ParseException e) {
                 if (e == null) {
+                    Log.d(TAG,"New object id is a:"+task.getObjectId());
+                   String taskDescription = task.getString("taskDescription");
+                    String taskHeader = task.getString("taskHeader");
+                    String employee = task.getString("taskEmployee");
+                    Date  deadline = task.getDate("taskDate");
+                    SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance();
+                    String deadlineStr = dateFormat.format(deadline);
+                    String   status = task.getString("status");
+                    String category = task.getString("taskCategory");
+                    String location = task.getString("taskLocation");
+                    String parseId = task.getObjectId();
+                    Boolean photoRequire = task.getBoolean("photoRequire");
+                    String priority = task.getString("priority");
+                    Task  newTask = new Task (taskHeader,taskDescription,employee,deadline,priority,status,category,location,photoRequire,parseId,deadlineStr);
+                    dataAccess.insertTask(newTask);
                     progressDialog.dismiss();
-                    Toast.makeText(AddTaskActivity.this, "Task send to employee", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddTaskActivity.this, R.string.taskSendToEmployee, Toast.LENGTH_LONG).show();
                     finish();
                 } else {
                     progressDialog.dismiss();
-                    Toast.makeText(AddTaskActivity.this, "Task not add.Try again later", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddTaskActivity.this, R.string.taskNotAdd, Toast.LENGTH_LONG).show();
                     Log.d(TAG, "ParseException:", e);
                 }
             }
@@ -371,32 +389,32 @@ public class AddTaskActivity extends AppCompatActivity
 
     private boolean validationTask() {
         if(taskHeader.getText().toString().isEmpty()){
-            Toast.makeText(this,"Task header field is empty",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.headerEmpty,Toast.LENGTH_LONG).show();
             return false;
         }
         if(taskHeader.getText().toString().length()>HEADER_TASK_MAX_LENGTH){
-            Toast.makeText(this,"Task header maximum:"+HEADER_TASK_MAX_LENGTH,Toast.LENGTH_LONG).show();
+            Toast.makeText(this,getString(R.string.taskHeaderMaximum)+HEADER_TASK_MAX_LENGTH,Toast.LENGTH_LONG).show();
             return false;
         }
         if(taskDescription.getText().toString().isEmpty()){
-            Toast.makeText(this,"Task description field is empty",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.taskDescriptionEmpty,Toast.LENGTH_LONG).show();
             return false;
         }
          if(selectedEmployee.equals(getString(R.string.selectEmployee))){
-            Toast.makeText(this,"You not select a employee",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.notSelectEmployee,Toast.LENGTH_LONG).show();
             return false;
         }
         if(selectedCategory.equals(getString(R.string.selectCategory))){
-            Toast.makeText(this,"You not select a category",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.notSelectCategory,Toast.LENGTH_LONG).show();
             return false;
         }
         if(selectedLocation.equals(getString(R.string.selectLocation))){
-            Toast.makeText(this,"You not select a location",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.notSelectLocation,Toast.LENGTH_LONG).show();
             return false;
         }
         //dateTask
         if(dateTask.before(Calendar.getInstance().getTime())){
-            Toast.makeText(this,"You can't select date from past",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.dateFromPast,Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -427,7 +445,7 @@ public class AddTaskActivity extends AppCompatActivity
                     int month = calendar.get(Calendar.MONTH);
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
                     textTime.setText("17:00");
-                    textDate.setText(day+"."+month+"."+year);
+                    textDate.setText(day+getString(R.string.dot+month)+getString(R.string.dot)+year);
 
                     setTime.setClickable(false);
                     setDate.setClickable(false);
@@ -456,7 +474,7 @@ public class AddTaskActivity extends AppCompatActivity
         int month = gc.get(Calendar.MONTH);
         int day = gc.get(Calendar.DAY_OF_MONTH);
         textTime.setText("17:00");
-        textDate.setText(day+"."+month+"."+year);
+        textDate.setText(day+getString(R.string.dot)+month+getString(R.string.dot)+year);
         //textTime;
         setTime.setClickable(false);
         setDate.setClickable(false);

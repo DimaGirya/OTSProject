@@ -167,10 +167,10 @@ public class AddEmployeeActivity extends AppCompatActivity
         if(listEmployeeToAdd.size()>0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            builder.setTitle("Confirm");
-            builder.setMessage("Are you sure? " + listEmployeeToAdd.size() + " employees will not be added");
+            builder.setTitle(getString(R.string.confrim));
+            builder.setMessage(getString(R.string.areYouSure) + listEmployeeToAdd.size() + getString(R.string.employeeNotAdd));
 
-            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(getString(R.string.Yes), new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface dialog, int which) {
                     AddEmployeeActivity.super.onBackPressed();
@@ -179,7 +179,7 @@ public class AddEmployeeActivity extends AppCompatActivity
 
             });
 
-            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(getString(R.string.No), new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -205,12 +205,12 @@ public class AddEmployeeActivity extends AppCompatActivity
 
     public void onClickAddEmployeeSubmit(View view) {
         if(listEmployeeToAdd.size()==0){
-            Toast.makeText(this,"No employees to add",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.noEmployessToAdd,Toast.LENGTH_LONG).show();
             return;
         }
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Adding employee to data base");
-        progressDialog.setMessage("Please wait");
+        progressDialog.setTitle(getString(R.string.addingEmployee));
+        progressDialog.setMessage(getString(R.string.pleaseWait));
         progressDialog.show();
         ParseUser currentUser = ParseUser.getCurrentUser();
         EmployeeToAdd employeeToAdd;
@@ -230,26 +230,26 @@ public class AddEmployeeActivity extends AppCompatActivity
                     if (e == null) {    // SIGN UP DONE
                         numOfAddNewEmployee++;
                         // todo send email to user
-                        Toast.makeText(AddEmployeeActivity.this, "Add new employee done", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddEmployeeActivity.this, R.string.addNewEmployeeDone, Toast.LENGTH_LONG).show();
                         if (numOfAddNewEmployee == numOfNewEmployee) {
-                            NotificationControl.notificationNow("Add employee done", numOfNewEmployee + " added",
-                                    R.drawable.ic_launcher, 1, AddEmployeeActivity.this);
+                            NotificationControl.notificationNow(getString(R.string.addEmployeeDone), numOfNewEmployee + getString(R.string.added),
+                                    R.drawable.ic_launcher, 1, AddEmployeeActivity.this,null);
                             DataAccess dataAccess = DataAccess.getInstatnce(AddEmployeeActivity.this);
                             Employee employee;
                             for (int i = 0; i < listEmployeeToAdd.size(); i++) {
                                 employee = new Employee(listEmployeeToAdd.get(i));
                                 dataAccess.insertEmployee(employee);
                             }
-                            Toast.makeText(AddEmployeeActivity.this, "Add all new employee done", Toast.LENGTH_LONG).show();
+                            Toast.makeText(AddEmployeeActivity.this, R.string.addAllNewEmployeeDone, Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();
                             finish();
                         }
 
                     } else {
-                        Toast.makeText(AddEmployeeActivity.this, "Add new employee fail", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddEmployeeActivity.this, R.string.addEmployeeFail, Toast.LENGTH_LONG).show();
                         Log.d(TAG, "ParseException:", e);
-                        NotificationControl.notificationNow("Add employee fail", "Oops! Try again later.Error is a:" + e.getMessage(),
-                                R.drawable.ic_launcher, 2, AddEmployeeActivity.this);
+                        NotificationControl.notificationNow(getString(R.string.addEmployeeFailNotification), "Oops! Try again later.Error is a:" + e.getMessage(),
+                                R.drawable.ic_launcher, 2, AddEmployeeActivity.this,null);
                         progressDialog.dismiss();
                     }
                 }

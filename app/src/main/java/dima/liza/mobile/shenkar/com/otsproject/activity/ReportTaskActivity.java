@@ -169,7 +169,7 @@ public class ReportTaskActivity extends AppCompatActivity {
 
         taskDescriptionTextView.setText(taskToReport.getTaskDescription());
         taskHeaderTextView.setText(taskToReport.getTaskHeader());
-        taskPriorityTextView.setText("todo");   // replace to priority
+        taskPriorityTextView.setText(taskToReport.getPriority());
         taskCategoryTextView.setText(taskToReport.getCategory());
     }
 

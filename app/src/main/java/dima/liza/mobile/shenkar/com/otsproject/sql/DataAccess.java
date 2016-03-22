@@ -358,6 +358,12 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
     }
 
     @Override
+    public int getNumberOfTask(Boolean getPastTask) {
+        List<Task> list = getAllTask(getPastTask);
+        return list.size();
+    }
+
+    @Override
     public boolean updateTask(Task task) {
         ContentValues content = new ContentValues();
         String whereClauseLecture = DbContract.TaskEntry.COLUMN_TASK_ID + " = ? ";

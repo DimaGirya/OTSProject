@@ -183,8 +183,11 @@ public class ShowTaskManagerActivity extends AppCompatActivity
                     @Override
                     public void done(ParseException e) {
                         if(e==null){
-                            Toast.makeText(ShowTaskManagerActivity.this,"Task cancel",Toast.LENGTH_LONG).show();
-                            ShowTaskManagerActivity.this.onResume();
+                            Toast.makeText(ShowTaskManagerActivity.this, "Task cancel", Toast.LENGTH_LONG).show();
+                            Task taskCancel = dataAccess.getTaskById(taskSelectedId);
+                            taskCancel.setStatus("cancel");
+                            dataAccess.updateTask(taskCancel);
+                            onResume();
                         }
                         else{
                             Toast.makeText(ShowTaskManagerActivity.this,"Task not cancel",Toast.LENGTH_LONG).show();

@@ -1,6 +1,8 @@
 package dima.liza.mobile.shenkar.com.otsproject;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
@@ -17,6 +19,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import dima.liza.mobile.shenkar.com.otsproject.activity.ReportTaskActivity;
+import dima.liza.mobile.shenkar.com.otsproject.activity.ShowTaskManagerActivity;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.EmployeeToAdd;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
@@ -78,7 +82,6 @@ public class UpdateData {
                     SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance();
                     ParseObject object;
                     for (int i = 0; i < objects.size(); i++) {
-                        //   if(!lastUpdate.before(objects.get(i).getUpdatedAt())){
                         object = objects.get(i);
                         taskDescription = object.getString("taskDescription");
                         taskHeader = object.getString("taskHeader");
@@ -91,45 +94,58 @@ public class UpdateData {
                         parseId = object.getObjectId();
                         photoRequire = object.getBoolean("photoRequire");
                         priority = object.getString("priority");
-                        //todo compare task before end after and notification change
                         Task oldTask = dataAccess.getTaskById(parseId);
-                            Task newTask = new Task(taskHeader, taskDescription, employee, deadline, status, category,priority, location, photoRequire, parseId, deadlineStr);
+                         Task  newTask = new Task (taskHeader,taskDescription,employee,deadline,priority,status,category,location,photoRequire,parseId,deadlineStr);
+                           if(!isManager){
+                               String taskSelectedIdParse = newTask.getParseId();
+                               PendingIntent pendingIntent;
+                               Intent intent = new Intent(context,ReportTaskActivity.class);
+                               intent.putExtra("taskId",taskSelectedIdParse);
+                               pendingIntent =  PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                             if(oldTask!=null) {
-                            if (oldTask.getDeadline().compareTo(newTask.getDeadline()) != 0) {
-                                NotificationControl.notificationNow("Deadline of task change", taskHeader, R.drawable.ic_menu_send, parseId.hashCode(), context);
+                                if (oldTask.getDeadline().compareTo(newTask.getDeadline()) != 0) {
+                                    NotificationControl.notificationNow("Deadline of task change", taskHeader, R.drawable.ic_menu_send, parseId.hashCode(), context,pendingIntent);
+                                }
+                                if (!taskDescription.equals(oldTask.getTaskDescription())) {
+                                    NotificationControl.notificationNow("Task description  change", taskHeader, R.drawable.ic_menu_send, taskDescription.hashCode(), context,pendingIntent);
+                                }
+                                if (!taskHeader.equals(oldTask.getTaskHeader())) {
+                                    NotificationControl.notificationNow("Task description  change", taskHeader, R.drawable.ic_menu_send, taskHeader.hashCode(), context,pendingIntent);
+                                }
+                                if (!category.equals(oldTask.getCategory())) {
+                                    NotificationControl.notificationNow("Task category  change", taskHeader, R.drawable.ic_menu_send, category.hashCode(), context,pendingIntent);
+                                }
+                                if (!location.equals(oldTask.getLocation())) {
+                                    NotificationControl.notificationNow("Task location  change", taskHeader, R.drawable.ic_menu_send, location.hashCode(), context,pendingIntent);
+                                }
+                                if (!status.equals("cancel")) {
+                                    NotificationControl.notificationNow("Task cancel ", taskHeader, R.drawable.ic_menu_send, status.hashCode(), context,pendingIntent);
+                                }
                             }
-                            if (!taskDescription.equals(oldTask.getTaskDescription())) {
-                                NotificationControl.notificationNow("Task description  change", taskHeader, R.drawable.ic_menu_send, taskDescription.hashCode(), context);
-                            }
-                            if (!taskHeader.equals(oldTask.getTaskHeader())) {
-                                NotificationControl.notificationNow("Task description  change", taskHeader, R.drawable.ic_menu_send, taskHeader.hashCode(), context);
-                            }
-                            if (!status.equals("cancel")) {
-                                NotificationControl.notificationNow("Task cancel ", taskHeader, R.drawable.ic_menu_send, status.hashCode(), context);
-                            }
-                            if (!category.equals(oldTask.getCategory())) {
-                                NotificationControl.notificationNow("Task category  change", taskHeader, R.drawable.ic_menu_send, category.hashCode(), context);
-                            }
-                            if (!location.equals(oldTask.getLocation())) {
-                                NotificationControl.notificationNow("Task location  change", taskHeader, R.drawable.ic_menu_send, location.hashCode(), context);
+                               else{
+                                NotificationControl.notificationNow("You have new task todo.Enjoy! ", taskHeader, R.drawable.ic_menu_send, taskHeader.hashCode(), context,pendingIntent);
                             }
                         }
+                        else{
+                               if(oldTask!=null) {
+                                   if (!status.equals(oldTask.getStatus())) {
+                                       NotificationControl.notificationNow("Employee change status of task ", "Task:"+taskHeader +" .New status:"+ status, R.drawable.ic_menu_send, status.hashCode(), context,null);
+                                   }
+                               }
+                           }
 
                         dataAccess.insertTask(newTask);
                         Log.d(TAG, "Update task done. Id is a:" + parseId);
-                      //  int number = (int) (Math.random()*100);
-
                         if (isManager) {
-                            NotificationControl.notificationNow("You have update status task",taskHeader,R.drawable.ic_menu_send,2,context);
+                            NotificationControl.notificationNow("You have update status task",taskHeader,R.drawable.ic_menu_send,2,context,null);
                             Log.d(TAG,"Update parse filed:updateForManager to false");
                             object.put("updateForManager", false);
                         } else {
-                            NotificationControl.notificationNow("You have new task",taskHeader,R.drawable.ic_menu_send,2,context);
+                            NotificationControl.notificationNow("You have new task",taskHeader,R.drawable.ic_menu_send,2,context,null);
                             Log.d(TAG, "Update parse filed:updateForEmployee to false");
                             object.put("updateForEmployee", false);
                         }
-                        object.saveInBackground();  //warning!!!
-                        // }
+                        object.saveInBackground();
                     }
 
                 } else {
@@ -138,9 +154,6 @@ public class UpdateData {
 
             }
         });
-        if(numberOfUpdateTask>0) {
-            NotificationControl.notificationNow("Update/new task", "" + numberOfUpdateTask, R.drawable.ic_launcher, 1, context);
-        }
     }
 
     public void updateEmployeeList(final Context context) {
@@ -209,15 +222,5 @@ public class UpdateData {
                     }
                 }
             });
-
-        // update time of last update to current time
-        /*
-        Calendar calendar = Calendar.getInstance();
-        SharedPreferences lastUpdateData = context.getSharedPreferences("DateDataUpdate", context.MODE_PRIVATE);
-        SharedPreferences.Editor ed = lastUpdateData.edit();
-        Date date =  calendar.getTime();
-            ed.putString("lastEmployeeDateUpdate", date.toString());
-            Log.i(TAG,"Date:"+date.toString());
-            */
     }
 }

@@ -10,6 +10,9 @@ import android.widget.Toast;
 import com.parse.ParseUser;
 
 import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import dima.liza.mobile.shenkar.com.otsproject.activity.SignInActivity;
 
@@ -20,49 +23,49 @@ public  class Validation {
 
     public static boolean emailValidation(String email,Context act){
         if(email == null) {
-            Toast.makeText(act, "Please enter an e-mail", Toast.LENGTH_LONG).show();
+            Toast.makeText(act, R.string.enterEmail, Toast.LENGTH_LONG).show();
             return false;
         }
         if(!(email.matches("^\\w+[-\\w\\.]*\\@\\w+((-\\w+)|(\\w*))\\.[a-z]{2,3}$"))) {
-            Toast.makeText(act, "Please enter a valid email address", Toast.LENGTH_LONG).show();
+            Toast.makeText(act, R.string.enterValidEmail, Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
     }
     public static boolean passwordValidation(String password,Context act){
         if(password == null) {
-            Toast.makeText(act, "Please enter a password", Toast.LENGTH_LONG).show();
+            Toast.makeText(act, R.string.enterPassword, Toast.LENGTH_LONG).show();
             return false;
         }
         if(password.length()<5) {
-            Toast.makeText(act, "Password must contain at least 6 characters", Toast.LENGTH_LONG).show();
+            Toast.makeText(act, R.string.passwordMin, Toast.LENGTH_LONG).show();
             return false;
         }
         if(password.length()>14) {
-            Toast.makeText(act, "Password must contain no more then 15 characters", Toast.LENGTH_LONG).show();
+            Toast.makeText(act, R.string.passwordMax, Toast.LENGTH_LONG).show();
             return false;
         }
         if (password.matches("\\s?.*\\s.*")){
-            Toast.makeText(act, "Password must not contain whitespaces", Toast.LENGTH_LONG).show();
+            Toast.makeText(act, R.string.passwordWhitespace, Toast.LENGTH_LONG).show();
             return false;
         }
         if (!(password.matches("[a-zA-Z0-9@*#]{6,15}"))) {
-            Toast.makeText(act, "Password can only contain Letters, numbers or '*', '#' and '@'", Toast.LENGTH_LONG).show();
+            Toast.makeText(act, R.string.passwordValidation, Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
     }
     public static boolean phoneNumberValidation(String phoneNumber,Context act){
         if(phoneNumber == null) {
-            Toast.makeText(act, "Please enter a phone number", Toast.LENGTH_LONG).show();
+            Toast.makeText(act, R.string.enterPhoneNumber, Toast.LENGTH_LONG).show();
             return false;
         }
         if (phoneNumber.length() > 10 | phoneNumber.length() < 8) {
-            Toast.makeText(act, "Phone number must be beetween 8 to 10 digits", Toast.LENGTH_LONG).show();
+            Toast.makeText(act, R.string.phoneNumberLength, Toast.LENGTH_LONG).show();
             return false;
         }
         if ((phoneNumber.matches("[0-9]"))){
-            Toast.makeText(act,"Phone number must contain only digits", Toast.LENGTH_LONG).show();
+            Toast.makeText(act, R.string.phoneNumberValidation, Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
@@ -76,7 +79,7 @@ public  class Validation {
         {
             return true;
         }
-        Toast.makeText(context,"No internet connection. Application work offline", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, R.string.noInternetToast, Toast.LENGTH_LONG).show();
         return false;
     }
 
@@ -85,4 +88,16 @@ public  class Validation {
         return dbFile.exists();
     }
 
+    public static  String calculateUntilDeadline(Date deadline) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("GMT"));
+        Date now = cal.getTime();
+     //   now.
+        if(now.after(deadline)){
+            return "deadline has passed";
+        }
+        long difference = deadline.getTime() - now.getTime();
+        long days = difference/(24*60*60*1000);
+        return "days "+days;
+    }
 }

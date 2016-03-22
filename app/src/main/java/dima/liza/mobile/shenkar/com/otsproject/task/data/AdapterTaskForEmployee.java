@@ -8,9 +8,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.Date;
 import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.Validation;
 
 /**
  * Created by Girya on 09/03/2016.
@@ -62,10 +64,13 @@ public class AdapterTaskForEmployee extends BaseAdapter {
         }
         viewRowTask.taskHeader.setText(listOfTask.get(position).getTaskHeader());
         viewRowTask.categoryOrEmployee.setText(listOfTask.get(position).getCategory());
-        viewRowTask.deadline.setText(String.valueOf(listOfTask.get(position).getDeadline())); // new employee. number of task is 0
+        String  temp = Validation.calculateUntilDeadline(listOfTask.get(position).getDeadline());
+       // viewRowTask.deadline.setText(String.valueOf(listOfTask.get(position).getDeadline()));
+        viewRowTask.deadline.setText(temp); // tempory
         viewRowTask.status.setText(listOfTask.get(position).getStatus());
         viewRowTask.taskId.setText(listOfTask.get(position).getParseId());
         return convertView;
     }
+
 }
 

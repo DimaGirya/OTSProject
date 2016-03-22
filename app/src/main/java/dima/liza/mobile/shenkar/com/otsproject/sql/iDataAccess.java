@@ -22,6 +22,6 @@ public interface iDataAccess {
     boolean insertTask(Task task);
 
     Task getTaskById(String parseId);
-
+    int getNumberOfTask(Boolean getPastTask);
     boolean updateTask(Task task);
 }

@@ -3,22 +3,32 @@ package dima.liza.mobile.shenkar.com.otsproject;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.parse.Parse;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.TimeZone;
 
+import dima.liza.mobile.shenkar.com.otsproject.activity.ReportTaskActivity;
 import dima.liza.mobile.shenkar.com.otsproject.activity.ShowTaskManagerActivity;
 import dima.liza.mobile.shenkar.com.otsproject.activity.TaskShowEmployeeActivity;
+import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
+import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
 
 public class SynchronizationService extends Service {
     private static final String TAG = "SynchronizationService";
@@ -69,6 +79,7 @@ public class SynchronizationService extends Service {
 
         NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(this.NOTIFICATION_SERVICE);
         startForeground(NOTIFICATION_NUMBER,  mBuilder.build());
+     /*
         handler = new Handler() {
             public void handleMessage(android.os.Message msg) {
                 switch (msg.what) {
@@ -84,12 +95,13 @@ public class SynchronizationService extends Service {
                 }
             };
         };
+        */
         service();
     }
 
     private Date getLastUpdateDate() {
         sharedPreferences = getSharedPreferences("DateTimSave", MODE_PRIVATE);
-        String savedDate = sharedPreferences.getString("DateTimSave","");
+        String savedDate = sharedPreferences.getString("DateTimSave", "");
         Date date;
         if(savedDate.equals("")){
             GregorianCalendar gr = new GregorianCalendar();
@@ -111,15 +123,47 @@ public class SynchronizationService extends Service {
     }
 
     private void service() {
+        final Context context = SynchronizationService.this;
+        final DataAccess dataAccess = DataAccess.getInstatnce(context);
         Thread t = new Thread(new Runnable(){
             public void run() {
                 while (true) {
+                    try {
+                        Parse.initialize(SynchronizationService.this);
+                    }
+                    catch (Exception e){
+
+                    }
+
                     if (isManager) {
                         updateData.updateTaskList(SynchronizationService.this,isManager);
                         updateData.updateEmployeeList(SynchronizationService.this);
+
                     } else {
                         updateData.updateTaskList(SynchronizationService.this,isManager);
                     }
+                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+                    mBuilder.setSmallIcon(R.drawable.ic_launcher);
+                    mBuilder.setContentTitle("Hello " + currentUserName);
+                    PendingIntent contentIntent;
+                    if(isManager) {
+                        contentIntent = PendingIntent.getActivity(context, 0,
+                                new Intent(SynchronizationService.this, ShowTaskManagerActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                        mBuilder.setContentText("Your team have "+dataAccess.getNumberOfTask(false)+ " task now");
+                    }
+                    else{
+                        contentIntent = PendingIntent.getActivity(context, 0,
+                                new Intent(context, TaskShowEmployeeActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                        mBuilder.setContentText("Your  have a "+dataAccess.getNumberOfTask(false)+ " task now");
+                    }
+                    mBuilder.setContentIntent(contentIntent);
+                    // Gets an instance of the NotificationManager service
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+                    NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+                    startForeground(NOTIFICATION_NUMBER,  mBuilder.build());
+                    checkDeadline();
                     updateDone();
                     try {
                         Thread.sleep(1000 * 60);
@@ -132,6 +176,40 @@ public class SynchronizationService extends Service {
         t.start();
     }
 
+    private void checkDeadline() {
+        DataAccess dataAccess = DataAccess.getInstatnce(this);
+        List<Task> taskList = dataAccess.getAllTask(false);
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("GMT"));
+        Date now = cal.getTime();
+        Log.d(TAG,"Date time now:"+now.toString());
+        for(int i = 0;i < taskList.size();i++){
+            Task task = taskList.get(i);
+            if(now.after(task.getDeadline())){
+                ParseObject taskObject = new ParseObject("Task");
+                taskObject.setObjectId(taskList.get(i).getParseId());
+                taskObject.put("status", "late");
+                task.setStatus("late");
+                dataAccess.updateTask(task);
+
+                taskObject.saveInBackground();
+                String taskSelectedIdParse = task.getParseId();
+                PendingIntent pendingIntent;
+                Intent intent = new Intent(this,ReportTaskActivity.class);
+                intent.putExtra("taskId", taskSelectedIdParse);
+                pendingIntent =  PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                if(isManager){
+                    NotificationControl.notificationNow("Your employee late in task","Employee:"+task.getEmployee()+" Task:"+task.getTaskHeader(),
+                            R.drawable.ic_menu_send,task.getParseId().hashCode(),this,pendingIntent);
+                }
+                else{
+                    NotificationControl.notificationNow("You late in task","Employee:"+task.getEmployee()+" Task:"+task.getTaskHeader(),
+                            R.drawable.ic_menu_send,task.getParseId().hashCode(),this,pendingIntent);
+                }
+            }
+        }
+    }
+
     private void updateDone() {
         Date date = Calendar.getInstance().getTime();
         sharedPreferences = getSharedPreferences("DateTimSave", MODE_PRIVATE);
@@ -142,84 +220,7 @@ public class SynchronizationService extends Service {
         ed.commit();
         Log.d(TAG, "Update done.Update time:" + dateStr);
     }
-    /*
-    private void updateTaskList(final boolean isManager) {
-        final DataAccess dataAccess = DataAccess.getInstatnce(this);
-        currentUser = ParseUser.getCurrentUser();
-        boolean wasUpdated = (dataAccess.getAllTask(true).size()>0);
-        ParseQuery<ParseObject> queryTask = ParseQuery.getQuery("Task");
-        queryTask.whereEqualTo("taskManager", currentUser.getEmail());
-        if(wasUpdated) {
-            if (isManager) {
-                queryTask.whereEqualTo("updateForManager", true);
-            } else {
-                queryTask.whereEqualTo("updateForEmployee", true);
-            }
-        }
-     //   Log.d(TAG, lastUpdate.toString());
 
-        queryTask.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                numberOfUpdateTask = objects.size();
-                Log.e(TAG, "Task objects size" + objects.size());
-                if (e == null) {
-                    List<Task> list = new ArrayList();
-                    String taskDescription;
-                    String employee;
-                    Date deadline;
-                    String deadlineStr;
-                    String status;
-                    String category;
-                    String location;
-                    String parseId;
-                    String taskHeader;
-                    boolean photoRequire;
-                    SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance();
-                    ParseObject object;
-                    for (int i = 0; i < objects.size(); i++) {
-                        //   if(!lastUpdate.before(objects.get(i).getUpdatedAt())){
-                        object = objects.get(i);
-                        taskDescription = object.getString("taskDescription");
-                        taskHeader = object.getString("taskHeader");
-                        employee = object.getString("taskEmployee");
-                        deadline = object.getDate("taskDate");
-                        deadlineStr = dateFormat.format(deadline);
-                        status = object.getString("status");
-                        category = object.getString("taskCategory");
-                        location = object.getString("taskLocation");
-                        parseId = object.getObjectId();
-                        photoRequire = object.getBoolean("photoRequire");
-                        //todo compare task before end after and notification change
-                        dataAccess.insertTask(new Task(taskHeader, taskDescription, employee, deadline, status, category, location, photoRequire, parseId, deadlineStr));
-                        Log.d(TAG, "Update task:" + parseId);
-                        if (isManager) {
-                            object.put("updateForManager", false);
-                        } else {
-                            object.put("updateForEmployee", false);
-                        }
-                        object.saveInBackground();
-                        // }
-                    }
-
-                } else {
-                    Log.d(TAG, "findInBackground exception:", e);
-                }
-
-            }
-        });
-        Log.d(TAG, "updateManagerTask");
-        if(numberOfUpdateTask>0) {
-            NotificationControl.notificationNow("Update/new task", "" + numberOfUpdateTask, R.drawable.ic_launcher, 1, this);
-        }
-    }
-    */
-
-
-    private void updateEmployeeList() {
-        Log.d(TAG,"updateEmployeeList");
-        NotificationControl.notificationNow("updateEmployeeList","updateEmployeeList",R.drawable.ic_launcher,2,this);
-    }
 
     @Override
     public IBinder onBind(Intent intent) {
