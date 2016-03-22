@@ -276,6 +276,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
         } catch (Exception e) {
             Log.d(TAG,"Parse date exception.Parse string:"+deadlineStr,e);
         }
+        String priority = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_PRIORITY));
         String taskHeader = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_HEADER_TASK));
         String status = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_STATUS));
         String category = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_CATEGORY));
@@ -290,7 +291,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
         }
         String parseId  = cursor.getString(cursor.getColumnIndex(DbContract.TaskEntry.COLUMN_TASK_ID));
 
-        return new Task(taskHeader,taskDescription,employee,deadline,status,category,location, photoRequire,parseId,deadlineStr);
+        return new Task(taskHeader,taskDescription,employee,deadline,priority,status,category,location, photoRequire,parseId,deadlineStr);
     }
 
 
@@ -304,6 +305,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
         SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance();
         String deadlineStr = dateFormat.format(task.getDeadline());
         content.put(DbContract.TaskEntry.COLUMN_DEADLINE, deadlineStr);
+        content.put(DbContract.TaskEntry.COLUMN_PRIORITY,task.getPriority());
         content.put(DbContract.TaskEntry.COLUMN_DESCRIPTION, task.getTaskDescription());
         content.put(DbContract.TaskEntry.COLUMN_LOCATION,task.getLocation());
         content.put(DbContract.TaskEntry.COLUMN_STATUS,task.getStatus());
@@ -364,6 +366,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
         content.put(DbContract.TaskEntry.COLUMN_HEADER_TASK,task.getTaskHeader());
         content.put(DbContract.TaskEntry.COLUMN_CATEGORY,task.getCategory());
         content.put(DbContract.TaskEntry.COLUMN_EMPLOYEE, task.getEmployee());
+        content.put(DbContract.TaskEntry.COLUMN_PRIORITY,task.getPriority());
         SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance();
         String deadlineStr = dateFormat.format(task.getDeadline());
         content.put(DbContract.TaskEntry.COLUMN_DEADLINE, deadlineStr);
@@ -373,18 +376,9 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
         content.put(DbContract.TaskEntry.COLUMN_PHOTO_REQUIRE,task.isPhotoRequire());
         content.put(DbContract.TaskEntry.COLUMN_TASK_ID, task.getParseId());
 
-        /*
-        Log.i(TAG, "UPDATE " + DbContract.TaskEntry.TABLE_NAME + " SET "
-                + DbContract.LectureEntry.COLUMN_FIRST_NAME + "=" +lecture.getFirstName() + ","
-                + DbContract.LectureEntry.COLUMN_LAST_NAME + "=" +lecture.getLastName() + ","
-                + DbContract.LectureEntry.COLUMN_ADDRESS + "=" +lecture.getAddress()
-                + " WHERE " + DbContract.LectureEntry.COLUMN_LECTURE_ID + " = " +   whereArgs[0]+ ";");
-                */
         database = dbHelper.getReadableDatabase();
         database.beginTransaction();
         try {
-            /* UPDATE Lecturers SET FirstName = 'marselo', LastName = 'shichman', Address = 'hertzel tal aviv'
-             WHERE LecturerId='1002'; EXAMPLE  */
             if(database.update(DbContract.TaskEntry.TABLE_NAME, content, whereClauseLecture, whereArgs)!=1){
                 return false;
             }

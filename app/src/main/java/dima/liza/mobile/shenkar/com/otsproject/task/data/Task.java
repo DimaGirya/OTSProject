@@ -15,6 +15,7 @@ public class Task {
     private String location;
     private String parseId;
     private String deadlineStr;
+    private String priority;
     private boolean photoRequire;
 
     public String getDeadlineStr() {
@@ -25,11 +26,12 @@ public class Task {
         this.deadlineStr = deadlineStr;
     }
 
-    public Task(String taskHeader,String taskDescription, String employee, Date deadline, String status, String category, String location, boolean photoRequire,String parseId,String deadlineStr) {
+    public Task(String taskHeader,String taskDescription, String employee, Date deadline,String priority, String status, String category, String location, boolean photoRequire,String parseId,String deadlineStr) {
         this.taskHeader = taskHeader;
         this.taskDescription = taskDescription;
         this.employee = employee;
         this.deadline = deadline;
+        this.priority = priority;
         this.status = status;
         this.category = category;
         this.location = location;
@@ -38,7 +40,13 @@ public class Task {
         this.deadlineStr = deadlineStr;
     }
 
+    public String getPriority() {
+        return priority;
+    }
 
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
 
     public String getParseId() {
         return parseId;

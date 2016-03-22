@@ -73,6 +73,7 @@ public class UpdateData {
                     String location;
                     String parseId;
                     String taskHeader;
+                    String priority;
                     boolean photoRequire;
                     SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance();
                     ParseObject object;
@@ -89,9 +90,10 @@ public class UpdateData {
                         location = object.getString("taskLocation");
                         parseId = object.getObjectId();
                         photoRequire = object.getBoolean("photoRequire");
+                        priority = object.getString("priority");
                         //todo compare task before end after and notification change
                         Task oldTask = dataAccess.getTaskById(parseId);
-                            Task newTask = new Task(taskHeader, taskDescription, employee, deadline, status, category, location, photoRequire, parseId, deadlineStr);
+                            Task newTask = new Task(taskHeader, taskDescription, employee, deadline, status, category,priority, location, photoRequire, parseId, deadlineStr);
                             if(oldTask!=null) {
                             if (oldTask.getDeadline().compareTo(newTask.getDeadline()) != 0) {
                                 NotificationControl.notificationNow("Deadline of task change", taskHeader, R.drawable.ic_menu_send, parseId.hashCode(), context);

@@ -54,7 +54,10 @@
             android:name=".activity.ReportTaskActivity"
             android:label="@string/title_activity_report_task"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity
+            android:name=".activity.LocationsActivity"
+            android:label="@string/title_activity_locations"
+            android:theme="@style/AppTheme.NoActionBar" />
         <service
             android:name=".SynchronizationService"
             android:enabled="true"

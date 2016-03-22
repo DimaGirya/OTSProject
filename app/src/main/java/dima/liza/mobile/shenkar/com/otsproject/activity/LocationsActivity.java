@@ -37,7 +37,7 @@ import dima.liza.mobile.shenkar.com.otsproject.R;
 public class LocationsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static String TAG  = "LocationsActivity";
-    String[] allLocations = {};
+    String[] allLocations;
 
 
 
@@ -73,11 +73,12 @@ public class LocationsActivity extends AppCompatActivity
             @Override
             public void done(List<ParseObject> locations, ParseException e) {
                 if (e == null) {
+                    Log.d(TAG,"locations size:"+locations.size());
                     if(locations.isEmpty()){
                         Toast.makeText(LocationsActivity.this, "Locations not found.", Toast.LENGTH_LONG).show();
                     }
                     else {
-
+                        allLocations = new String[locations.size()];
                         for(int i=0;i<locations.size();i++){
                             //allLocations.add(locations.get(i).getString("location"));
                             allLocations[i] = locations.get(i).getString("location");
@@ -151,7 +152,7 @@ public class LocationsActivity extends AppCompatActivity
     }
 
     public void populate(){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.location_item, allLocations);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allLocations);
         ListView list = (ListView) findViewById(R.id.LocationsListView);
         list.setAdapter(adapter);
     }
