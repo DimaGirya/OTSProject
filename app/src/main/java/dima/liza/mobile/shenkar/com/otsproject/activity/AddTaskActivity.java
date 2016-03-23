@@ -382,9 +382,6 @@ public class AddTaskActivity extends AppCompatActivity
                 }
             }
         });
-
-
-
 }
 
     private boolean validationTask() {

@@ -1,5 +1,6 @@
 package dima.liza.mobile.shenkar.com.otsproject.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.ParseException;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 import java.lang.reflect.Array;
@@ -32,11 +35,16 @@ import java.util.List;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
+import dima.liza.mobile.shenkar.com.otsproject.NotificationControl;
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
+import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 
 public class LocationsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static String TAG  = "LocationsActivity";
+    private ProgressDialog progressDialog;
+    ParseUser user = ParseUser.getCurrentUser();
     String[] allLocations;
 
 
@@ -65,33 +73,34 @@ public class LocationsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        makeList();
 
-        ParseUser user = ParseUser.getCurrentUser();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("location");
-        query.whereEqualTo("manager", user.getEmail());
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> locations, ParseException e) {
-                if (e == null) {
-                    Log.d(TAG,"locations size:"+locations.size());
-                    if(locations.isEmpty()){
-                        Toast.makeText(LocationsActivity.this, "Locations not found.", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        allLocations = new String[locations.size()];
-                        for(int i=0;i<locations.size();i++){
-                            //allLocations.add(locations.get(i).getString("location"));
-                            allLocations[i] = locations.get(i).getString("location");
-                        }
-                        populate();
-
-                    }
-                } else {
-                    Toast.makeText(LocationsActivity.this, "Something went wrong, try again later.", Toast.LENGTH_LONG).show();
-                    Log.d(TAG, "exception:", e);
-                }
-            }
-        });
+//        ParseUser user = ParseUser.getCurrentUser();
+//        ParseQuery<ParseObject> query = ParseQuery.getQuery("location");
+//        query.whereEqualTo("manager", user.getEmail());
+//        query.findInBackground(new FindCallback<ParseObject>() {
+//            @Override
+//            public void done(List<ParseObject> locations, ParseException e) {
+//                if (e == null) {
+//                    Log.d(TAG,"locations size:"+locations.size());
+//                    if(locations.isEmpty()){
+//                        Toast.makeText(LocationsActivity.this, "Locations not found.", Toast.LENGTH_LONG).show();
+//                    }
+//                    else {
+//                        allLocations = new String[locations.size()];
+//                        for(int i=0;i<locations.size();i++){
+//                            //allLocations.add(locations.get(i).getString("location"));
+//                            allLocations[i] = locations.get(i).getString("location");
+//                        }
+//                        populate();
+//
+//                    }
+//                } else {
+//                    Toast.makeText(LocationsActivity.this, "Something went wrong, try again later.", Toast.LENGTH_LONG).show();
+//                    Log.d(TAG, "exception:", e);
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -151,9 +160,62 @@ public class LocationsActivity extends AppCompatActivity
         return true;
     }
 
+    public void makeList(){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("location");
+        query.whereEqualTo("manager", user.getEmail());
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> locations, ParseException e) {
+                if (e == null) {
+                    Log.d(TAG, "locations size:" + locations.size());
+                    if (locations.isEmpty()) {
+                        Toast.makeText(LocationsActivity.this, "Locations not found.", Toast.LENGTH_LONG).show();
+                    } else {
+                        allLocations = new String[locations.size()];
+                        for (int i = 0; i < locations.size(); i++) {
+                            //allLocations.add(locations.get(i).getString("location"));
+                            allLocations[i] = locations.get(i).getString("location");
+                        }
+                        populate();
+                    }
+                } else {
+                    Toast.makeText(LocationsActivity.this, "Something went wrong, try again later.", Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "exception:", e);
+                }
+            }
+        });
+    }
+
     public void populate(){
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allLocations);
         ListView list = (ListView) findViewById(R.id.LocationsListView);
         list.setAdapter(adapter);
     }
+
+    public void addLocationClicked(View view){
+        EditText newLocationInput = (EditText) findViewById(R.id.editTextNewLocationName);
+        String locationStr = newLocationInput.getText().toString();
+        ParseUser user = ParseUser.getCurrentUser();
+        ParseObject newLocation = new ParseObject("location");
+        newLocation.put("location", locationStr);
+        newLocation.put("manager", user.getEmail());
+        newLocation.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    onResume();
+                } else {
+                    Toast.makeText(LocationsActivity.this, "Something went wrong, try again later.", Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "exception:", e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onResume(){
+        makeList();
+        super.onResume();
+    }
+
 }
