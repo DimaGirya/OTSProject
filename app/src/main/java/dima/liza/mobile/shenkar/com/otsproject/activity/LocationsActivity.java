@@ -19,6 +19,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
+
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseObject;
@@ -46,8 +48,7 @@ public class LocationsActivity extends AppCompatActivity
     private ProgressDialog progressDialog;
     ParseUser user = ParseUser.getCurrentUser();
     String[] allLocations;
-
-
+    DataAccess dataAccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class LocationsActivity extends AppCompatActivity
         setContentView(R.layout.activity_locations);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        dataAccess = DataAccess.getInstatnce(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,33 +75,6 @@ public class LocationsActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         makeList();
-
-//        ParseUser user = ParseUser.getCurrentUser();
-//        ParseQuery<ParseObject> query = ParseQuery.getQuery("location");
-//        query.whereEqualTo("manager", user.getEmail());
-//        query.findInBackground(new FindCallback<ParseObject>() {
-//            @Override
-//            public void done(List<ParseObject> locations, ParseException e) {
-//                if (e == null) {
-//                    Log.d(TAG,"locations size:"+locations.size());
-//                    if(locations.isEmpty()){
-//                        Toast.makeText(LocationsActivity.this, "Locations not found.", Toast.LENGTH_LONG).show();
-//                    }
-//                    else {
-//                        allLocations = new String[locations.size()];
-//                        for(int i=0;i<locations.size();i++){
-//                            //allLocations.add(locations.get(i).getString("location"));
-//                            allLocations[i] = locations.get(i).getString("location");
-//                        }
-//                        populate();
-//
-//                    }
-//                } else {
-//                    Toast.makeText(LocationsActivity.this, "Something went wrong, try again later.", Toast.LENGTH_LONG).show();
-//                    Log.d(TAG, "exception:", e);
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -173,9 +147,9 @@ public class LocationsActivity extends AppCompatActivity
                     } else {
                         allLocations = new String[locations.size()];
                         for (int i = 0; i < locations.size(); i++) {
-                            //allLocations.add(locations.get(i).getString("location"));
                             allLocations[i] = locations.get(i).getString("location");
                         }
+                        dataAccess.insertLocations(allLocations);
                         populate();
                     }
                 } else {

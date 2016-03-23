@@ -17,9 +17,12 @@ public interface iDataAccess {
     int numberOfRegisteredEmployee();
      List<Employee> getAllEmployee();
     String[] getAllRegisteredEmployeesName();
+    //added by liza
+    String[] getLocations();
 
     List<Task> getAllTask(Boolean getPastTask);
     boolean insertTask(Task task);
+    boolean insertLocations(String[] locationsFromParse);
 
     Task getTaskById(String parseId);
     int getNumberOfTask(Boolean getPastTask);

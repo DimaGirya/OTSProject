@@ -28,4 +28,10 @@ public class DbContract {
         public static final String COLUMN_PRIORITY =  "Priority";
     }
 
+    //added by liza
+    public  static final class LocationsEntry implements BaseColumns {
+        public static final String TABLE_NAME = "Locations";
+        public static final String COLUMN_LOCATIONS = "Location";
+    }
+
 }
