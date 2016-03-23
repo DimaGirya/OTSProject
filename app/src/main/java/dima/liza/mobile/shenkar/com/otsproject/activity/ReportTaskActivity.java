@@ -19,9 +19,8 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.util.Calendar;
-
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.Validation;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
 
@@ -41,7 +40,7 @@ public class ReportTaskActivity extends AppCompatActivity {
     RadioButton radioButtonWaitingInProgress,radioButtonInProgress,radioButtonDone;
     RadioGroup radioGroupStatus,radioGroupProgress;
     TextView taskCategoryTextView, taskDescriptionTextView, taskHeaderTextView ,taskPriorityTextView;
-    TextView textViewProgress,textViewStatus;
+    TextView textViewProgress,textViewStatus,textViewDeadline;
     Button picture;
     Button reportTask;
     ParseUser currentUser;
@@ -84,6 +83,8 @@ public class ReportTaskActivity extends AppCompatActivity {
 
         radioGroupStatus = (RadioGroup) findViewById(R.id.radioGroupStatus);
         radioGroupProgress = (RadioGroup) findViewById(R.id.radioGroupProgress);
+
+        textViewDeadline = (TextView) findViewById(R.id.textDeadline);
         textViewProgress = (TextView)findViewById(R.id.textViewProgress);
         textViewProgress.setVisibility(View.INVISIBLE);
         textViewStatus = (TextView)findViewById(R.id.textViewStatus);
@@ -98,75 +99,94 @@ public class ReportTaskActivity extends AppCompatActivity {
         }
         dataAccess = DataAccess.getInstatnce(this);
         taskToReport = dataAccess.getTaskById(taskIdToReport);
+        String  temp = Validation.dateToString(taskToReport.getDeadline());
+        textViewDeadline.setText(temp);
         if(!taskToReport.isPhotoRequire()){
             picture.setVisibility(View.INVISIBLE);
         }
         String status = taskToReport.getStatus();
+        if(!currentUser.getBoolean("isManager")) {
+            switch (status) {
+                case "waiting": {
+                    radioButtonWaiting.setChecked(true);
+                    radioGroupProgress.setVisibility(View.INVISIBLE);
+                    textViewStatus.setVisibility(View.VISIBLE);
+                    statusOfTask = STATUS_WAITING;
+                    break;
+                }
+                case "accept": {
+                    radioButtonAccept.setChecked(true);
+                    // radioButtonWaitingInProgress.setChecked(true);
+                    radioGroupStatus.setVisibility(View.INVISIBLE);
+                    textViewProgress.setVisibility(View.VISIBLE);
+                    statusOfTask = STATUS_ACCEPT;
+                    break;
+                }
+                case "reject": {
+                    //radioButtonReject.setChecked(true);
+                    //  radioGroupStatus.setClickable(false);
+                    // radioButtonWaitingInProgress.setChecked(true);
+                    reportTask.setText("Go back");
+                    taskIsDone = true;
+                    radioGroupProgress.setVisibility(View.INVISIBLE);
+                    radioGroupStatus.setVisibility(View.INVISIBLE);
+                    textViewProgress.setText("You reject the task");
+                    textViewProgress.setVisibility(View.VISIBLE);
+                    statusOfTask = STATUS_REJECT;
+                    break;
+                }
+                case "inProgress": {
+                    radioButtonInProgress.setChecked(true);
+                    radioGroupStatus.setVisibility(View.INVISIBLE);
+                    textViewProgress.setVisibility(View.VISIBLE);
+                    statusOfTask = STATUS_IN_PROGRESS;
+                    break;
+                }
+                case "done": {
+                    radioGroupStatus.setVisibility(View.INVISIBLE);
+                    radioGroupProgress.setVisibility(View.INVISIBLE);
+                    textViewProgress.setText("Task Done");
+                    textViewProgress.setVisibility(View.VISIBLE);
+                    reportTask.setText("Go back");
+                    taskIsDone = true;
+                    statusOfTask = STATUS_DONE;
+                    break;
+                }
+                case "cancel": {
+                    statusOfTask = STATUS_CANCEL;
+                    reportTask.setText("Go back");
+                    taskIsDone = true;
+                    radioGroupProgress.setVisibility(View.INVISIBLE);
+                    radioGroupStatus.setVisibility(View.INVISIBLE);
+                    textViewProgress.setText("Task cancel");
+                    textViewProgress.setVisibility(View.VISIBLE);
 
-        switch (status){
-            case "waiting":{
-                radioButtonWaiting.setChecked(true);
-                radioGroupProgress.setVisibility(View.INVISIBLE);
-                textViewStatus.setVisibility(View.VISIBLE);
-                statusOfTask = STATUS_WAITING;
-                break;
-            }
-            case "accept":{
-                radioButtonAccept.setChecked(true);
-               // radioButtonWaitingInProgress.setChecked(true);
-                radioGroupStatus.setVisibility(View.INVISIBLE);
-                textViewProgress.setVisibility(View.VISIBLE);
-                statusOfTask = STATUS_ACCEPT;
-                break;
-            }
-            case "reject":{
-                //radioButtonReject.setChecked(true);
-              //  radioGroupStatus.setClickable(false);
-               // radioButtonWaitingInProgress.setChecked(true);
-                reportTask.setText("Go back");
-                taskIsDone = true;
-                radioGroupProgress.setVisibility(View.INVISIBLE);
-                radioGroupStatus.setVisibility(View.INVISIBLE);
-                textViewProgress.setText("You reject the task");
-                textViewProgress.setVisibility(View.VISIBLE);
-                statusOfTask = STATUS_REJECT;
-                break;
-            }
-            case "inProgress":{
-                radioButtonInProgress.setChecked(true);
-                radioGroupStatus.setVisibility(View.INVISIBLE);
-                textViewProgress.setVisibility(View.VISIBLE);
-                statusOfTask = STATUS_IN_PROGRESS;
-                break;
-            }
-            case "done":{
-                radioGroupStatus.setVisibility(View.INVISIBLE);
-                radioGroupProgress.setVisibility(View.INVISIBLE);
-                textViewProgress.setText("Task Done");
-                textViewProgress.setVisibility(View.VISIBLE);
-                reportTask.setText("Go back");
-                taskIsDone = true;
-                statusOfTask = STATUS_DONE;
-                break;
-            }
-            case "cancel":{
-                statusOfTask = STATUS_CANCEL;
-                reportTask.setText("Go back");
-                taskIsDone = true;
-                radioGroupProgress.setVisibility(View.INVISIBLE);
-                radioGroupStatus.setVisibility(View.INVISIBLE);
-                textViewProgress.setText("Task cancel");
-                textViewProgress.setVisibility(View.VISIBLE);
+                }
+                case "late": {
+                    statusOfTask = STATUS_CANCEL;
+                    reportTask.setText("Go back");
+                    taskIsDone = true;
+                    radioGroupProgress.setVisibility(View.INVISIBLE);
+                    radioGroupStatus.setVisibility(View.INVISIBLE);
+                    textViewProgress.setText("Deadline late");
+                    textViewProgress.setVisibility(View.VISIBLE);
+                }
+                default: {
+                    statusOfTask = ERROR;
+                    Log.d(TAG, "Status problem of task");
+                }
 
             }
-            default:{
-                statusOfTask = ERROR;
-                Log.d(TAG,"Status problem of task");
-            }
-
+            Log.d(TAG, "statusOfTask:" + statusOfTask);
         }
-        Log.d(TAG,"statusOfTask:"+statusOfTask);
-
+        else{
+            reportTask.setText("Go back");
+            taskIsDone = true;
+            radioGroupProgress.setVisibility(View.INVISIBLE);
+            radioGroupStatus.setVisibility(View.INVISIBLE);
+            textViewProgress.setText("Status:"+taskToReport.getStatus());
+            textViewProgress.setVisibility(View.VISIBLE);
+        }
         taskDescriptionTextView.setText(taskToReport.getTaskDescription());
         taskHeaderTextView.setText(taskToReport.getTaskHeader());
         taskPriorityTextView.setText(taskToReport.getPriority());

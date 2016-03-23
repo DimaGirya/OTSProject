@@ -1,14 +1,12 @@
 package dima.liza.mobile.shenkar.com.otsproject.task.data;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.Date;
 import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.R;
@@ -64,9 +62,10 @@ public class AdapterTaskForEmployee extends BaseAdapter {
         }
         viewRowTask.taskHeader.setText(listOfTask.get(position).getTaskHeader());
         viewRowTask.categoryOrEmployee.setText(listOfTask.get(position).getCategory());
-        String  temp = Validation.calculateUntilDeadline(listOfTask.get(position).getDeadline());
+
        // viewRowTask.deadline.setText(String.valueOf(listOfTask.get(position).getDeadline()));
-        viewRowTask.deadline.setText(temp); // tempory
+        String  temp = Validation.dateToString(listOfTask.get(position).getDeadline());
+        viewRowTask.deadline.setText(temp);
         viewRowTask.status.setText(listOfTask.get(position).getStatus());
         viewRowTask.taskId.setText(listOfTask.get(position).getParseId());
         return convertView;

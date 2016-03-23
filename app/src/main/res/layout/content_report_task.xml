@@ -214,11 +214,31 @@
         android:text="Add Picture"
         android:onClick="onClickAddPicture"
         android:id="@+id/buttonAddPicture"
-        android:layout_below="@+id/radioGroupProgress"
-        android:layout_alignRight="@+id/reportTask"
-        android:layout_alignEnd="@+id/reportTask"
+        android:layout_alignTop="@+id/reportTask"
+        android:layout_toRightOf="@+id/reportTask"
+        android:layout_toEndOf="@+id/reportTask" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Deadline"
+        android:id="@+id/textViewDeadline"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Deadline"
+        android:id="@+id/textDeadline"
+        android:layout_below="@+id/textViewDeadline"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/buttonAddPicture"
+        android:layout_above="@+id/buttonAddPicture"
+        android:layout_alignRight="@+id/radioGroupStatus"
+        android:layout_alignEnd="@+id/radioGroupStatus" />
 
 
 </RelativeLayout>

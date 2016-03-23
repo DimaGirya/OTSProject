@@ -412,12 +412,24 @@ public class AddTaskActivity extends AppCompatActivity
             Toast.makeText(this, R.string.notSelectLocation,Toast.LENGTH_LONG).show();
             return false;
         }
-        //dateTask
-        if(dateTask.before(Calendar.getInstance().getTime())){
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("GMT"));
+        Date now = cal.getTime();
+        Log.d(TAG,"Time now:"+now.toString());
+        Log.d(TAG,"Time deadline task:"+dateTask.toString());
+        if(dateTask.before(now)){
             Toast.makeText(this, R.string.dateFromPast,Toast.LENGTH_LONG).show();
             return false;
         }
 
+        //dateTask
+        /*
+        if(dateTask.before(Calendar.getInstance().getTime())){  //bag
+            Toast.makeText(this, R.string.dateFromPast,Toast.LENGTH_LONG).show();
+            return false;
+        }
+`````   */
         return true;
     }
 
@@ -441,11 +453,11 @@ public class AddTaskActivity extends AppCompatActivity
                 if (checked) {
                     flagDate = TODAY;
                     Calendar calendar = Calendar.getInstance();
-                    int year = calendar.get(Calendar.YEAR);
-                    int month = calendar.get(Calendar.MONTH);
-                    int day = calendar.get(Calendar.DAY_OF_MONTH);
+                     year = calendar.get(Calendar.YEAR);
+                     month = calendar.get(Calendar.MONTH);
+                     day = calendar.get(Calendar.DAY_OF_MONTH);
                     textTime.setText("17:00");
-                    textDate.setText(day+getString(R.string.dot+month)+getString(R.string.dot)+year);
+                    textDate.setText(day+getString(R.string.dot)+(month+1)+getString(R.string.dot)+year);
 
                     setTime.setClickable(false);
                     setDate.setClickable(false);
@@ -470,11 +482,13 @@ public class AddTaskActivity extends AppCompatActivity
         flagDate = TOMORROW;
         GregorianCalendar gc = new GregorianCalendar();
         gc.add(Calendar.DATE, 1);
-        int year = gc.get(Calendar.YEAR);
-        int month = gc.get(Calendar.MONTH);
-        int day = gc.get(Calendar.DAY_OF_MONTH);
+         year = gc.get(Calendar.YEAR);
+         month = gc.get(Calendar.MONTH);
+         day = gc.get(Calendar.DAY_OF_MONTH);
+        hour = 17;
+        minute = 0;
         textTime.setText("17:00");
-        textDate.setText(day+getString(R.string.dot)+month+getString(R.string.dot)+year);
+        textDate.setText(day+getString(R.string.dot)+(month+1)+getString(R.string.dot)+year);
         //textTime;
         setTime.setClickable(false);
         setDate.setClickable(false);

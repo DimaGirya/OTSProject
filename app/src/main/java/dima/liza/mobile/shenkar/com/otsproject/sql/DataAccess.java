@@ -241,7 +241,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
             else{
                // select  = "SELECT * FROM "+ DbContract.TaskEntry.TABLE_NAME + " WHERE ( NOT ("+ DbContract.TaskEntry.COLUMN_STATUS  +"= 'done' ) )";
                 select  = "SELECT * FROM "+ DbContract.TaskEntry.TABLE_NAME + " WHERE ( NOT ("+ DbContract.TaskEntry.COLUMN_STATUS  +"= 'done' OR "+
-                DbContract.TaskEntry.COLUMN_STATUS +"='cancel' OR "+DbContract.TaskEntry.COLUMN_STATUS +"= 'reject'))";
+                DbContract.TaskEntry.COLUMN_STATUS +"='cancel' OR "+DbContract.TaskEntry.COLUMN_STATUS +"= 'reject' OR "+DbContract.TaskEntry.COLUMN_STATUS +"= 'late'))";
             }
 
             Log.d(TAG, select);

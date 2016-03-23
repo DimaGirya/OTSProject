@@ -41,6 +41,7 @@ public class ShowTaskManagerActivity extends AppCompatActivity
     private static final String TAG = "ShowTaskManagerActivity" ;
     private static final int ID_EDIT_TASK = 0 ;
     private static final int ID_CANCEL_TASK = 1 ;
+    private static final int ID_VIEW_TASK = 2;
     TextView numberOfTask;
     CheckBox checkBox;
     ListView listView;
@@ -155,6 +156,7 @@ public class ShowTaskManagerActivity extends AppCompatActivity
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
         Task task = (Task) lv.getItemAtPosition(acmi.position);
         taskSelectedId = task.getParseId();
+            menu.add(Menu.NONE,ID_VIEW_TASK,Menu.NONE,"View task");
             menu.add(Menu.NONE,ID_EDIT_TASK,Menu.NONE,"Edit task");
             menu.add(Menu.NONE,ID_CANCEL_TASK,Menu.NONE,"Cancel task");
 
@@ -164,6 +166,15 @@ public class ShowTaskManagerActivity extends AppCompatActivity
     public boolean onContextItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
+            case ID_VIEW_TASK:{
+                Intent intent = new Intent(this,ReportTaskActivity.class);
+              //  intent.putExtra("editTask",true);
+                intent.putExtra("taskId",taskSelectedId);
+                startActivity(intent);
+                Log.d(TAG,"ID_EDIT_TASK");
+                Log.d(TAG,taskSelectedId);
+                break;
+            }
             case ID_EDIT_TASK:{
                 Intent intent = new Intent(this,AddTaskActivity.class);
                 intent.putExtra("editTask",true);
@@ -173,7 +184,7 @@ public class ShowTaskManagerActivity extends AppCompatActivity
                 Log.d(TAG,taskSelectedId);
                 break;
             }
-            case ID_CANCEL_TASK:{   // bag. Canceled not the task wrong
+            case ID_CANCEL_TASK:{
                 Log.d(TAG,"ID_CANCEL_TASK");
                 Log.d(TAG,taskSelectedId);
                 //todo ask confirmation

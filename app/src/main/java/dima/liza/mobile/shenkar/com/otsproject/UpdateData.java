@@ -96,12 +96,13 @@ public class UpdateData {
                         priority = object.getString("priority");
                         Task oldTask = dataAccess.getTaskById(parseId);
                          Task  newTask = new Task (taskHeader,taskDescription,employee,deadline,priority,status,category,location,photoRequire,parseId,deadlineStr);
-                           if(!isManager){
-                               String taskSelectedIdParse = newTask.getParseId();
-                               PendingIntent pendingIntent;
-                               Intent intent = new Intent(context,ReportTaskActivity.class);
-                               intent.putExtra("taskId",taskSelectedIdParse);
-                               pendingIntent =  PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        String taskSelectedIdParse = newTask.getParseId();
+                        PendingIntent pendingIntent;
+                        Intent intent = new Intent(context,ReportTaskActivity.class);
+                        intent.putExtra("taskId",taskSelectedIdParse);
+                        pendingIntent =  PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        if(!isManager){
+
                             if(oldTask!=null) {
                                 if (oldTask.getDeadline().compareTo(newTask.getDeadline()) != 0) {
                                     NotificationControl.notificationNow("Deadline of task change", taskHeader, R.drawable.ic_menu_send, parseId.hashCode(), context,pendingIntent);
@@ -129,7 +130,7 @@ public class UpdateData {
                         else{
                                if(oldTask!=null) {
                                    if (!status.equals(oldTask.getStatus())) {
-                                       NotificationControl.notificationNow("Employee change status of task ", "Task:"+taskHeader +" .New status:"+ status, R.drawable.ic_menu_send, status.hashCode(), context,null);
+                                       NotificationControl.notificationNow("Employee change status of task ", "Task:"+taskHeader +" .New status:"+ status, R.drawable.ic_menu_send, status.hashCode(), context,pendingIntent);
                                    }
                                }
                            }
