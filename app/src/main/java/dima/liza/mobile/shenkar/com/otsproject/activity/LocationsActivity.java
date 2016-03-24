@@ -141,7 +141,6 @@ public class LocationsActivity extends AppCompatActivity
             @Override
             public void done(List<ParseObject> locations, ParseException e) {
                 if (e == null) {
-                    Log.d(TAG, "locations size:" + locations.size());
                     if (locations.isEmpty()) {
                         Toast.makeText(LocationsActivity.this, "Locations not found.", Toast.LENGTH_LONG).show();
                     } else {
@@ -191,5 +190,4 @@ public class LocationsActivity extends AppCompatActivity
         makeList();
         super.onResume();
     }
-
 }
