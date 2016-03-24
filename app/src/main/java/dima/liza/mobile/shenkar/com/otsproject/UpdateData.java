@@ -184,8 +184,8 @@ public class UpdateData {
                             dataAccess.deleteEmployee(objects.get(i).getEmail());   //warning
                             employee = new Employee(objects.get(i).getUsername(), objects.get(i).getEmail(), objects.get(i).getString("phoneNumber"), "registered", objects.get(i).getInt("taskCounter"));
                             dataAccess.insertEmployee(employee);
-                            if(numberOfEmployee != 0) {
-                                objects.get(i).put("statusEmployeeChange",false);
+                            if (numberOfEmployee != 0) {
+                                objects.get(i).put("statusEmployeeChange", false);
                                 objects.get(i).saveInBackground();
 
                             }
@@ -223,5 +223,33 @@ public class UpdateData {
                     }
                 }
             });
+    }
+
+
+    public void getLocationFromParse(final Context context){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("location");
+        ParseUser user = ParseUser.getCurrentUser();
+        final String[][] allLocations = new String[1][1];
+        query.whereEqualTo("manager", user.getEmail());
+        final DataAccess dataAccess = DataAccess.getInstatnce(context);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> locations, ParseException e) {
+                if (e == null) {
+                    if (locations.isEmpty()) {
+                        Toast.makeText(context, "Locations not found.", Toast.LENGTH_LONG).show();
+                    } else {
+                        allLocations[0] = new String[locations.size()];
+                        for (int i = 0; i < locations.size(); i++) {
+                            allLocations[0][i] = locations.get(i).getString("location");
+                        }
+                        dataAccess.insertLocations(allLocations[0]);
+                    }
+                } else {
+                    Toast.makeText(context, "Something went wrong, try again later.", Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "exception:", e);
+                }
+            }
+        });
     }
 }

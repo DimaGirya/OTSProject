@@ -107,8 +107,14 @@ public class AddTaskActivity extends AppCompatActivity
         dataAccess = DataAccess.getInstatnce(this);
 
         String[] category = {getString(R.string.selectCategory),"General", "Cleaning", "Electricity", "Computers", "Other"};
-
-        String[] location = {getString(R.string.selectLocation),"location 1", "location 2", "location 3", "location 4"};
+        String[] location;
+        location = dataAccess.getLocations();
+        if(location == null || location.length < 2 ) {
+            location = new String[2];//{getString(R.string.selectLocation), "location 1", "location 2", "location 3", "location 4"};
+            location[0] = getString(R.string.selectLocation);
+            location[1] = "World";//default value
+        }
+        location = dataAccess.getLocations();
         String[] employeesName;
         Intent intent = getIntent();
         updateTask = intent.getBooleanExtra("editTask",false);

@@ -25,6 +25,7 @@ import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
+import dima.liza.mobile.shenkar.com.otsproject.UpdateData;
 
 public class SignInActivity extends AppCompatActivity {
     ProgressDialog  pd;
@@ -61,6 +62,7 @@ public class SignInActivity extends AppCompatActivity {
                 if (user != null) {
                     //user found in Parse Users class.
                     if (user.getBoolean("isManager") == true) {
+                        UpdateData.getInstance().getLocationFromParse(SignInActivity.this); //warning! Maybe race condition?
                         Intent serviceIntent = new Intent(SignInActivity.this, SynchronizationService.class);
                         startService(serviceIntent);
                         Intent intent = new Intent(context, ShowTaskManagerActivity.class);

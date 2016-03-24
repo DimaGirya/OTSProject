@@ -19,6 +19,7 @@ import com.parse.SignUpCallback;
 import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
+import dima.liza.mobile.shenkar.com.otsproject.UpdateData;
 
 
 public class SignUpManagerActivity extends AppCompatActivity {
@@ -96,6 +97,7 @@ public class SignUpManagerActivity extends AppCompatActivity {
                 public void done(com.parse.ParseException e) {
                     if (e == null) {    // SIGN UP DONE
                         Toast.makeText(SignUpManagerActivity.this, "Sign up done.Now create team", Toast.LENGTH_LONG).show();
+                        UpdateData.getInstance().getLocationFromParse(SignUpManagerActivity.this); //warning! Maybe race condition?
                         createTeam(ParseUser.getCurrentUser());
                     } else {
                         Log.d(TAG, "ParseException:", e);
@@ -135,6 +137,7 @@ public class SignUpManagerActivity extends AppCompatActivity {
                     startService(serviceIntent);
                     pd.dismiss();
                     Log.d(TAG, "Create Team done");
+
                     finish();
                 } else {
                     Log.d(TAG, "Create Team Error",e);

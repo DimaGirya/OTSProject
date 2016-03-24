@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
 
@@ -414,12 +415,15 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
             Cursor cursor = database.rawQuery(select, null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
+
                 String location = cursor.getString(cursor.getColumnIndex(DbContract.LocationsEntry.COLUMN_LOCATIONS));
-                locationsFromDb.add(location);
+                Log.d(TAG, "location from cursor:"+location);
+                        locationsFromDb.add(location);
                 cursor.moveToNext();
             }
             cursor.close();
             String[] locations = new String[locationsFromDb.size()+1];
+            locations[0] = context.getString(R.string.selectLocation);
             for(int i = 1;i<locationsFromDb.size()+1;i++) {
                 locations[i] = locationsFromDb.get(i - 1);
                 //locations[i] =  locationsFromDb.get(i-1).toString(); //if line 418 doesn't work try this
@@ -427,16 +431,17 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
             return locations;
         } catch (Exception e) {
             Log.d(TAG, "Exception:", e);
+            Log.d(TAG, "Return null in getLocations:");
+            return null;
         } finally {
             if (database != null) {
                 database.close();
             }
-            Log.d(TAG, "Return null:");
-            return null;
         }
     }
 
     //added by liza
+    /*
     @Override
     public boolean insertLocations(String[] locationsFromParse) {
         ContentValues content = new ContentValues();
@@ -445,6 +450,39 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
             content.put(DbContract.LocationsEntry.COLUMN_LOCATIONS,locationsFromParse[i]);
         }
         try {
+            database = dbHelper.getReadableDatabase();
+            if (database.insert(DbContract.LocationsEntry.TABLE_NAME, null, content) == -1) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "Exception:", e);
+            return false;
+        } finally {
+            if (database != null) {
+                database.close();
+            }
+        }
+    }
+    */
+    @Override
+    public boolean insertLocations(String[] locationsFromParse) {
+        ContentValues content = new ContentValues();
+        //getLocationsFromParse(); //get data from parse and put in allLocations array attribute
+        for (int i = 0; i < locationsFromParse.length; i++) {
+            if(!insertLocation(locationsFromParse[i])){
+                return false;
+            }
+            Log.d(TAG,"insert location:"+locationsFromParse[i]);
+        }
+        return true;
+    }
+
+    public boolean   insertLocation(String location){
+        try {
+            ContentValues content = new ContentValues();
+          content.put(DbContract.LocationsEntry.COLUMN_LOCATIONS,location);
             database = dbHelper.getReadableDatabase();
             if (database.insert(DbContract.LocationsEntry.TABLE_NAME, null, content) == -1) {
                 return false;

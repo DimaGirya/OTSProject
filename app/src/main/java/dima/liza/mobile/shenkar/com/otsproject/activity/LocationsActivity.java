@@ -22,25 +22,15 @@ import android.widget.Toast;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 
 import com.parse.FindCallback;
-import com.parse.LogInCallback;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
-import com.parse.SignUpCallback;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-
-import dima.liza.mobile.shenkar.com.otsproject.NotificationControl;
 import dima.liza.mobile.shenkar.com.otsproject.R;
-import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
-import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 
 public class LocationsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -74,7 +64,8 @@ public class LocationsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        makeList();
+        //getLocationFromParse();
+        onResume();
     }
 
     @Override
@@ -133,8 +124,8 @@ public class LocationsActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    public void makeList(){
+    /* moved to updateData and call in log in
+    public void getLocationFromParse(){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("location");
         query.whereEqualTo("manager", user.getEmail());
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -158,8 +149,9 @@ public class LocationsActivity extends AppCompatActivity
             }
         });
     }
-
+    */
     public void populate(){
+        allLocations = dataAccess.getLocations();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allLocations);
         ListView list = (ListView) findViewById(R.id.LocationsListView);
         list.setAdapter(adapter);
@@ -167,15 +159,20 @@ public class LocationsActivity extends AppCompatActivity
 
     public void addLocationClicked(View view){
         EditText newLocationInput = (EditText) findViewById(R.id.editTextNewLocationName);
-        String locationStr = newLocationInput.getText().toString();
+        final String locationStr = newLocationInput.getText().toString();
         ParseUser user = ParseUser.getCurrentUser();
         ParseObject newLocation = new ParseObject("location");
         newLocation.put("location", locationStr);
         newLocation.put("manager", user.getEmail());
+        if(!dataAccess.insertLocation(locationStr)){
+            Toast.makeText(this,"This location is already Tin data base",Toast.LENGTH_LONG).show();
+            return;
+        }
         newLocation.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
+
                     onResume();
                 } else {
                     Toast.makeText(LocationsActivity.this, "Something went wrong, try again later.", Toast.LENGTH_LONG).show();
@@ -187,7 +184,8 @@ public class LocationsActivity extends AppCompatActivity
 
     @Override
     public void onResume(){
-        makeList();
+        //getLocationFromParse();
+        populate();
         super.onResume();
     }
 }

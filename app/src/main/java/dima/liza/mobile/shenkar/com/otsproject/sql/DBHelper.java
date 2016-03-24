@@ -35,7 +35,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     + DbContract.TaskEntry.COLUMN_HEADER_TASK +","+ DbContract.TaskEntry.COLUMN_PHOTO_REQUIRE + " INTEGER)";
             //added by liza
             final String SQL_CREATE_LOCATIONS_TABLE = "CREATE TABLE "
-                    +DbContract.LocationsEntry.TABLE_NAME + "(" + DbContract.LocationsEntry.COLUMN_LOCATIONS + "TEXT NOT NULL)";
+                    +DbContract.LocationsEntry.TABLE_NAME + "("  + DbContract.LocationsEntry._ID + " INTEGER PRIMARY KEY,"+ DbContract.LocationsEntry.COLUMN_LOCATIONS + " UNIQUE ON CONFLICT REPLACE)";
 
             Log.i(TAG,SQL_CREATE_EMPLOYEE_TABLE);
             Log.i(TAG,SQL_CREATE_TASK_TABLE);
