@@ -5,8 +5,8 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="130dp"
+        android:layout_height="50dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="14sp"
         android:padding="2dp"
@@ -14,31 +14,30 @@
 
     <TextView
         android:textSize="14sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="70dp"
+        android:layout_height="50dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:padding="2dp"
         android:id="@+id/taskCategoryOrEmployee" />
     <TextView
         android:textSize="14sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:padding="2dp"
         android:id="@+id/taskStatus" />
     <TextView
         android:textSize="14sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="70dp"
+        android:layout_height="50dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:padding="2dp"
         android:id="@+id/taskDeadline" />
     <TextView
         android:textSize="14sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:padding="2dp"
         android:visibility="invisible"
         android:id="@+id/taskId" />
 </LinearLayout>

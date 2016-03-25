@@ -1,6 +1,7 @@
 package dima.liza.mobile.shenkar.com.otsproject.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 
 import com.parse.FindCallback;
@@ -96,6 +98,14 @@ public class LocationsActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_log_of) {
+            ParseUser.logOut();
+            this.deleteDatabase("otsProject.db");
+            stopService(new Intent(this, SynchronizationService.class));
+            Intent intent = new Intent(this,SignInActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -105,20 +115,26 @@ public class LocationsActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_camara) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        switch (id){
+            case R.id.teamTasksDrawer: {
+                Intent intent = new Intent(this,ShowTaskManagerActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.editTeamDrawer: {
+                Intent intent = new Intent(this,EditTeamActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.taskLocationOption:{
+                Intent intent = new Intent(this,LocationsActivity.class);
+                startActivity(intent);
+                break;
+            }
+            default:
+                Log.d(TAG,"onNavigationItemSelected no such id");
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

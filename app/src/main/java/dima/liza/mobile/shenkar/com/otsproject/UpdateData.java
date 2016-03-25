@@ -102,7 +102,6 @@ public class UpdateData {
                         intent.putExtra("taskId",taskSelectedIdParse);
                         pendingIntent =  PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                         if(!isManager){
-
                             if(oldTask!=null) {
                                 if (oldTask.getDeadline().compareTo(newTask.getDeadline()) != 0) {
                                     NotificationControl.notificationNow("Deadline of task change", taskHeader, R.drawable.ic_menu_send, parseId.hashCode(), context,pendingIntent);

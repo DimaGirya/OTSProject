@@ -82,7 +82,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Priority:"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="74dp"
         android:id="@+id/textViewPriority"
         android:layout_below="@+id/taskDescriptionText"
         android:layout_alignParentLeft="true"
@@ -201,11 +201,11 @@
         android:layout_height="wrap_content"
         android:text="Save and send"
         android:id="@+id/reportTask"
-        android:layout_below="@+id/radioGroupProgress"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:onClick="onClickSaveTaskReport"
-        android:layout_marginTop="64dp" />
+        android:layout_marginTop="87dp"
+        android:layout_below="@+id/textViewDeadline"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -239,6 +239,51 @@
         android:layout_above="@+id/buttonAddPicture"
         android:layout_alignRight="@+id/radioGroupStatus"
         android:layout_alignEnd="@+id/radioGroupStatus" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Employee:"
+        android:id="@+id/employeeOfTask"
+        android:layout_below="@+id/textViewPriority"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:visibility="invisible"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/texViewEmployeeTask"
+        android:layout_above="@+id/textViewProgress"
+        android:layout_toRightOf="@+id/textViewPriority"
+        android:layout_toEndOf="@+id/textViewPriority"
+        android:visibility="invisible"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Location:"
+        android:id="@+id/textViewLocation"
+        android:layout_alignTop="@+id/textDeadline"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="31dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/textViewLocationTask"
+        android:layout_alignTop="@+id/textViewLocation"
+        android:layout_alignLeft="@+id/texViewEmployeeTask"
+        android:layout_alignStart="@+id/texViewEmployeeTask" />
 
 
 </RelativeLayout>

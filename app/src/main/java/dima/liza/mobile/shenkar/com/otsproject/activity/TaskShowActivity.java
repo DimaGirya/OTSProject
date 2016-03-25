@@ -123,10 +123,6 @@ public class TaskShowActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id){
-            case R.id.taskCategoryOption:{
-                Log.i(TAG, "taskCategoryOption");
-                break;
-            }
             case R.id.taskLocationOption:{
                 Log.i(TAG,"taskLocationOption");
                 break;

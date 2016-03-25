@@ -3,10 +3,15 @@ package dima.liza.mobile.shenkar.com.otsproject.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -19,12 +24,14 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
 import dima.liza.mobile.shenkar.com.otsproject.R;
+import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 import dima.liza.mobile.shenkar.com.otsproject.Validation;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
 
-public class ReportTaskActivity extends AppCompatActivity {
+public class ReportTaskActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private static final String TAG = "ReportTaskActivity" ;
     private static final int STATUS_WAITING = 1;
     private static final int STATUS_ACCEPT = 2;
@@ -41,6 +48,7 @@ public class ReportTaskActivity extends AppCompatActivity {
     RadioGroup radioGroupStatus,radioGroupProgress;
     TextView taskCategoryTextView, taskDescriptionTextView, taskHeaderTextView ,taskPriorityTextView;
     TextView textViewProgress,textViewStatus,textViewDeadline;
+    TextView texViewEmployeeTask,employeeOfTask,textViewLocationTask;
     Button picture;
     Button reportTask;
     ParseUser currentUser;
@@ -59,20 +67,20 @@ public class ReportTaskActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                ManagerValidation.checkRegisteredEmployee(ReportTaskActivity.this, dataAccess);
             }
         });
-        fab.hide();
+
         picture = (Button)findViewById(R.id.buttonAddPicture);
         reportTask = (Button)findViewById(R.id.reportTask);
         taskCategoryTextView = (TextView) findViewById(R.id.taskCategoryText);
         taskDescriptionTextView = (TextView) findViewById(R.id.taskDescriptionText);
         taskPriorityTextView = (TextView) findViewById(R.id.taskPriorityText);
         taskHeaderTextView = (TextView) findViewById(R.id.textViewHeaderText);
-
+        textViewLocationTask = (TextView) findViewById(R.id.textViewLocationTask);
         radioButtonWaiting = (RadioButton) findViewById(R.id.waitingRadioButton);
         radioButtonAccept = (RadioButton) findViewById(R.id.acceptRadioButton);
         radioButtonReject = (RadioButton) findViewById(R.id.rejectRadioButton);
@@ -101,11 +109,13 @@ public class ReportTaskActivity extends AppCompatActivity {
         taskToReport = dataAccess.getTaskById(taskIdToReport);
         String  temp = Validation.dateToString(taskToReport.getDeadline());
         textViewDeadline.setText(temp);
+        textViewLocationTask.setText(taskToReport.getLocation());
         if(!taskToReport.isPhotoRequire()){
             picture.setVisibility(View.INVISIBLE);
         }
         String status = taskToReport.getStatus();
         if(!currentUser.getBoolean("isManager")) {
+            fab.hide();
             switch (status) {
                 case "waiting": {
                     radioButtonWaiting.setChecked(true);
@@ -180,6 +190,11 @@ public class ReportTaskActivity extends AppCompatActivity {
             Log.d(TAG, "statusOfTask:" + statusOfTask);
         }
         else{
+            texViewEmployeeTask = (TextView) findViewById(R.id.texViewEmployeeTask);
+            texViewEmployeeTask.setVisibility(View.VISIBLE);
+            employeeOfTask = (TextView)findViewById(R.id.employeeOfTask);
+            employeeOfTask.setVisibility(View.VISIBLE);
+            texViewEmployeeTask.setText(taskToReport.getEmployee());
             reportTask.setText("Go back");
             taskIsDone = true;
             radioGroupProgress.setVisibility(View.INVISIBLE);
@@ -193,7 +208,67 @@ public class ReportTaskActivity extends AppCompatActivity {
         taskCategoryTextView.setText(taskToReport.getCategory());
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_log_of) {
+            ParseUser.logOut();
+            this.deleteDatabase("otsProject.db");
+            stopService(new Intent(this, SynchronizationService.class));
+            Intent intent = new Intent(this,SignInActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        switch (id){
+            case R.id.teamTasksDrawer: {
+                Intent intent = new Intent(this,ShowTaskManagerActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.editTeamDrawer: {
+                Intent intent = new Intent(this,EditTeamActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.taskLocationOption:{
+                Intent intent = new Intent(this,LocationsActivity.class);
+                startActivity(intent);
+                break;
+            }
+            default:
+                Log.d(TAG,"onNavigationItemSelected no such id");
+        }
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 
 
     public void onClickAddPicture(View view) {

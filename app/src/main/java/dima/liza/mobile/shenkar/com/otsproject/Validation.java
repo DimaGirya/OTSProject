@@ -92,7 +92,33 @@ public  class Validation {
     public static String dateToString(Date deadline) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(deadline);
-        return cal.get(Calendar.DAY_OF_MONTH) + "." + (cal.get(Calendar.MONTH) + 1) + "." + cal.get(Calendar.YEAR)
-                + " " + cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE);
+        int amOrPM = cal.get(Calendar.AM_PM);
+        String amPm;
+        if(amOrPM ==Calendar.AM){
+            amPm = "AM";
+        }
+        else{
+            amPm = "PM";
+        }
+        int hour =  cal.get(Calendar.HOUR);
+        String hourStr;
+        if(hour < 10){
+            hourStr = "0"+hour;
+        }
+        else{
+            hourStr = ""+hour;
+        }
+        int minute =  cal.get(Calendar.MINUTE);
+        String minuteStr;
+        if(minute < 10){
+            minuteStr = "0"+minute;
+        }
+        else{
+            minuteStr = ""+minute;
+        }
+
+
+        return cal.get(Calendar.DAY_OF_MONTH) + "." + (cal.get(Calendar.MONTH) + 1) + "." + cal.get(Calendar.YEAR) + " "
+                + amPm + " " + hourStr + ":" + minuteStr;
     }
 }

@@ -142,14 +142,16 @@ public class AddEmployeeActivity extends AppCompatActivity
                 startActivity(intent);
                 break;
             }
+            /*
             case R.id.taskCategoryOption:{
                 Toast.makeText(this,"Task category option todo Liza",Toast.LENGTH_LONG).show();
                 Log.i(TAG,"taskCategoryOption");
                 break;
             }
+            */
             case R.id.taskLocationOption:{
-                Toast.makeText(this,"Task location option todo Liza",Toast.LENGTH_LONG).show();
-                Log.i(TAG,"taskLocationOption");
+                Intent intent = new Intent(this,LocationsActivity.class);
+                startActivity(intent);
                 break;
             }
             default:
@@ -224,6 +226,7 @@ public class AddEmployeeActivity extends AppCompatActivity
             newEmployee.put("manager", currentUser.getEmail());
             newEmployee.put("isManager", false);
             newEmployee.put("statusEmployeeChange",true);
+       //     newEmployee.saveEventually();
             newEmployee.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {

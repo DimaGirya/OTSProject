@@ -49,55 +49,42 @@ public class SynchronizationService extends Service {
     }
     @Override
     public void onCreate() {
-        lastUpdate = getLastUpdateDate();
-        Log.i(TAG, "SynchronizationService: onCreate");
+        try {
+            lastUpdate = getLastUpdateDate();
+            Log.i(TAG, "SynchronizationService: onCreate");
+            ParseUser currentUser = ParseUser.getCurrentUser();
+            isManager = currentUser.getBoolean("isManager");
+            Log.d(TAG, "isManager:" + isManager);
+            currentUserName = currentUser.getUsername();
+            updateData = UpdateData.getInstance();
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+            mBuilder.setSmallIcon(R.drawable.ic_launcher);
+            mBuilder.setContentTitle("Hello " + currentUserName);
+            PendingIntent contentIntent;
+            if (isManager) {
+                contentIntent = PendingIntent.getActivity(this, 0,
+                        new Intent(this, ShowTaskManagerActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                mBuilder.setContentText("You not have new task status update");
+            } else {
+                contentIntent = PendingIntent.getActivity(this, 0,
+                        new Intent(this, TaskShowEmployeeActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                mBuilder.setContentText("You not have new task yet");
+            }
+            mBuilder.setContentIntent(contentIntent);
+            // Gets an instance of the NotificationManager service
+            NotificationManager mNotifyMgr =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        isManager = currentUser.getBoolean("isManager");
-        Log.d(TAG, "isManager:"+isManager);
-        currentUserName = currentUser.getUsername();
-        updateData = UpdateData.getInstance();
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setSmallIcon(R.drawable.ic_launcher);
-        mBuilder.setContentTitle("Hello " + currentUserName);
-        PendingIntent contentIntent;
-        if(isManager) {
-            contentIntent = PendingIntent.getActivity(this, 0,
-                    new Intent(this, ShowTaskManagerActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-            mBuilder.setContentText("You not have new task status update");
+            NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(this.NOTIFICATION_SERVICE);
+            startForeground(NOTIFICATION_NUMBER, mBuilder.build());
+            service();
         }
-        else{
-            contentIntent = PendingIntent.getActivity(this, 0,
-                    new Intent(this, TaskShowEmployeeActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-            mBuilder.setContentText("You not have new task yet");
+        catch (Exception e){
+            Log.d(TAG,"Exception in  service:",e);
+            stopSelf();
         }
-        mBuilder.setContentIntent(contentIntent);
-        // Gets an instance of the NotificationManager service
-        NotificationManager mNotifyMgr =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(this.NOTIFICATION_SERVICE);
-        startForeground(NOTIFICATION_NUMBER,  mBuilder.build());
-     /*
-        handler = new Handler() {
-            public void handleMessage(android.os.Message msg) {
-                switch (msg.what) {
-                    case NEW_TASK:
-                        Log.d(TAG,"NEW TASK");
-                        break;
-                    case TASK_STATUS_UPDATE:
-
-                        break;
-                    case TASK_CANCEL:
-
-                        break;
-                }
-            };
-        };
-        */
-        service();
     }
+
 
     private Date getLastUpdateDate() {
         sharedPreferences = getSharedPreferences("DateTimSave", MODE_PRIVATE);
