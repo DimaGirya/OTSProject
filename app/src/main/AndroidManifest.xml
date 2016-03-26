@@ -68,11 +68,6 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity
-            android:name=".activity.TestCamera"
-            android:label="@string/title_activity_test_camera"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
     </application>
 
 </manifest>
