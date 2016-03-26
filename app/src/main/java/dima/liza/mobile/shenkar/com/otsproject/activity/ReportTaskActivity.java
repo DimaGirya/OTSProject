@@ -1,6 +1,8 @@
 package dima.liza.mobile.shenkar.com.otsproject.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -14,15 +16,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
 import dima.liza.mobile.shenkar.com.otsproject.R;
@@ -30,6 +40,9 @@ import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 import dima.liza.mobile.shenkar.com.otsproject.Validation;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
+
+
+
 
 public class ReportTaskActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private static final String TAG = "ReportTaskActivity" ;
@@ -56,7 +69,8 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
     Task taskToReport;
     String taskIdToReport;
     private boolean taskIsDone = false;
-
+    private static final int CAMERA_REQUEST = 1888;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +89,7 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
         });
 
         picture = (Button)findViewById(R.id.buttonAddPicture);
+        this.imageView = (ImageView)this.findViewById(R.id.CameraImageView);
         reportTask = (Button)findViewById(R.id.reportTask);
         taskCategoryTextView = (TextView) findViewById(R.id.taskCategoryText);
         taskDescriptionTextView = (TextView) findViewById(R.id.taskDescriptionText);
@@ -110,9 +125,9 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
         String  temp = Validation.dateToString(taskToReport.getDeadline());
         textViewDeadline.setText(temp);
         textViewLocationTask.setText(taskToReport.getLocation());
-        if(!taskToReport.isPhotoRequire()){
-            picture.setVisibility(View.INVISIBLE);
-        }
+//        if(!taskToReport.isPhotoRequire()){
+//            picture.setVisibility(View.INVISIBLE);
+//        }
         String status = taskToReport.getStatus();
         if(!currentUser.getBoolean("isManager")) {
             fab.hide();
@@ -170,7 +185,6 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                     radioGroupStatus.setVisibility(View.INVISIBLE);
                     textViewProgress.setText("Task cancel");
                     textViewProgress.setVisibility(View.VISIBLE);
-
                 }
                 case "late": {
                     statusOfTask = STATUS_CANCEL;
@@ -185,7 +199,6 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                     statusOfTask = ERROR;
                     Log.d(TAG, "Status problem of task");
                 }
-
             }
             Log.d(TAG, "statusOfTask:" + statusOfTask);
         }
@@ -206,6 +219,42 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
         taskHeaderTextView.setText(taskToReport.getTaskHeader());
         taskPriorityTextView.setText(taskToReport.getPriority());
         taskCategoryTextView.setText(taskToReport.getCategory());
+
+
+        //if there is image for this task show it in the imageView
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("images");
+        query.whereEqualTo("task_id", taskIdToReport);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null) {
+                    if (objects.size() == 0) {
+                        ;
+                    } else {
+                        ParseObject fileObject = objects.get(0);
+                        ParseFile file = (ParseFile) fileObject.get("imageFile");
+                        //get the data of the file
+                        file.getDataInBackground(new GetDataCallback() {
+                            @Override
+                            public void done(byte[] data, ParseException e) {
+                                if (e == null) {
+                                    //make bytes into usable file
+                                    Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+                                    //set the file to the imageView
+                                    ImageView pic = (ImageView) findViewById(R.id.CameraImageView);
+                                    pic.setImageBitmap(bmp);
+                                } else {
+                                    Toast.makeText(ReportTaskActivity.this, "Can't load image. Try again", Toast.LENGTH_LONG).show();
+                                }
+
+                            }
+                        });
+                    }
+                } else {
+                    ;
+                }
+            }
+        });
     }
 
     @Override
@@ -272,7 +321,29 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
 
 
     public void onClickAddPicture(View view) {
-        Log.d(TAG,"onClickAddPicture todo");
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+    }
+//
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //save image to parse
+        if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            //show the photo you take in the imageView
+            imageView.setImageBitmap(photo);
+            //prepare image file for parse
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] image = stream.toByteArray();
+            ParseFile file = new ParseFile("taskPhoto.png", image);
+            file.saveInBackground();
+            //save in parse
+            ParseObject imgupload = new ParseObject("images");
+            imgupload.put("employee", currentUser.getEmail());
+            imgupload.put("task_id", taskIdToReport);
+            imgupload.put("imageFile", file);
+            imgupload.saveInBackground();
+        }
     }
 
     public void onClickSaveTaskReport(View view) {

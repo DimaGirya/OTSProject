@@ -285,5 +285,14 @@
         android:layout_alignLeft="@+id/texViewEmployeeTask"
         android:layout_alignStart="@+id/texViewEmployeeTask" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/CameraImageView"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/buttonAddPicture"
+        android:layout_alignEnd="@+id/buttonAddPicture"
+        android:layout_marginBottom="36dp" />
+
 
 </RelativeLayout>
