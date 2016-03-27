@@ -3,6 +3,7 @@ package dima.liza.mobile.shenkar.com.otsproject.activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -236,7 +237,7 @@ public class AddEmployeeActivity extends AppCompatActivity
                         Toast.makeText(AddEmployeeActivity.this, R.string.addNewEmployeeDone, Toast.LENGTH_LONG).show();
                         if (numOfAddNewEmployee == numOfNewEmployee) {
                             NotificationControl.notificationNow(getString(R.string.addEmployeeDone), numOfNewEmployee + getString(R.string.added),
-                                    R.drawable.ic_launcher, 1, AddEmployeeActivity.this,null);
+                                    R.drawable.ic_launcher, 1, AddEmployeeActivity.this, null);
                             DataAccess dataAccess = DataAccess.getInstatnce(AddEmployeeActivity.this);
                             Employee employee;
                             for (int i = 0; i < listEmployeeToAdd.size(); i++) {
@@ -252,13 +253,42 @@ public class AddEmployeeActivity extends AppCompatActivity
                         Toast.makeText(AddEmployeeActivity.this, R.string.addEmployeeFail, Toast.LENGTH_LONG).show();
                         Log.d(TAG, "ParseException:", e);
                         NotificationControl.notificationNow(getString(R.string.addEmployeeFailNotification), "Oops! Try again later.Error is a:" + e.getMessage(),
-                                R.drawable.ic_launcher, 2, AddEmployeeActivity.this,null);
+                                R.drawable.ic_launcher, 2, AddEmployeeActivity.this, null);
                         progressDialog.dismiss();
                     }
                 }
             });
 
         }
+
+
+        List<String> emails2 = new <String> ArrayList();
+        for(int i = 0;i < listEmployeeToAdd.size();i++) {
+           emails2.add(listEmployeeToAdd.get(i).getEmail());
+        }
+        String[] stringEmails = (String[]) emails2.toArray();
+        //String[] TO = {stringEmails};    // to-do make it work
+        String[] TO = {"lizagilman@gmail.com"};
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, stringEmails);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Invitation to Join OTS team");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hi\n" +
+                "\tYou have been invited to be a team member in an OTS Team created by me.\n" +
+                "\tUse this link to download and install the App from Google Play.");
+
+        try {
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            finish();
+        }
+        catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(AddEmployeeActivity.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
+        }
+
+
+
 
     }
 
