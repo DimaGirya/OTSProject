@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -27,6 +28,7 @@ import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 import dima.liza.mobile.shenkar.com.otsproject.UpdateData;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.AdapterTaskForEmployee;
+import dima.liza.mobile.shenkar.com.otsproject.task.data.AdapterTaskForManager;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.ViewRowTask;
 
@@ -68,7 +70,7 @@ public class TaskShowEmployeeActivity extends AppCompatActivity {
         updateData.updateTaskList(this,false);
         onResume();
     }
-
+/*
     @Override
     protected void onResume() {
         listOfTask = dataAccess.getAllTask(checkBox.isChecked());
@@ -80,6 +82,28 @@ public class TaskShowEmployeeActivity extends AppCompatActivity {
         registerForContextMenu(listView);
         super.onResume();
     }
+*/
+@Override
+protected void onResume() {
+    listOfTask = dataAccess.getAllTask(checkBox.isChecked());
+    if(listOfTask.size()==0){
+        String noTask [] = new String[1];
+        noTask[0] = "No current task";
+        adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,noTask);
+        listView = (ListView) findViewById(R.id.listViewTask);
+        listView.setAdapter(adapter);
+        unregisterForContextMenu(listView);
+    }
+    else {
+        numberOfTask.setText(getString(R.string.numberOfTask) + listOfTask.size());
+        adapter = new AdapterTaskForManager(this, listOfTask);
+        listView = (ListView) findViewById(R.id.listViewTask);
+        listView.setAdapter(adapter);
+        registerForContextMenu(listView);
+    }
+    super.onResume();
+}
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -93,7 +117,7 @@ public class TaskShowEmployeeActivity extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
         Task task = (Task) lv.getItemAtPosition(acmi.position);
         taskSelectedIdParse = task.getParseId();
-        menu.add(Menu.NONE, ID_REPORT_TASK, Menu.NONE, "Report task");
+        menu.add(Menu.NONE, ID_REPORT_TASK, Menu.NONE, "Report/View task");
     }
 
     @Override

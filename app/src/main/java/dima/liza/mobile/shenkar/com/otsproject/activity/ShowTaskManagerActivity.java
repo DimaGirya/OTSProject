@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -52,7 +53,7 @@ public class ShowTaskManagerActivity extends AppCompatActivity
     List<Task> listOfTask;
     DataAccess dataAccess;
     private String taskSelectedId;
-
+    Task task;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,12 +92,22 @@ public class ShowTaskManagerActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         listOfTask = dataAccess.getAllTask(checkBox.isChecked());
-        numberOfTask.setText(getString(R.string.numberOfTask)+listOfTask.size());
-        adapter = new AdapterTaskForManager(this,listOfTask);
-        listView = (ListView) findViewById(R.id.listViewTask);
-        listView.setAdapter(adapter);
-        registerForContextMenu(listView);
-        super.onResume();
+        if(listOfTask.size()==0){
+            String noTask [] = new String[1];
+            noTask[0] = "No current task";
+            adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,noTask);
+            listView = (ListView) findViewById(R.id.listViewTask);
+            listView.setAdapter(adapter);
+            unregisterForContextMenu(listView);
+        }
+        else {
+            numberOfTask.setText(getString(R.string.numberOfTask) + listOfTask.size());
+            adapter = new AdapterTaskForManager(this, listOfTask);
+            listView = (ListView) findViewById(R.id.listViewTask);
+            listView.setAdapter(adapter);
+            registerForContextMenu(listView);
+        }
+            super.onResume();
     }
 
     @Override
@@ -113,16 +124,24 @@ public class ShowTaskManagerActivity extends AppCompatActivity
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         ListView lv = (ListView) v;
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        Task task = (Task) lv.getItemAtPosition(acmi.position);
+         task = (Task) lv.getItemAtPosition(acmi.position);
         taskSelectedId = task.getParseId();
+
+        String status = task.getStatus();
+        if(status.compareTo("cancel") == 0  || status.compareTo("late") == 0 || status.compareTo("done")  == 0  ){
             menu.add(Menu.NONE,ID_VIEW_TASK,Menu.NONE,"View task");
-            menu.add(Menu.NONE,ID_EDIT_TASK,Menu.NONE,"Edit task");
-            menu.add(Menu.NONE,ID_CANCEL_TASK,Menu.NONE,"Cancel task");
+        }
+        else {
+            menu.add(Menu.NONE,ID_VIEW_TASK,Menu.NONE,"View task");
+            menu.add(Menu.NONE, ID_EDIT_TASK, Menu.NONE, "Edit task");
+            menu.add(Menu.NONE, ID_CANCEL_TASK, Menu.NONE, "Cancel task");
+        }
 
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+
 
         switch (item.getItemId()) {
             case ID_VIEW_TASK:{

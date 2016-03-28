@@ -114,55 +114,64 @@ public class SynchronizationService extends Service {
         final DataAccess dataAccess = DataAccess.getInstatnce(context);
         Thread t = new Thread(new Runnable(){
             public void run() {
-                while (true) {
-                    try {
-                        Parse.initialize(SynchronizationService.this);
+                    try{
+                        loopService(context,dataAccess);
                     }
                     catch (Exception e){
-
+                      Log.d(TAG,"Service is shutdown",e);
                     }
-
-                    if (isManager) {
-                        updateData.updateTaskList(SynchronizationService.this,isManager);
-                        updateData.updateEmployeeList(SynchronizationService.this);
-
-                    } else {
-                        updateData.updateTaskList(SynchronizationService.this,isManager);
-                    }
-                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-                    mBuilder.setSmallIcon(R.drawable.ic_launcher);
-                    mBuilder.setContentTitle("Hello " + currentUserName);
-                    PendingIntent contentIntent;
-                    if(isManager) {
-                        contentIntent = PendingIntent.getActivity(context, 0,
-                                new Intent(SynchronizationService.this, ShowTaskManagerActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-                        mBuilder.setContentText("Your team have "+dataAccess.getNumberOfTask(false)+ " task now");
-                    }
-                    else{
-                        contentIntent = PendingIntent.getActivity(context, 0,
-                                new Intent(context, TaskShowEmployeeActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-                        mBuilder.setContentText("Your  have a "+dataAccess.getNumberOfTask(false)+ " task now");
-                    }
-                    mBuilder.setContentIntent(contentIntent);
-                    // Gets an instance of the NotificationManager service
-                    NotificationManager mNotifyMgr =
-                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-                    NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
-                    startForeground(NOTIFICATION_NUMBER,  mBuilder.build());
-                    checkDeadline();
-                    updateDone();
-                    try {
-                        Thread.sleep(1000 * 60);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         });
         t.start();
     }
-    //todo finish  checkDeadline()
+
+
+    private void loopService(Context context,DataAccess dataAccess){
+        while (true) {
+            try {
+                Parse.initialize(SynchronizationService.this);
+            }
+            catch (Exception e){
+                Log.d(TAG,"Exception Parse.initialize",e);
+            }
+
+            if (isManager) {
+                updateData.updateTaskList(SynchronizationService.this,isManager);
+                updateData.updateEmployeeList(SynchronizationService.this);
+
+            } else {
+                updateData.updateTaskList(SynchronizationService.this,isManager);
+            }
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+            mBuilder.setSmallIcon(R.drawable.ic_launcher);
+            mBuilder.setContentTitle("Hello " + currentUserName);
+            PendingIntent contentIntent;
+            if(isManager) {
+                contentIntent = PendingIntent.getActivity(context, 0,
+                        new Intent(SynchronizationService.this, ShowTaskManagerActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                mBuilder.setContentText("Your team have "+dataAccess.getNumberOfTask(false)+ " task now");
+            }
+            else{
+                contentIntent = PendingIntent.getActivity(context, 0,
+                        new Intent(context, TaskShowEmployeeActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                mBuilder.setContentText("Your  have a "+dataAccess.getNumberOfTask(false)+ " task now");
+            }
+            mBuilder.setContentIntent(contentIntent);
+            // Gets an instance of the NotificationManager service
+            NotificationManager mNotifyMgr =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+            NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+            startForeground(NOTIFICATION_NUMBER,  mBuilder.build());
+            checkDeadline();
+            updateDone();
+            try {
+                Thread.sleep(1000 * 60);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private void checkDeadline() {
         DataAccess dataAccess = DataAccess.getInstatnce(this);

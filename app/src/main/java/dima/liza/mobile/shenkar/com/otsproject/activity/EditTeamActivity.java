@@ -316,17 +316,10 @@ public class EditTeamActivity extends AppCompatActivity
     }
 
 
-    public void onClickDeleteMembers(View view) {
-
-    }
 
     public void onCLickEditTeamDone(View view) {
-//        Intent intent = new Intent(EditTeamActivity.this,ShowTaskManagerActivity.class);
-//        startActivity(intent);
-
-        // for test locations activity!
-        Intent intent = new Intent(EditTeamActivity.this,LocationsActivity.class);
-        startActivity(intent);
+       Intent intent = new Intent(EditTeamActivity.this,ShowTaskManagerActivity.class);
+       startActivity(intent);
     }
 
 }

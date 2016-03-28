@@ -119,8 +119,7 @@ public class SignInActivity extends AppCompatActivity {
                                                     user.signUpInBackground(new SignUpCallback() {
                                                         public void done(ParseException e) {
                                                             if (e == null) {
-                                                                // sign up succeed, delete user from newEmloyee parse class
-                                                                // Toast.makeText(SignInActivity.this, "NEW EMPLOYEE signed up", Toast.LENGTH_LONG).show();
+                                                                Toast.makeText(context,"You have been added to Team of "+ newEmployee.getString("manager"),Toast.LENGTH_LONG).show();
                                                                 newEmployee.deleteInBackground();
                                                                 Intent serviceIntent = new Intent(SignInActivity.this, SynchronizationService.class);
                                                                 startService(serviceIntent);
