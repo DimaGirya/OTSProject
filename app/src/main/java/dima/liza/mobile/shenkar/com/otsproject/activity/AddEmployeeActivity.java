@@ -54,6 +54,7 @@ public class AddEmployeeActivity extends AppCompatActivity
     int numOfAddNewEmployee;
     private static String TAG  = "AddEmployeeActivity";
     TextView userName,userEmail;
+    EditText messageToEmployee;
     ParseUser currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class AddEmployeeActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    ManagerValidation.checkRegisteredEmployee(AddEmployeeActivity.this, dataAccess);
+                ManagerValidation.checkRegisteredEmployee(AddEmployeeActivity.this, dataAccess);
             }
         });
 
@@ -79,7 +80,7 @@ public class AddEmployeeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
          currentUser = ParseUser.getCurrentUser();
-
+        messageToEmployee = (EditText) findViewById(R.id.messageToEmployee);
         editTextEmail = (EditText) findViewById(R.id.addEmployeeEmail);
         editTextPhone = (EditText) findViewById(R.id.addEmployeePhone);
         listEmployeeToAdd = new ArrayList();
@@ -262,23 +263,25 @@ public class AddEmployeeActivity extends AppCompatActivity
         }
 
 
-        List<String> emails2 = new <String> ArrayList();
+        String  emails[] = new String [listEmployeeToAdd.size()];
         for(int i = 0;i < listEmployeeToAdd.size();i++) {
-           emails2.add(listEmployeeToAdd.get(i).getEmail());
+            emails[i] = listEmployeeToAdd.get(i).getEmail();
         }
-        String[] stringEmails = (String[]) emails2.toArray();
+       // String[] stringEmails = (String[]) emails.toArray();
         //String[] TO = {stringEmails};    // to-do make it work
-        String[] TO = {"lizagilman@gmail.com"};
+       // String[] TO = {"lizagilman@gmail.com"};
+      //  String[] stringEmails = new String[list]
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
         emailIntent.setData(Uri.parse("mailto:"));
         emailIntent.setType("text/plain");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, stringEmails);
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, emails);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Invitation to Join OTS team");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hi\n" +
+      /*  emailIntent.putExtra(Intent.EXTRA_TEXT, "Hi\n" +
                 "\tYou have been invited to be a team member in an OTS Team created by me.\n" +
                 "\tUse this link to download and install the App from Google Play.");
-
+                */
+        emailIntent.putExtra(Intent.EXTRA_TEXT,messageToEmployee.getText().toString());
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
             finish();

@@ -15,8 +15,7 @@
 
     <TextView
         android:textSize="18sp"
-
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:padding="5dp"
@@ -28,5 +27,6 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:padding="5dp"
+        android:visibility="invisible"
         android:id="@+id/listOfEmployeeNumberOfTask" />
 </LinearLayout>

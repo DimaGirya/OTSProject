@@ -15,6 +15,7 @@ public  class NotificationControl {
         mBuilder.setSmallIcon(drawable);
         mBuilder.setContentTitle(title);
         mBuilder.setContentText(text);
+        mBuilder.setAutoCancel(true);
         if(intent!=null) {
             mBuilder.setContentIntent(intent);
         }

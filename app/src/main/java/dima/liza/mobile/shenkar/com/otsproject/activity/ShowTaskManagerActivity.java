@@ -81,52 +81,12 @@ public class ShowTaskManagerActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         final DataAccess dataAccess = DataAccess.getInstatnce(this);
-        currentUser = ParseUser.getCurrentUser();
+        currentUser = ParseUser.getCurrentUser();  //crush
         getPastTask = checkBox.isChecked();
         isManager = currentUser.getBoolean("isManager");
         UpdateData updateData = UpdateData.getInstance();
         updateData.updateTaskList(this,isManager);
-        /*
-        ParseQuery<ParseObject> queryTask = ParseQuery.getQuery("Task");
-        queryTask.whereEqualTo("taskManager", currentUser.getEmail());
-        queryTask.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                Log.e(TAG, "Task objects size" + objects.size());
-                if (e == null) {
-                    List<Task> list = new ArrayList();
-                    String taskDescription;
-                    String employee;
-                    Date deadline;
-                    String deadlineStr;
-                    String status;
-                    String category;
-                    String location;
-                    String parseId;
-                    String taskHeader;
-                    boolean photoRequire;
-                    SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance();
-                    for (int i = 0; i < objects.size(); i++) {
-                        taskDescription = objects.get(i).getString("taskDescription");
-                        taskHeader =  objects.get(i).getString("taskHeader");
-                        employee = objects.get(i).getString("taskEmployee");
-                        deadline = objects.get(i).getDate("taskDate");
-                        deadlineStr = dateFormat.format(deadline);
-                        status = objects.get(i).getString("status");
-                        category = objects.get(i).getString("taskCategory");
-                        location = objects.get(i).getString("taskLocation");
-                        parseId = objects.get(i).getObjectId();
-                        photoRequire = objects.get(i).getBoolean("photoRequire");
-                        dataAccess.insertTask(new Task(taskHeader,taskDescription, employee, deadline, status, category, location, photoRequire, parseId, deadlineStr));
-                    }
-                    onResume();
-                } else {
-                    Toast.makeText(ShowTaskManagerActivity.this, "Connection problem.Try again later", Toast.LENGTH_LONG).show();
-                    Log.d(TAG, "findInBackground exception:", e);
-                }
-            }
-        });
-        */
+        onResume();
     }
     @Override
     protected void onResume() {
@@ -135,7 +95,6 @@ public class ShowTaskManagerActivity extends AppCompatActivity
         adapter = new AdapterTaskForManager(this,listOfTask);
         listView = (ListView) findViewById(R.id.listViewTask);
         listView.setAdapter(adapter);
-//        listView.setOnItemLongClickListener((AdapterView.OnItemLongClickListener) adapter); //warning
         registerForContextMenu(listView);
         super.onResume();
     }

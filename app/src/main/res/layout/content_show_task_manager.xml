@@ -38,5 +38,42 @@
         android:id="@+id/listViewTask"
         android:layout_below="@+id/checkBoxPastTask"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp"
+        />
+    <TextView
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:text="Task Header"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/checkBoxPastTask"
+        />
+
+    <TextView
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="Employee"
+        android:id="@+id/textView4"
+        android:layout_alignTop="@+id/textView5"
+        android:layout_toRightOf="@+id/textView3"
+        android:layout_toEndOf="@+id/textView3" />
+
+    <TextView
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:id="@+id/textView5"
+        android:layout_alignTop="@+id/textView3"
+        android:layout_toRightOf="@+id/textView4"
+        android:layout_toEndOf="@+id/textView4" />
+
+    <TextView
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="Deadline"
+        android:id="@+id/textView6"
+        android:layout_alignBaseline="@+id/textView4"
+        android:layout_alignBottom="@+id/textView4"
+        android:layout_toRightOf="@+id/textView5"
+        android:layout_toEndOf="@+id/textView5" />
 </RelativeLayout>

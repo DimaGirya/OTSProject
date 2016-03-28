@@ -48,27 +48,48 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+    <!--
+       <Button
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="@string/buttonDeleteMembers"
+           android:id="@+id/buttonDeleteMembers"
+           android:onClick="onClickDeleteMembers"
+           android:layout_alignParentBottom="true"
+           android:layout_toRightOf="@+id/buttonEditTeamDone"
+           android:layout_toEndOf="@+id/buttonEditTeamDone" />
+      -->
+       <ListView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:id="@+id/listViewTeamMembers"
+           android:layout_alignParentRight="true"
+           android:layout_alignParentEnd="true"
+           android:layout_below="@+id/bInviteMembers"
+           android:layout_alignParentLeft="true"
+           android:layout_alignParentStart="true"
+           android:layout_marginTop="20dp"
+           android:layout_above="@+id/buttonEditTeamDone" />
 
-    <Button
-        android:layout_width="wrap_content"
+    <TextView
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="@string/buttonDeleteMembers"
-        android:id="@+id/buttonDeleteMembers"
-        android:onClick="onClickDeleteMembers"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/buttonEditTeamDone"
-        android:layout_toEndOf="@+id/buttonEditTeamDone" />
-
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listViewTeamMembers"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Employee "
+        android:id="@+id/textView7"
         android:layout_below="@+id/bInviteMembers"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/buttonEditTeamDone" />
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Status"
+        android:id="@+id/textView8"
+        android:layout_below="@+id/bInviteMembers"
+        android:layout_toRightOf="@+id/textView7"
+        android:layout_toEndOf="@+id/textView7" />
 
     <!--
     need to change to FloatingActionButton

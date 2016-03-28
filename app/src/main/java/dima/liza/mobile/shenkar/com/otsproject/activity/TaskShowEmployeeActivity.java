@@ -67,45 +67,6 @@ public class TaskShowEmployeeActivity extends AppCompatActivity {
         UpdateData updateData = UpdateData.getInstance();
         updateData.updateTaskList(this,false);
         onResume();
-        /*
-        ParseQuery<ParseObject> queryTask = ParseQuery.getQuery("Task");
-        queryTask.whereEqualTo("taskEmployee", currentUser.getEmail());
-        queryTask.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                if (e == null) {
-                    List<Task> list = new ArrayList();
-                    String taskDescription;
-                    String employee;
-                    Date deadline;
-                    String deadlineStr;
-                    String status;
-                    String category;
-                    String location;
-                    String parseId;
-                    String taskHeader;
-                    boolean photoRequire;
-                    SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance();
-                    for (int i = 0; i < objects.size(); i++) {
-                        taskDescription = objects.get(i).getString("taskDescription");
-                        taskHeader =  objects.get(i).getString("taskHeader");
-                        employee = objects.get(i).getString("taskEmployee");
-                        deadline = objects.get(i).getDate("taskDate");
-                        deadlineStr = dateFormat.format(deadline);
-                        status = objects.get(i).getString("status");
-                        category = objects.get(i).getString("taskCategory");
-                        location = objects.get(i).getString("taskLocation");
-                        parseId = objects.get(i).getObjectId();
-                        photoRequire = objects.get(i).getBoolean("photoRequire");
-                        dataAccess.insertTask(new Task(taskHeader,taskDescription, employee, deadline, status, category, location, photoRequire, parseId, deadlineStr));
-                    }
-                    onResume();
-                } else {
-                    Toast.makeText(TaskShowEmployeeActivity.this, "Connection problem.Try again later", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-        */
     }
 
     @Override
@@ -132,7 +93,7 @@ public class TaskShowEmployeeActivity extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
         Task task = (Task) lv.getItemAtPosition(acmi.position);
         taskSelectedIdParse = task.getParseId();
-        menu.add(Menu.NONE, ID_REPORT_TASK, Menu.NONE, "Edit task");
+        menu.add(Menu.NONE, ID_REPORT_TASK, Menu.NONE, "Report task");
     }
 
     @Override

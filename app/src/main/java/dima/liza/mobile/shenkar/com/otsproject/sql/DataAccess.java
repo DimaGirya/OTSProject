@@ -338,6 +338,10 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
             select = "SELECT * FROM " + DbContract.TaskEntry.TABLE_NAME + " WHERE " + DbContract.TaskEntry.COLUMN_TASK_ID + "='" + parseId + "'";
             Log.d(TAG, select);
             Cursor cursor = database.rawQuery(select, null);
+            if(cursor.getCount()==0){
+                Log.d(TAG, "getTaskById return null");
+                return null;
+            }
             cursor.moveToFirst();
             Task task = getTaskFromCursor(cursor);
             cursor.close();

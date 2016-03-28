@@ -34,7 +34,7 @@ public class UpdateData {
     private static final String TAG = "UpdateData";
     private static UpdateData ourInstance = new UpdateData();
     private int numberOfEmployee;
-
+    int drawable= R.drawable.ic_menu_send;
     public static UpdateData getInstance() {
         return ourInstance;
     }
@@ -98,53 +98,44 @@ public class UpdateData {
                          Task  newTask = new Task (taskHeader,taskDescription,employee,deadline,priority,status,category,location,photoRequire,parseId,deadlineStr);
                         String taskSelectedIdParse = newTask.getParseId();
                         PendingIntent pendingIntent;
-                        Intent intent = new Intent(context,ReportTaskActivity.class);
-                        intent.putExtra("taskId",taskSelectedIdParse);
-                        pendingIntent =  PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                            Intent intent = new Intent(context, ReportTaskActivity.class);
+                            intent.putExtra("taskId", taskSelectedIdParse);
+                            pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
                         if(!isManager){
                             if(oldTask!=null) {
                                 if (oldTask.getDeadline().compareTo(newTask.getDeadline()) != 0) {
-                                    NotificationControl.notificationNow("Deadline of task change", taskHeader, R.drawable.ic_menu_send, parseId.hashCode(), context,pendingIntent);
+                                    NotificationControl.notificationNow("Deadline of task change", taskHeader, drawable, parseId.hashCode(), context,pendingIntent);
                                 }
                                 if (!taskDescription.equals(oldTask.getTaskDescription())) {
-                                    NotificationControl.notificationNow("Task description  change", taskHeader, R.drawable.ic_menu_send, taskDescription.hashCode(), context,pendingIntent);
+                                    NotificationControl.notificationNow("Task description  change", taskHeader, drawable, taskDescription.hashCode(), context,pendingIntent);
                                 }
                                 if (!taskHeader.equals(oldTask.getTaskHeader())) {
-                                    NotificationControl.notificationNow("Task description  change", taskHeader, R.drawable.ic_menu_send, taskHeader.hashCode(), context,pendingIntent);
+                                    NotificationControl.notificationNow("Task description  change", taskHeader, drawable, taskHeader.hashCode(), context,pendingIntent);
                                 }
                                 if (!category.equals(oldTask.getCategory())) {
-                                    NotificationControl.notificationNow("Task category  change", taskHeader, R.drawable.ic_menu_send, category.hashCode(), context,pendingIntent);
+                                    NotificationControl.notificationNow("Task category  change", taskHeader, drawable, category.hashCode(), context,pendingIntent);
                                 }
                                 if (!location.equals(oldTask.getLocation())) {
-                                    NotificationControl.notificationNow("Task location  change", taskHeader, R.drawable.ic_menu_send, location.hashCode(), context,pendingIntent);
+                                    NotificationControl.notificationNow("Task location  change", taskHeader,drawable, location.hashCode(), context,pendingIntent);
                                 }
                                 if (!status.equals("cancel")) {
-                                    NotificationControl.notificationNow("Task cancel ", taskHeader, R.drawable.ic_menu_send, status.hashCode(), context,pendingIntent);
+                                    NotificationControl.notificationNow("Task cancel ", taskHeader, drawable, status.hashCode(), context,pendingIntent);
                                 }
-                            }
+                                }
+
                                else{
-                                NotificationControl.notificationNow("You have new task todo.Enjoy! ", taskHeader, R.drawable.ic_menu_send, taskHeader.hashCode(), context,pendingIntent);
+                                NotificationControl.notificationNow("You have new task todo.Enjoy! ", taskHeader, drawable, taskHeader.hashCode(), context,pendingIntent);
                             }
                         }
                         else{
                                if(oldTask!=null) {
                                    if (!status.equals(oldTask.getStatus())) {
-                                       NotificationControl.notificationNow("Employee change status of task ", "Task:"+taskHeader +" .New status:"+ status, R.drawable.ic_menu_send, status.hashCode(), context,pendingIntent);
+                                       NotificationControl.notificationNow("Employee change status of task ", "Task:"+taskHeader +" .New status:"+ status, drawable, status.hashCode(), context,pendingIntent);
                                    }
                                }
                            }
-
                         dataAccess.insertTask(newTask);
                         Log.d(TAG, "Update task done. Id is a:" + parseId);
-                        if (isManager) {
-                            NotificationControl.notificationNow("You have update status task",taskHeader,R.drawable.ic_menu_send,2,context,null);
-                            Log.d(TAG,"Update parse filed:updateForManager to false");
-                            object.put("updateForManager", false);
-                        } else {
-                            NotificationControl.notificationNow("You have new task",taskHeader,R.drawable.ic_menu_send,2,context,null);
-                            Log.d(TAG, "Update parse filed:updateForEmployee to false");
-                            object.put("updateForEmployee", false);
-                        }
                         object.saveInBackground();
                     }
 
