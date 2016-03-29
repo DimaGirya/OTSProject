@@ -188,7 +188,7 @@
     <string name="imageView">imageView</string>
     <string name="androidStudio">Android Studio</string>
     <string name="androidStudio2">android.studio@android.com</string>
-    <string name="aboutMenu">about</string>
+    <string name="aboutMenu">About</string>
     <string name="version">Version 1.0</string>
     <string name="developed"><![CDATA[Developed by Dima Girya & Liza Gilman]]></string>
     <string name="allRights">All rights reserved</string>
