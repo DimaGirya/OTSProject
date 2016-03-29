@@ -49,10 +49,9 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     public void SignInClicked(View view) {
-        //todo make waiting dialog here
         pd = new ProgressDialog(this);
-        pd.setTitle("Signing-In");
-        pd.setMessage("Please wait");
+        pd.setTitle(getString(R.string.signingIn));
+        pd.setMessage(getString(R.string.pleaseWait));
         pd.show();
         final UpdateData updateData = UpdateData.getInstance();
         final String emailStr = email.getText().toString();
@@ -64,7 +63,7 @@ public class SignInActivity extends AppCompatActivity {
                     //user found in Parse Users class.
                     if (user.getBoolean("isManager") == true) {
                         updateData.updateTaskList(SignInActivity.this, true);
-                        updateData.getLocationFromParse(SignInActivity.this); //warning! Maybe race condition?
+                        updateData.getLocationFromParse(SignInActivity.this);
                         Intent serviceIntent = new Intent(SignInActivity.this, SynchronizationService.class);
                         startService(serviceIntent);
                         Intent intent = new Intent(context, ShowTaskManagerActivity.class);
@@ -91,24 +90,24 @@ public class SignInActivity extends AppCompatActivity {
                                 if (employee.size() == 0) {
                                     //user does not exist
                                     pd.dismiss();
-                                    Toast.makeText(SignInActivity.this, "Wrong Log-In details", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(SignInActivity.this, R.string.wrongLongInDetails, Toast.LENGTH_LONG).show();
                                 } else {
                                     //user found, move to Users Parse class (sign up
                                     final ParseObject newEmployee = employee.get(0);
                                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                    builder.setTitle("enter new username");
+                                    builder.setTitle(R.string.enterNewUsername);
                                     final EditText input = new EditText(context);
                                     builder.setView(input);
-                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    builder.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             newUsername = input.getText().toString();
                                             dialog.dismiss();
                                             AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
-                                            builder2.setTitle("enter new password");
+                                            builder2.setTitle(R.string.enterNewPassword);
                                             final EditText input2 = new EditText(context);
                                             builder2.setView(input2);
-                                            builder2.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            builder2.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     newPassword = input2.getText().toString();
@@ -122,7 +121,7 @@ public class SignInActivity extends AppCompatActivity {
                                                     user.signUpInBackground(new SignUpCallback() {
                                                         public void done(ParseException e) {
                                                             if (e == null) {
-                                                                Toast.makeText(context,"You have been added to Team of "+ newEmployee.getString("manager"),Toast.LENGTH_LONG).show();
+                                                                Toast.makeText(context,getString(R.string.youBeenAddetToTeam)+ newEmployee.getString("manager"),Toast.LENGTH_LONG).show();
                                                                 newEmployee.deleteInBackground();
                                                                 Intent serviceIntent = new Intent(SignInActivity.this, SynchronizationService.class);
                                                                 startService(serviceIntent);
@@ -133,14 +132,14 @@ public class SignInActivity extends AppCompatActivity {
                                                             } else {
                                                                 // Sign up didn't succeed
                                                                 pd.dismiss();
-                                                                Toast.makeText(SignInActivity.this, "signup failed", Toast.LENGTH_LONG).show();
+                                                                Toast.makeText(SignInActivity.this, R.string.signupFailed, Toast.LENGTH_LONG).show();
                                                                 Log.d(TAG, "ParseException", e);
                                                             }
                                                         }
                                                     });
                                                 }
                                             });
-                                            builder2.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                            builder2.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     dialog.cancel();
@@ -149,7 +148,7 @@ public class SignInActivity extends AppCompatActivity {
                                             builder2.show();
                                         }
                                     });
-                                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.cancel();
@@ -159,7 +158,7 @@ public class SignInActivity extends AppCompatActivity {
                                 }
                             } else {
                                 pd.dismiss();
-                                Toast.makeText(SignInActivity.this, "Something went wrong, try again later.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(SignInActivity.this, R.string.somethingWentWrong, Toast.LENGTH_LONG).show();
                             }
                         }
                     });

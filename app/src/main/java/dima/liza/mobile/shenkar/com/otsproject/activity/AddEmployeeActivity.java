@@ -145,13 +145,6 @@ public class AddEmployeeActivity extends AppCompatActivity
                 startActivity(intent);
                 break;
             }
-            /*
-            case R.id.taskCategoryOption:{
-                Toast.makeText(this,"Task category option todo Liza",Toast.LENGTH_LONG).show();
-                Log.i(TAG,"taskCategoryOption");
-                break;
-            }
-            */
             case R.id.taskLocationOption:{
                 Intent intent = new Intent(this,LocationsActivity.class);
                 startActivity(intent);
@@ -229,7 +222,6 @@ public class AddEmployeeActivity extends AppCompatActivity
             newEmployee.put("manager", currentUser.getEmail());
             newEmployee.put("isManager", false);
             newEmployee.put("statusEmployeeChange",true);
-       //     newEmployee.saveEventually();
             newEmployee.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
@@ -268,27 +260,19 @@ public class AddEmployeeActivity extends AppCompatActivity
         for(int i = 0;i < listEmployeeToAdd.size();i++) {
             emails[i] = listEmployeeToAdd.get(i).getEmail();
         }
-       // String[] stringEmails = (String[]) emails.toArray();
-        //String[] TO = {stringEmails};    // to-do make it work
-       // String[] TO = {"lizagilman@gmail.com"};
-      //  String[] stringEmails = new String[list]
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
         emailIntent.setData(Uri.parse("mailto:"));
         emailIntent.setType("text/plain");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, emails);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Invitation to Join OTS team");
-      /*  emailIntent.putExtra(Intent.EXTRA_TEXT, "Hi\n" +
-                "\tYou have been invited to be a team member in an OTS Team created by me.\n" +
-                "\tUse this link to download and install the App from Google Play.");
-                */
         emailIntent.putExtra(Intent.EXTRA_TEXT,messageToEmployee.getText().toString());
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
             finish();
         }
         catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(AddEmployeeActivity.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddEmployeeActivity.this, R.string.noEmailClient, Toast.LENGTH_SHORT).show();
         }
 
 

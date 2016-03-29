@@ -41,7 +41,7 @@ public class ManagerValidation {
             context.startActivity(intent);
         }
         else{
-            Toast.makeText(context,"You don't have registered workers",Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.youDontHaveWorkers,Toast.LENGTH_LONG).show();
         }
     }
 }

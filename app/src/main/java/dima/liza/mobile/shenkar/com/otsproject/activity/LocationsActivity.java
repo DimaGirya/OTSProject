@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
 import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 
@@ -53,11 +54,9 @@ public class LocationsActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                ManagerValidation.checkRegisteredEmployee(LocationsActivity.this, dataAccess);
             }
         });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -141,32 +140,7 @@ public class LocationsActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    /* moved to updateData and call in log in
-    public void getLocationFromParse(){
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("location");
-        query.whereEqualTo("manager", user.getEmail());
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> locations, ParseException e) {
-                if (e == null) {
-                    if (locations.isEmpty()) {
-                        Toast.makeText(LocationsActivity.this, "Locations not found.", Toast.LENGTH_LONG).show();
-                    } else {
-                        allLocations = new String[locations.size()];
-                        for (int i = 0; i < locations.size(); i++) {
-                            allLocations[i] = locations.get(i).getString("location");
-                        }
-                        dataAccess.insertLocations(allLocations);
-                        populate();
-                    }
-                } else {
-                    Toast.makeText(LocationsActivity.this, "Something went wrong, try again later.", Toast.LENGTH_LONG).show();
-                    Log.d(TAG, "exception:", e);
-                }
-            }
-        });
-    }
-    */
+
     public void populate(){
         allLocations = dataAccess.getLocations();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allLocations);
@@ -182,7 +156,7 @@ public class LocationsActivity extends AppCompatActivity
         newLocation.put("location", locationStr);
         newLocation.put("manager", user.getEmail());
         if(!dataAccess.insertLocation(locationStr)){
-            Toast.makeText(this,"This location is already Tin data base",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.locationInDateBase,Toast.LENGTH_LONG).show();
             return;
         }
         newLocation.saveInBackground(new SaveCallback() {
@@ -192,7 +166,7 @@ public class LocationsActivity extends AppCompatActivity
 
                     onResume();
                 } else {
-                    Toast.makeText(LocationsActivity.this, "Something went wrong, try again later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LocationsActivity.this, R.string.somethingWentWrong, Toast.LENGTH_LONG).show();
                     Log.d(TAG, "exception:", e);
                 }
             }
@@ -201,7 +175,6 @@ public class LocationsActivity extends AppCompatActivity
 
     @Override
     public void onResume(){
-        //getLocationFromParse();
         populate();
         super.onResume();
     }

@@ -33,16 +33,10 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
 public class SynchronizationService extends Service {
     private static final String TAG = "SynchronizationService";
     private static final int NOTIFICATION_NUMBER = 768 ;
-    private static final int NEW_TASK = 0;
-    private static final int TASK_STATUS_UPDATE = 1;
-    private static final int TASK_CANCEL = 3;
     private boolean isManager;
     SharedPreferences sharedPreferences;
     private String currentUserName;
-    private  ParseUser currentUser;
     Date lastUpdate;
-    Handler handler;
-    private int numberOfUpdateTask;
     UpdateData updateData;
     public SynchronizationService() {
 
@@ -64,11 +58,11 @@ public class SynchronizationService extends Service {
             if (isManager) {
                 contentIntent = PendingIntent.getActivity(this, 0,
                         new Intent(this, ShowTaskManagerActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-                mBuilder.setContentText("You not have new task status update");
+                mBuilder.setContentText(getString(R.string.noStatus));
             } else {
                 contentIntent = PendingIntent.getActivity(this, 0,
                         new Intent(this, TaskShowEmployeeActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-                mBuilder.setContentText("You not have new task yet");
+                mBuilder.setContentText(getString(R.string.noTaskYet));
             }
             mBuilder.setContentIntent(contentIntent);
             // Gets an instance of the NotificationManager service
@@ -149,12 +143,12 @@ public class SynchronizationService extends Service {
             if(isManager) {
                 contentIntent = PendingIntent.getActivity(context, 0,
                         new Intent(SynchronizationService.this, ShowTaskManagerActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-                mBuilder.setContentText("Your team have "+dataAccess.getNumberOfTask(false)+ " task now");
+                mBuilder.setContentText(getString(R.string.yourTeamHave)+dataAccess.getNumberOfTask(false)+ getString(R.string.taskNow));
             }
             else{
                 contentIntent = PendingIntent.getActivity(context, 0,
                         new Intent(context, TaskShowEmployeeActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-                mBuilder.setContentText("You  have a "+dataAccess.getNumberOfTask(false)+ " task now");
+                mBuilder.setContentText(getString(R.string.youHave)+dataAccess.getNumberOfTask(false)+ getString(R.string.taskNow));
             }
             mBuilder.setContentIntent(contentIntent);
             // Gets an instance of the NotificationManager service

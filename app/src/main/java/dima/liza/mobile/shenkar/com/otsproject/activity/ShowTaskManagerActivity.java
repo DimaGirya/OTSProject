@@ -87,7 +87,7 @@ public class ShowTaskManagerActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         final DataAccess dataAccess = DataAccess.getInstatnce(this);
-        currentUser = ParseUser.getCurrentUser();  //crush
+        currentUser = ParseUser.getCurrentUser();
         getPastTask = checkBox.isChecked();
         isManager = currentUser.getBoolean("isManager");
         UpdateData updateData = UpdateData.getInstance();
@@ -134,12 +134,12 @@ public class ShowTaskManagerActivity extends AppCompatActivity
 
         String status = task.getStatus();
         if(status.compareTo("cancel") == 0  || status.compareTo("late") == 0 || status.compareTo("done")  == 0 || status.compareTo("reject") == 0  ){
-            menu.add(Menu.NONE,ID_VIEW_TASK,Menu.NONE,"View task");
+            menu.add(Menu.NONE,ID_VIEW_TASK,Menu.NONE, R.string.viewTask);
         }
         else {
-            menu.add(Menu.NONE,ID_VIEW_TASK,Menu.NONE,"View task");
-            menu.add(Menu.NONE, ID_EDIT_TASK, Menu.NONE, "Edit task");
-            menu.add(Menu.NONE, ID_CANCEL_TASK, Menu.NONE, "Cancel task");
+            menu.add(Menu.NONE,ID_VIEW_TASK,Menu.NONE, R.string.viewTask);
+            menu.add(Menu.NONE, ID_EDIT_TASK, Menu.NONE, R.string.editTask);
+            menu.add(Menu.NONE, ID_CANCEL_TASK, Menu.NONE, R.string.cancelTask);
         }
 
     }
@@ -170,21 +170,20 @@ public class ShowTaskManagerActivity extends AppCompatActivity
             case ID_CANCEL_TASK:{
                 Log.d(TAG,"ID_CANCEL_TASK");
                 Log.d(TAG,taskSelectedId);
-                //todo ask confirmation
                 ParseObject parseTask = ParseObject.createWithoutData("Task", taskSelectedId);
                 parseTask.put("status","cancel");
                 parseTask.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         if(e==null){
-                            Toast.makeText(ShowTaskManagerActivity.this, "Task cancel", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ShowTaskManagerActivity.this, R.string.taskCancelDone, Toast.LENGTH_LONG).show();
                             Task taskCancel = dataAccess.getTaskById(taskSelectedId);
                             taskCancel.setStatus("cancel");
                             dataAccess.updateTask(taskCancel);
                             onResume();
                         }
                         else{
-                            Toast.makeText(ShowTaskManagerActivity.this,"Task not cancel",Toast.LENGTH_LONG).show();
+                            Toast.makeText(ShowTaskManagerActivity.this, R.string.taskNotCancel,Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -271,7 +270,7 @@ public class ShowTaskManagerActivity extends AppCompatActivity
             public void run() {
                 UpdateData.getInstance().updateTaskList(ShowTaskManagerActivity.this,true);
                 mSwipeRefreshLayout.setRefreshing(false);
-                Toast.makeText(ShowTaskManagerActivity.this,"Refresh finish",Toast.LENGTH_LONG).show();
+                Toast.makeText(ShowTaskManagerActivity.this, R.string.refreshFinish,Toast.LENGTH_LONG).show();
                 onResume();
             }
         });

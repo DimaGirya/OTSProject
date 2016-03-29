@@ -31,30 +31,37 @@
         </activity>
         <activity android:name=".activity.SignInActivity" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activity.AddEmployeeActivity"
             android:label="@string/title_activity_add_employee_activity_nav"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activity.EditTeamActivity"
             android:label="@string/title_activity_edit_team_activity_nav"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activity.AddTaskActivity"
             android:label="@string/title_activity_add_task"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activity.ShowTaskManagerActivity"
             android:label="@string/title_activity_show_task"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activity.TaskShowEmployeeActivity"
             android:label="@string/title_activity_task_show_employee"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activity.ReportTaskActivity"
             android:label="@string/title_activity_report_task"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activity.LocationsActivity"
             android:label="@string/title_activity_locations"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -65,9 +72,12 @@
             android:exported="true" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".activity.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>

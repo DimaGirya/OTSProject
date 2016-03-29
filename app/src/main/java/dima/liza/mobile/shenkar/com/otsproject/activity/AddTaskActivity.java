@@ -106,15 +106,14 @@ public class AddTaskActivity extends AppCompatActivity
         textDate = (TextView)findViewById(R.id.dateTask);
         dataAccess = DataAccess.getInstatnce(this);
 
-        String[] category = {getString(R.string.selectCategory),"General", "Cleaning", "Electricity", "Computers", "Other"};
+        String[] category = {getString(R.string.selectCategory),getString(R.string.general), getString(R.string.cleaning), getString(R.string.electricity), getString(R.string.computers), getString(R.string.other)};
         String[] location;
         location = dataAccess.getLocations();
-        if(location == null || location.length < 2 ) {
-            location = new String[2];//{getString(R.string.selectLocation), "location 1", "location 2", "location 3", "location 4"};
+        if(location.length==1) {
+            location = new String[2];
             location[0] = getString(R.string.selectLocation);
-            location[1] = "World";//default value
+            location[1] = getString(R.string.defaultLocation);//default value
         }
-        location = dataAccess.getLocations();
         String[] employeesName;
         Intent intent = getIntent();
         updateTask = intent.getBooleanExtra("editTask",false);
@@ -143,7 +142,7 @@ public class AddTaskActivity extends AppCompatActivity
             day = calendar.get(calendar.DAY_OF_MONTH);
             hour = calendar.get(calendar.HOUR_OF_DAY);
             year = calendar.get(calendar.YEAR);
-                    textDate.setText(day+getString(R.string.dot)+month+getString(R.string.dot)+year);
+            textDate.setText(day+getString(R.string.dot)+month+getString(R.string.dot)+year);
             hour = calendar.get(calendar.HOUR_OF_DAY);
             minute = calendar.get(calendar.MINUTE);
             textTime.setText(hour+getString(R.string.doubleDot)+minute);
@@ -422,14 +421,6 @@ public class AddTaskActivity extends AppCompatActivity
             Toast.makeText(this, R.string.dateFromPast,Toast.LENGTH_LONG).show();
             return false;
         }
-
-        //dateTask
-        /*
-        if(dateTask.before(Calendar.getInstance().getTime())){  //bag
-            Toast.makeText(this, R.string.dateFromPast,Toast.LENGTH_LONG).show();
-            return false;
-        }
-`````   */
         return true;
     }
 

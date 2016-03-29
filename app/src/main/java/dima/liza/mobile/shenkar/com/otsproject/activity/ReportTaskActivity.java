@@ -120,7 +120,7 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
         Intent intent = getIntent();
         taskIdToReport = intent.getStringExtra("taskId");
         if(taskIdToReport==null){
-            Toast.makeText(this,"Error",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,R.string.somethingWentWrong,Toast.LENGTH_LONG).show();
             Log.d(TAG, "TaskID is null");
             finish();
         }
@@ -167,11 +167,11 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                 }
                 case "reject": {
                     needLoadPhotoToParse = false;
-                    reportTask.setText("Go back");
+                    reportTask.setText(getString(R.string.goBack));
                     taskIsDone = true;
                     radioGroupProgress.setVisibility(View.INVISIBLE);
                     radioGroupStatus.setVisibility(View.INVISIBLE);
-                    textViewProgress.setText("You reject the task");
+                    textViewProgress.setText(getString(R.string.youRejectTask));
                     textViewProgress.setVisibility(View.VISIBLE);
                     statusOfTask = STATUS_REJECT;
                     break;
@@ -190,9 +190,9 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                     needLoadPhotoToParse = false;
                     radioGroupStatus.setVisibility(View.INVISIBLE);
                     radioGroupProgress.setVisibility(View.INVISIBLE);
-                    textViewProgress.setText("Task Done");
+                    textViewProgress.setText(getString(R.string.taskDone));
                     textViewProgress.setVisibility(View.VISIBLE);
-                    reportTask.setText("Go back");
+                    reportTask.setText(getString(R.string.goBack));
                     taskIsDone = true;
                     statusOfTask = STATUS_DONE;
                     break;
@@ -200,21 +200,21 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                 case "cancel": {
                     needLoadPhotoToParse = false;
                     statusOfTask = STATUS_CANCEL;
-                    reportTask.setText("Go back");
+                    reportTask.setText(getString(R.string.goBack));
                     taskIsDone = true;
                     radioGroupProgress.setVisibility(View.INVISIBLE);
                     radioGroupStatus.setVisibility(View.INVISIBLE);
-                    textViewProgress.setText("Task cancel");
+                    textViewProgress.setText(getString(R.string.taskCancel));
                     textViewProgress.setVisibility(View.VISIBLE);
                 }
                 case "late": {
                     needLoadPhotoToParse = false;
                     statusOfTask = STATUS_CANCEL;
-                    reportTask.setText("Go back");
+                    reportTask.setText(getString(R.string.goBack));
                     taskIsDone = true;
                     radioGroupProgress.setVisibility(View.INVISIBLE);
                     radioGroupStatus.setVisibility(View.INVISIBLE);
-                    textViewProgress.setText("Deadline late");
+                    textViewProgress.setText(getString(R.string.deadlineLate));
                     textViewProgress.setVisibility(View.VISIBLE);
                 }
                 default: {
@@ -231,15 +231,15 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
             employeeOfTask = (TextView)findViewById(R.id.employeeOfTask);
             employeeOfTask.setVisibility(View.VISIBLE);
             texViewEmployeeTask.setText(taskToReport.getEmployee());
-            reportTask.setText("Go back");
+            reportTask.setText(getString(R.string.goBack));
             taskIsDone = true;
             radioGroupProgress.setVisibility(View.INVISIBLE);
             radioGroupStatus.setVisibility(View.INVISIBLE);
-            textViewProgress.setText("Status:"+taskToReport.getStatus());
+            textViewProgress.setText(getString(R.string.status)+taskToReport.getStatus());
             textViewProgress.setVisibility(View.VISIBLE);
             if(taskToReport.isPhotoRequire()){
                 if(taskToReport.getStatus().equals("done")){
-                    picture.setText("View photo");
+                    picture.setText(R.string.viewPhoto);
                     picture.setVisibility(View.VISIBLE);
                 }
 
@@ -274,16 +274,13 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                                     ImageView pic = (ImageView) findViewById(R.id.CameraImageView);
                                     pic.setImageBitmap(bmp);
                                 } else {
-                                    Toast.makeText(ReportTaskActivity.this, "Can't load image. Try again", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ReportTaskActivity.this, R.string.loadImageFails, Toast.LENGTH_LONG).show();
                                 }
 
                             }
                         });
                     }
                 }
-                //else {
-            //        ;
-            //    }
             }
         });
     }
@@ -394,12 +391,12 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                 return;
             }
             if(statusOfTask == newStatusOfTask){
-                Toast.makeText(this,"Task status not change",Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.statusNotChange,Toast.LENGTH_LONG).show();
                 return;
             }
         String newTaskStatus = "none";
         if(needLoadPhotoToParse){
-            Toast.makeText(this,"You must load photo to this task",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.mustLoadPhoto,Toast.LENGTH_LONG).show();
             return;
         }
         switch(newStatusOfTask){
@@ -439,7 +436,7 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
             }
         }
         if(newTaskStatus.equals("none")){
-            Toast.makeText(this,"You can't set this status to current task",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.ilegalStatus,Toast.LENGTH_LONG).show();
             Log.e(TAG,"Status none");
             return;
         }
@@ -454,10 +451,10 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                if(e == null){
                    taskToReport.setStatus(temp);
                    dataAccess.updateTask(taskToReport);
-                   Toast.makeText(ReportTaskActivity.this,"Status save",Toast.LENGTH_LONG).show();
+                   Toast.makeText(ReportTaskActivity.this, R.string.statusSave,Toast.LENGTH_LONG).show();
                    finish();
                }else{
-                   Toast.makeText(ReportTaskActivity.this,"Connection error.Try again letter",Toast.LENGTH_LONG).show();
+                   Toast.makeText(ReportTaskActivity.this,R.string.conectionProblem,Toast.LENGTH_LONG).show();
                    Log.e(TAG,"ParseException:",e);
                }
             }
@@ -494,11 +491,6 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
 
     }
 
-    /*
-            radioButtonWaitingInProgress = (RadioButton) findViewById(R.id.waitingProgressRadioButton);
-        radioButtonInProgress = (RadioButton) findViewById(R.id.progressRadioButton);
-        radioButtonDone  = (RadioButton) findViewById(R.id.doneRadioButton);
-     */
 
     public void onClickRadioGroupProgress(View view) {
         boolean checked = ((RadioButton) view).isChecked();

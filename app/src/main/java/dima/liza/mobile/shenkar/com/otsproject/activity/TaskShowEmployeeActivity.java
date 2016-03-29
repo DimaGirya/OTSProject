@@ -76,14 +76,14 @@ public class TaskShowEmployeeActivity extends AppCompatActivity implements Swipe
     }
     @Override
     public void onRefresh() {
-        Toast.makeText(this,"Refresh",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.refresh,Toast.LENGTH_LONG).show();
         mSwipeRefreshLayout.setRefreshing(true);
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
                 UpdateData.getInstance().updateTaskList(TaskShowEmployeeActivity.this,false);
                 mSwipeRefreshLayout.setRefreshing(false);
-                Toast.makeText(TaskShowEmployeeActivity.this,"Refresh finish",Toast.LENGTH_LONG).show();
+                Toast.makeText(TaskShowEmployeeActivity.this,R.string.refreshFinish,Toast.LENGTH_LONG).show();
                 onResume();
             }
         });
@@ -93,7 +93,7 @@ protected void onResume() {
     listOfTask = dataAccess.getAllTask(checkBox.isChecked());
     if(listOfTask.size()==0){
         String noTask [] = new String[1];
-        noTask[0] = "No current task";
+        noTask[0] = getString(R.string.noCurrentTask);
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,noTask);
         listView = (ListView) findViewById(R.id.listViewTask);
         listView.setAdapter(adapter);
@@ -122,7 +122,7 @@ protected void onResume() {
         AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
         Task task = (Task) lv.getItemAtPosition(acmi.position);
         taskSelectedIdParse = task.getParseId();
-        menu.add(Menu.NONE, ID_REPORT_TASK, Menu.NONE, "Report/View task");
+        menu.add(Menu.NONE, ID_REPORT_TASK, Menu.NONE, R.string.reportViewTask);
     }
 
     @Override
@@ -130,11 +130,8 @@ protected void onResume() {
         switch (item.getItemId()) {
             case ID_REPORT_TASK:{
                 Intent intent = new Intent(this,ReportTaskActivity.class);
-        //        intent.putExtra("editTask",true);
                 intent.putExtra("taskId",taskSelectedIdParse);
                 startActivity(intent);
-             //   Log.d(TAG,"ID_EDIT_TASK");
-             //   Log.d(TAG,taskSelectedId);
                 break;
             }
         }

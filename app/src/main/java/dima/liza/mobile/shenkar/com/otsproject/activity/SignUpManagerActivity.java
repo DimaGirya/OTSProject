@@ -82,8 +82,8 @@ public class SignUpManagerActivity extends AppCompatActivity {
         ManagerValidation authorizationLocal = new ManagerValidation();
         if(authorizationLocal.signUpValidation(email,password,phoneNumber, this)){
             pd = new ProgressDialog(this);
-            pd.setTitle("Adding manager to data base");
-            pd.setMessage("Please wait");
+            pd.setTitle(getString(R.string.addingManagerToDataBase));
+            pd.setMessage(getString(R.string.pleaseWait));
             pd.show();
             ParseUser user = new ParseUser();
             user.setUsername(managerName);
@@ -96,13 +96,12 @@ public class SignUpManagerActivity extends AppCompatActivity {
                 @Override
                 public void done(com.parse.ParseException e) {
                     if (e == null) {    // SIGN UP DONE
-                        Toast.makeText(SignUpManagerActivity.this, "Sign up done.Now create team", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SignUpManagerActivity.this, R.string.createTeam, Toast.LENGTH_LONG).show();
                         UpdateData.getInstance().getLocationFromParse(SignUpManagerActivity.this); //warning! Maybe race condition?
                         createTeam(ParseUser.getCurrentUser());
                     } else {
                         Log.d(TAG, "ParseException:", e);
-                        Toast.makeText(SignUpManagerActivity.this, "Sign up failed"+e.getMessage(), Toast.LENGTH_LONG).show();
-                        //todo check why sign up failed(already have a user or no internet) and notify user
+                        Toast.makeText(SignUpManagerActivity.this,R.string.signupFailed, Toast.LENGTH_LONG).show();
                         Log.e(TAG,"ParseException:",e);
                         SignUpManagerActivity.this.pd.dismiss();
                     }
@@ -137,11 +136,9 @@ public class SignUpManagerActivity extends AppCompatActivity {
                     startService(serviceIntent);
                     pd.dismiss();
                     Log.d(TAG, "Create Team done");
-
                     finish();
                 } else {
                     Log.d(TAG, "Create Team Error",e);
-                    //todo
                 }
             }
         });

@@ -65,10 +65,6 @@ public class UpdateData {
 
             }
         }
-   //     else{
-       //     Log.d(TAG, "Update task for Employee");
-       //     queryTask.whereEqualTo("taskEmployee",currentUser.getUsername());
-   //     }
         queryTask.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -115,23 +111,23 @@ public class UpdateData {
                         if(!isManager){
                             if(oldTask!=null) {
                                 if (oldTask.getDeadline().compareTo(newTask.getDeadline()) != 0) {
-                                    NotificationControl.notificationNow("Deadline of task change", taskHeader, drawable, parseId.hashCode(), context,pendingIntent);
+                                    NotificationControl.notificationNow(context.getString(R.string.deadlineChange), taskHeader, drawable, parseId.hashCode(), context,pendingIntent);
                                 }
                                 if (!taskDescription.equals(oldTask.getTaskDescription())) {
-                                    NotificationControl.notificationNow("Task description  change", taskHeader, drawable, taskDescription.hashCode(), context,pendingIntent);
+                                    NotificationControl.notificationNow(context.getString(R.string.descriptionChange), taskHeader, drawable, taskDescription.hashCode(), context,pendingIntent);
                                 }
                                 if (!taskHeader.equals(oldTask.getTaskHeader())) {
-                                    NotificationControl.notificationNow("Task header  change", taskHeader, drawable, taskHeader.hashCode(), context,pendingIntent);
+                                    NotificationControl.notificationNow(context.getString(R.string.headerChange), taskHeader, drawable, taskHeader.hashCode(), context,pendingIntent);
                                 }
                                  if (!category.equals(oldTask.getCategory())) {
-                                     NotificationControl.notificationNow("Task category  change", taskHeader, drawable, category.hashCode(), context,pendingIntent);
+                                     NotificationControl.notificationNow(context.getString(R.string.categoryChange), taskHeader, drawable, category.hashCode(), context,pendingIntent);
                                  }
                                  if (!location.equals(oldTask.getLocation())) {
-                                     NotificationControl.notificationNow("Task location  change", taskHeader,drawable, location.hashCode(), context,pendingIntent);
+                                     NotificationControl.notificationNow(context.getString(R.string.locationChange), taskHeader,drawable, location.hashCode(), context,pendingIntent);
                                  }
                                 if(!oldTask.getStatus().equals(newTask.getStatus())){
                                       if (newTask.getStatus().equals("cancel")) {
-                                         NotificationControl.notificationNow("Task cancel ", taskHeader, drawable, status.hashCode(), context,pendingIntent);
+                                         NotificationControl.notificationNow(context.getString(R.string.taskCancelNotification), taskHeader, drawable, status.hashCode(), context,pendingIntent);
                                       }
                                 }
 
@@ -147,13 +143,12 @@ public class UpdateData {
                                     countOfNewTask++;
                                     notificationTask = newTask;
                                 }
-                              //  NotificationControl.notificationNow("You have new task todo.Enjoy! ", taskHeader, drawable, taskHeader.hashCode(), context,pendingIntent);
                             }
                         }
                         else{
                                if(oldTask!=null) {
                                    if (!status.equals(oldTask.getStatus())) {
-                                       NotificationControl.notificationNow("Employee change status of task ", "Task:"+taskHeader +" .New status:"+ status, drawable, status.hashCode(), context,pendingIntent);
+                                       NotificationControl.notificationNow(context.getString(R.string.employeeChangeStatus), context.getString(R.string.ofTask)+taskHeader +context.getString(R.string.newStatusIs)+ status, drawable, status.hashCode(), context,pendingIntent);
                                    }
                                }
                            }
@@ -169,12 +164,12 @@ public class UpdateData {
                             intent.putExtra("taskId", notificationTask.getParseId());
 
                             pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-                            NotificationControl.notificationNow("You have new task todo.Enjoy! ", notificationTask.getTaskHeader(), drawable, notificationTask.getTaskHeader().hashCode(), context, pendingIntent);
+                            NotificationControl.notificationNow(context.getString(R.string.newTaskTodo), notificationTask.getTaskHeader(), drawable, notificationTask.getTaskHeader().hashCode(), context, pendingIntent);
                         } else if (countOfNewTask != 0) {
                             PendingIntent pendingIntent;
                             Intent intent = new Intent(context, TaskShowEmployeeActivity.class);
                             pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-                            NotificationControl.notificationNow("You have new " + countOfNewTask + " tasks todo.Enjoy! ", "", drawable, 1, context, pendingIntent);
+                            NotificationControl.notificationNow(context.getString(R.string.youHaveNewTasks) + countOfNewTask + context.getString(R.string.taskTodo), "", drawable, 1, context, pendingIntent);
                         }
                     }
 
@@ -191,8 +186,6 @@ public class UpdateData {
         ParseUser currentUser = ParseUser.getCurrentUser();
          numberOfEmployee = dataAccess.getAllRegisteredEmployeesName().length-1;
         Log.d(TAG,"numberOfEmployee:"+numberOfEmployee);
-       // need to get all employees
-
             ParseQuery<ParseUser> queryEmployee = ParseUser.getQuery();
             queryEmployee.whereEqualTo("manager", currentUser.getEmail());
             queryEmployee.whereNotEqualTo("email", currentUser.getEmail());
@@ -210,7 +203,7 @@ public class UpdateData {
                         Log.e(TAG, "Active employee download:" + objects.size());
                         Employee employee;
                         for (int i = 0; i < objects.size(); i++) {
-                            dataAccess.deleteEmployee(objects.get(i).getEmail());   //warning
+                            dataAccess.deleteEmployee(objects.get(i).getEmail());
                             employee = new Employee(objects.get(i).getUsername(), objects.get(i).getEmail(), objects.get(i).getString("phoneNumber"), "registered", objects.get(i).getInt("taskCounter"));
                             dataAccess.insertEmployee(employee);
                             if (numberOfEmployee != 0) {
@@ -220,14 +213,14 @@ public class UpdateData {
                             }
                         }
                     } else {
-                        Toast.makeText(context, "Connection problem.Try again later", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context,R.string.conectionProblem, Toast.LENGTH_LONG).show();
                         Log.d(TAG, "FindCallback exception", e);
                     }
                 }
             });
 
 
-        ParseQuery<ParseObject> queryNewEmployee = ParseQuery.getQuery("NewEmployee");  // get all employee from class NewEmployee
+        ParseQuery<ParseObject> queryNewEmployee = ParseQuery.getQuery("NewEmployee");
         queryNewEmployee.whereEqualTo("Manager", currentUser.getEmail());
             if(numberOfEmployee == 0){
                 queryNewEmployee.whereEqualTo("statusEmployeeChange",true);
@@ -247,7 +240,7 @@ public class UpdateData {
                             objects.get(i).saveInBackground();
                         }
                     } else {
-                        Toast.makeText(context, "Connection problem.Try again later", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.conectionProblem, Toast.LENGTH_LONG).show();
                         Log.d(TAG, "findInBackground exception:", e);
                     }
                 }
@@ -266,7 +259,7 @@ public class UpdateData {
             public void done(List<ParseObject> locations, ParseException e) {
                 if (e == null) {
                     if (locations.isEmpty()) {
-                        Toast.makeText(context, "Locations not found.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.locationNotFount, Toast.LENGTH_LONG).show();
                     } else {
                         allLocations[0] = new String[locations.size()];
                         for (int i = 0; i < locations.size(); i++) {
@@ -275,7 +268,7 @@ public class UpdateData {
                         dataAccess.insertLocations(allLocations[0]);
                     }
                 } else {
-                    Toast.makeText(context, "Something went wrong, try again later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.somethingWentWrong, Toast.LENGTH_LONG).show();
                     Log.d(TAG, "exception:", e);
                 }
             }

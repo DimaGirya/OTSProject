@@ -54,7 +54,7 @@
     <TextView
         android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:text="Task Header"
+        android:text="@string/taskHeaderText"
         android:id="@+id/textView3"
         android:layout_below="@+id/checkBoxPastTask"
         />
@@ -62,7 +62,7 @@
     <TextView
         android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:text="Employee"
+        android:text="@string/employeeText"
         android:id="@+id/textView4"
         android:layout_alignTop="@+id/textView5"
         android:layout_toRightOf="@+id/textView3"
@@ -71,7 +71,7 @@
     <TextView
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:text="Status"
+        android:text="@string/statusTextView"
         android:id="@+id/textView5"
         android:layout_alignTop="@+id/textView3"
         android:layout_toRightOf="@+id/textView4"
@@ -80,7 +80,7 @@
     <TextView
         android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:text="Deadline"
+        android:text="@string/deadlineText"
         android:id="@+id/textView6"
         android:layout_alignBaseline="@+id/textView4"
         android:layout_alignBottom="@+id/textView4"
