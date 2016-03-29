@@ -54,7 +54,7 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
     private static final int ERROR = 0;
     private int statusOfTask;
     private int newStatusOfTask;
-
+    private TextView userName,userEmail;
     RadioButton radioButtonWaiting,radioButtonAccept,radioButtonReject;
     RadioButton radioButtonWaitingInProgress,radioButtonInProgress,radioButtonDone;
     RadioGroup radioGroupStatus,radioGroupProgress;
@@ -461,6 +461,14 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
         });
     }
 
+    @Override
+    public boolean onPreparePanel(int featureId, View view, Menu menu) {
+        userName = (TextView) findViewById(R.id.userNameNav);
+        userEmail = (TextView) findViewById(R.id.userEmailNav);
+        userName.setText(currentUser.getUsername());
+        userEmail.setText(currentUser.getEmail());
+        return super.onPreparePanel(featureId, view, menu);
+    }
 
     public void onClickRadioGroupStatus(View view) {
         boolean checked = ((RadioButton) view).isChecked();

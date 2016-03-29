@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
@@ -39,10 +40,10 @@ public class LocationsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static String TAG  = "LocationsActivity";
     private ProgressDialog progressDialog;
-    ParseUser user = ParseUser.getCurrentUser();
     String[] allLocations;
     DataAccess dataAccess;
-
+    ParseUser currentUser;
+    private TextView userName,userEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +63,7 @@ public class LocationsActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
+        ParseUser currentUser = ParseUser.getCurrentUser();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         //getLocationFromParse();
@@ -108,6 +109,16 @@ public class LocationsActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPreparePanel(int featureId, View view, Menu menu) {
+        currentUser = ParseUser.getCurrentUser();
+        userName = (TextView) findViewById(R.id.userNameNav);
+        userEmail = (TextView) findViewById(R.id.userEmailNav);
+        userName.setText(currentUser.getUsername());
+        userEmail.setText(currentUser.getEmail());
+        return super.onPreparePanel(featureId, view, menu);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

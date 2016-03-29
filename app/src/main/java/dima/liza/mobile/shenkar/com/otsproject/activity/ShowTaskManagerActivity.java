@@ -55,6 +55,7 @@ public class ShowTaskManagerActivity extends AppCompatActivity
     DataAccess dataAccess;
     private String taskSelectedId;
     Task task;
+    private TextView userName,userEmail;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
@@ -94,6 +95,16 @@ public class ShowTaskManagerActivity extends AppCompatActivity
         updateData.updateTaskList(this,isManager);
         onResume();
     }
+
+    @Override
+    public boolean onPreparePanel(int featureId, View view, Menu menu) {
+        userName = (TextView) findViewById(R.id.userNameNav);
+        userEmail = (TextView) findViewById(R.id.userEmailNav);
+        userName.setText(currentUser.getUsername());
+        userEmail.setText(currentUser.getEmail());
+        return super.onPreparePanel(featureId, view, menu);
+    }
+
     @Override
     protected void onResume() {
         listOfTask = dataAccess.getAllTask(checkBox.isChecked());
