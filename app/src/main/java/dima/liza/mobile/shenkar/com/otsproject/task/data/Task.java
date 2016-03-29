@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by Girya on 09/03/2016.
  */
-public class Task {
+public class Task implements Comparable<Task>  {
     private String taskHeader;
     private String taskDescription;
     private String employee;
@@ -118,5 +118,10 @@ public class Task {
 
     public String getTaskHeader() {
         return taskHeader;
+    }
+
+    @Override
+    public int compareTo(Task another) {
+        return getDeadline().compareTo(another.getDeadline());
     }
 }

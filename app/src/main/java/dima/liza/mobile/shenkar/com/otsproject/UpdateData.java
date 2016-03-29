@@ -21,6 +21,7 @@ import java.util.List;
 
 import dima.liza.mobile.shenkar.com.otsproject.activity.ReportTaskActivity;
 import dima.liza.mobile.shenkar.com.otsproject.activity.ShowTaskManagerActivity;
+import dima.liza.mobile.shenkar.com.otsproject.activity.TaskShowEmployeeActivity;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
 import dima.liza.mobile.shenkar.com.otsproject.employee.data.EmployeeToAdd;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
@@ -46,11 +47,14 @@ public class UpdateData {
 
         final DataAccess dataAccess = DataAccess.getInstatnce(context);
         ParseUser currentUser = ParseUser.getCurrentUser();
-        boolean wasUpdated = (dataAccess.getAllTask(true).size()>0);
+        boolean wasUpdated = (dataAccess.getAllTask(true).size()>0);    //replace to shared preference
         Log.d(TAG,"wasUpdated:"+wasUpdated);
         Log.d(TAG,"dataAccess.getAllTask(true).size():"+dataAccess.getAllTask(true).size());
         ParseQuery<ParseObject> queryTask = ParseQuery.getQuery("Task");
         queryTask.whereEqualTo("taskManager", currentUser.get("manager"));
+        if(!isManager){
+            queryTask.whereEqualTo("taskEmployee",currentUser.getUsername());
+        }
         if(wasUpdated) {
             if (isManager) {
                 Log.d(TAG,"Update task for Manager");
@@ -58,9 +62,13 @@ public class UpdateData {
             } else {
                 Log.d(TAG, "Update task for Employee");
                 queryTask.whereEqualTo("updateForEmployee", true);
-                queryTask.whereEqualTo("taskEmployee",currentUser.getUsername());
+
             }
         }
+   //     else{
+       //     Log.d(TAG, "Update task for Employee");
+       //     queryTask.whereEqualTo("taskEmployee",currentUser.getUsername());
+   //     }
         queryTask.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -81,6 +89,9 @@ public class UpdateData {
                     boolean photoRequire;
                     SimpleDateFormat dateFormat = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance();
                     ParseObject object;
+                    int countOfNewTask = 0;
+                    Task notificationTask = null;
+
                     for (int i = 0; i < objects.size(); i++) {
                         object = objects.get(i);
                         taskDescription = object.getString("taskDescription");
@@ -110,21 +121,33 @@ public class UpdateData {
                                     NotificationControl.notificationNow("Task description  change", taskHeader, drawable, taskDescription.hashCode(), context,pendingIntent);
                                 }
                                 if (!taskHeader.equals(oldTask.getTaskHeader())) {
-                                    NotificationControl.notificationNow("Task description  change", taskHeader, drawable, taskHeader.hashCode(), context,pendingIntent);
+                                    NotificationControl.notificationNow("Task header  change", taskHeader, drawable, taskHeader.hashCode(), context,pendingIntent);
                                 }
-                                if (!category.equals(oldTask.getCategory())) {
-                                    NotificationControl.notificationNow("Task category  change", taskHeader, drawable, category.hashCode(), context,pendingIntent);
-                                }
-                                if (!location.equals(oldTask.getLocation())) {
-                                    NotificationControl.notificationNow("Task location  change", taskHeader,drawable, location.hashCode(), context,pendingIntent);
-                                }
-                                if (!status.equals("cancel")) {
-                                    NotificationControl.notificationNow("Task cancel ", taskHeader, drawable, status.hashCode(), context,pendingIntent);
-                                }
+                                 if (!category.equals(oldTask.getCategory())) {
+                                     NotificationControl.notificationNow("Task category  change", taskHeader, drawable, category.hashCode(), context,pendingIntent);
+                                 }
+                                 if (!location.equals(oldTask.getLocation())) {
+                                     NotificationControl.notificationNow("Task location  change", taskHeader,drawable, location.hashCode(), context,pendingIntent);
+                                 }
+                                if(!oldTask.getStatus().equals(newTask.getStatus())){
+                                      if (newTask.getStatus().equals("cancel")) {
+                                         NotificationControl.notificationNow("Task cancel ", taskHeader, drawable, status.hashCode(), context,pendingIntent);
+                                      }
                                 }
 
+                                }
                                else{
-                                NotificationControl.notificationNow("You have new task todo.Enjoy! ", taskHeader, drawable, taskHeader.hashCode(), context,pendingIntent);
+                                String newStatus  = newTask.getStatus();
+                                if(newStatus.compareTo("cancel") == 0  || newStatus.compareTo("late") == 0 || newStatus.compareTo("done")  == 0 || newStatus.compareTo("reject") == 0 )
+                                {
+                                    Log.d(TAG,"Status cancel,late or done");
+                                }
+                                else {
+                                    Log.d(TAG,"countOfNewTask++");
+                                    countOfNewTask++;
+                                    notificationTask = newTask;
+                                }
+                              //  NotificationControl.notificationNow("You have new task todo.Enjoy! ", taskHeader, drawable, taskHeader.hashCode(), context,pendingIntent);
                             }
                         }
                         else{
@@ -137,6 +160,21 @@ public class UpdateData {
                         dataAccess.insertTask(newTask);
                         Log.d(TAG, "Update task done. Id is a:" + parseId);
                         object.saveInBackground();
+                    }
+                    if(!isManager) {
+                        if (countOfNewTask == 1) {
+                            PendingIntent pendingIntent;
+                            Intent intent = new Intent(context, ReportTaskActivity.class);
+                            intent.putExtra("taskId", notificationTask.getParseId());
+
+                            pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+                            NotificationControl.notificationNow("You have new task todo.Enjoy! ", notificationTask.getTaskHeader(), drawable, notificationTask.getTaskHeader().hashCode(), context, pendingIntent);
+                        } else if (countOfNewTask != 0) {
+                            PendingIntent pendingIntent;
+                            Intent intent = new Intent(context, TaskShowEmployeeActivity.class);
+                            pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+                            NotificationControl.notificationNow("You have new " + countOfNewTask + " tasks todo.Enjoy! ", "", drawable, 1, context, pendingIntent);
+                        }
                     }
 
                 } else {

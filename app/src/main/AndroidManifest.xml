@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="dima.liza.mobile.shenkar.com.otsproject" >
+    package="dima.liza.mobile.shenkar.com.otsproject">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,7 +14,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.parse.APPLICATION_ID"
             android:value="mVB8dry1m6q5ow7Ax9JPYL9TSKZIzYHjbOApES7p" />
@@ -22,7 +22,7 @@
             android:name="com.parse.CLIENT_KEY"
             android:value="uIyYzvWpn8HQ4jOus0g9j8nleQ9sWBhu0NM2LAow" />
 
-        <activity android:name=".activity.SignUpManagerActivity" >
+        <activity android:name=".activity.SignUpManagerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,10 +41,6 @@
         <activity
             android:name=".activity.AddTaskActivity"
             android:label="@string/title_activity_add_task"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activity.TaskShowActivity"
-            android:label="@string/title_activity_task_show"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.ShowTaskManagerActivity"
@@ -67,5 +63,11 @@
             android:name=".SynchronizationService"
             android:enabled="true"
             android:exported="true" />
+
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
+
 </manifest>

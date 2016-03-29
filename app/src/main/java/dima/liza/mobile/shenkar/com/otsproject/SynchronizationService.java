@@ -154,7 +154,7 @@ public class SynchronizationService extends Service {
             else{
                 contentIntent = PendingIntent.getActivity(context, 0,
                         new Intent(context, TaskShowEmployeeActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-                mBuilder.setContentText("Your  have a "+dataAccess.getNumberOfTask(false)+ " task now");
+                mBuilder.setContentText("You  have a "+dataAccess.getNumberOfTask(false)+ " task now");
             }
             mBuilder.setContentIntent(contentIntent);
             // Gets an instance of the NotificationManager service
@@ -166,9 +166,12 @@ public class SynchronizationService extends Service {
             checkDeadline();
             updateDone();
             try {
-                Thread.sleep(1000 * 60);
+                sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
+                int minute = sharedPreferences.getInt("UpdateTime",5);
+                Log.d(TAG,"Service thread sleep to "+minute+" minutes");
+                Thread.sleep(1000 * 60 * minute);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+               Log.d(TAG,"InterruptedException",e);
             }
         }
     }

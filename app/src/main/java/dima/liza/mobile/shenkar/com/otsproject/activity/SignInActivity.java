@@ -54,6 +54,7 @@ public class SignInActivity extends AppCompatActivity {
         pd.setTitle("Signing-In");
         pd.setMessage("Please wait");
         pd.show();
+        final UpdateData updateData = UpdateData.getInstance();
         final String emailStr = email.getText().toString();
         final String passwordStr = password.getText().toString();
         ParseUser.logInInBackground(emailStr, passwordStr, new LogInCallback() {
@@ -62,7 +63,8 @@ public class SignInActivity extends AppCompatActivity {
                 if (user != null) {
                     //user found in Parse Users class.
                     if (user.getBoolean("isManager") == true) {
-                        UpdateData.getInstance().getLocationFromParse(SignInActivity.this); //warning! Maybe race condition?
+                        updateData.updateTaskList(SignInActivity.this, true);
+                        updateData.getLocationFromParse(SignInActivity.this); //warning! Maybe race condition?
                         Intent serviceIntent = new Intent(SignInActivity.this, SynchronizationService.class);
                         startService(serviceIntent);
                         Intent intent = new Intent(context, ShowTaskManagerActivity.class);
@@ -70,6 +72,7 @@ public class SignInActivity extends AppCompatActivity {
                         pd.dismiss();
                         finish();
                     } else {
+                        updateData.updateTaskList(SignInActivity.this, false);
                         Intent intent = new Intent(context, TaskShowEmployeeActivity.class);
                         startActivity(intent);
                         Intent serviceIntent = new Intent(SignInActivity.this, SynchronizationService.class);

@@ -3,6 +3,7 @@ package dima.liza.mobile.shenkar.com.otsproject.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.View;
@@ -38,7 +39,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.AdapterTaskForManager;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
 
 public class ShowTaskManagerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener{
     private static final String TAG = "ShowTaskManagerActivity" ;
     private static final int ID_EDIT_TASK = 0 ;
     private static final int ID_CANCEL_TASK = 1 ;
@@ -54,6 +55,8 @@ public class ShowTaskManagerActivity extends AppCompatActivity
     DataAccess dataAccess;
     private String taskSelectedId;
     Task task;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +71,8 @@ public class ShowTaskManagerActivity extends AppCompatActivity
                 ManagerValidation.checkRegisteredEmployee(ShowTaskManagerActivity.this, dataAccess);
             }
         });
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         dataAccess = DataAccess.getInstatnce(this);
         checkBox = (CheckBox) findViewById(R.id.checkBoxPastTask);
         numberOfTask = (TextView) findViewById(R.id.numberOfTask);
@@ -128,7 +133,7 @@ public class ShowTaskManagerActivity extends AppCompatActivity
         taskSelectedId = task.getParseId();
 
         String status = task.getStatus();
-        if(status.compareTo("cancel") == 0  || status.compareTo("late") == 0 || status.compareTo("done")  == 0  ){
+        if(status.compareTo("cancel") == 0  || status.compareTo("late") == 0 || status.compareTo("done")  == 0 || status.compareTo("reject") == 0  ){
             menu.add(Menu.NONE,ID_VIEW_TASK,Menu.NONE,"View task");
         }
         else {
@@ -206,7 +211,8 @@ public class ShowTaskManagerActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(this,SettingsActivity.class);
+            startActivity(intent);
         }
         if (id == R.id.action_log_of) {
             ParseUser.logOut();
@@ -254,5 +260,20 @@ public class ShowTaskManagerActivity extends AppCompatActivity
 
     public void checkBoxShowOnlyActualTask(View view) {
         onResume();
+    }
+
+    @Override
+    public void onRefresh() {
+        Toast.makeText(this,"Refresh",Toast.LENGTH_LONG).show();
+        mSwipeRefreshLayout.setRefreshing(true);
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                UpdateData.getInstance().updateTaskList(ShowTaskManagerActivity.this,true);
+                mSwipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(ShowTaskManagerActivity.this,"Refresh finish",Toast.LENGTH_LONG).show();
+                onResume();
+            }
+        });
     }
 }

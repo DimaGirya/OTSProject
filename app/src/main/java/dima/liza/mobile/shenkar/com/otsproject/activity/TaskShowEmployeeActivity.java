@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -32,7 +33,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.AdapterTaskForManager;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
 import dima.liza.mobile.shenkar.com.otsproject.task.data.ViewRowTask;
 
-public class TaskShowEmployeeActivity extends AppCompatActivity {
+public class TaskShowEmployeeActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = "TaskShowEmployeeActivity";
     TextView numberOfTask;
     CheckBox checkBox;
@@ -45,6 +46,7 @@ public class TaskShowEmployeeActivity extends AppCompatActivity {
     private String taskSelectedId;
     private static final int ID_REPORT_TASK = 0;
     private String taskSelectedIdParse;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +62,8 @@ public class TaskShowEmployeeActivity extends AppCompatActivity {
             }
         });
         fab.hide();
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         dataAccess = DataAccess.getInstatnce(this);
         checkBox = (CheckBox) findViewById(R.id.checkBoxPastTask);
         numberOfTask = (TextView) findViewById(R.id.numberOfTask);
@@ -70,19 +74,20 @@ public class TaskShowEmployeeActivity extends AppCompatActivity {
         updateData.updateTaskList(this,false);
         onResume();
     }
-/*
     @Override
-    protected void onResume() {
-        listOfTask = dataAccess.getAllTask(checkBox.isChecked());
-        numberOfTask.setText(getString(R.string.numberOfTask) + listOfTask.size());
-        adapter = new AdapterTaskForEmployee(this,listOfTask);
-        listView = (ListView) findViewById(R.id.listViewTask);
-        listView.setAdapter(adapter);
-//        listView.setOnItemLongClickListener((AdapterView.OnItemLongClickListener) adapter); //warning
-        registerForContextMenu(listView);
-        super.onResume();
+    public void onRefresh() {
+        Toast.makeText(this,"Refresh",Toast.LENGTH_LONG).show();
+        mSwipeRefreshLayout.setRefreshing(true);
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                UpdateData.getInstance().updateTaskList(TaskShowEmployeeActivity.this,false);
+                mSwipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(TaskShowEmployeeActivity.this,"Refresh finish",Toast.LENGTH_LONG).show();
+                onResume();
+            }
+        });
     }
-*/
 @Override
 protected void onResume() {
     listOfTask = dataAccess.getAllTask(checkBox.isChecked());
@@ -96,7 +101,7 @@ protected void onResume() {
     }
     else {
         numberOfTask.setText(getString(R.string.numberOfTask) + listOfTask.size());
-        adapter = new AdapterTaskForManager(this, listOfTask);
+        adapter = new AdapterTaskForEmployee(this, listOfTask);
         listView = (ListView) findViewById(R.id.listViewTask);
         listView.setAdapter(adapter);
         registerForContextMenu(listView);
@@ -146,7 +151,8 @@ protected void onResume() {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(this,SettingsActivity.class);
+            startActivity(intent);
         }
         if (id == R.id.action_log_of) {
             ParseUser.logOut();
