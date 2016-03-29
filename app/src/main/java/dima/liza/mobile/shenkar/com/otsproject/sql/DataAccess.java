@@ -15,7 +15,6 @@ import com.parse.ParseUser;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -253,7 +252,6 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
                 cursor.moveToNext();
             }
             cursor.close();
-            Collections.sort(tasks);
             return tasks;
         } catch (Exception e) {
             Log.d(TAG, "Exception:", e);
@@ -408,6 +406,7 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
         return new Employee(name, email, phoneNumber, status, taskCount);
     }
 
+    //added by liza
     @Override
     public String[] getLocations() {
         try {
@@ -445,6 +444,32 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
         }
     }
 
+    //added by liza
+    /*
+    @Override
+    public boolean insertLocations(String[] locationsFromParse) {
+        ContentValues content = new ContentValues();
+        //getLocationsFromParse(); //get data from parse and put in allLocations array attribute
+        for(int i=0;i<locationsFromParse.length;i++){
+            content.put(DbContract.LocationsEntry.COLUMN_LOCATIONS,locationsFromParse[i]);
+        }
+        try {
+            database = dbHelper.getReadableDatabase();
+            if (database.insert(DbContract.LocationsEntry.TABLE_NAME, null, content) == -1) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "Exception:", e);
+            return false;
+        } finally {
+            if (database != null) {
+                database.close();
+            }
+        }
+    }
+    */
     @Override
     public boolean insertLocations(String[] locationsFromParse) {
         ContentValues content = new ContentValues();
@@ -478,6 +503,28 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
         }
     }
 
+//    public void getLocationsFromParse() {
+//        ParseUser user = ParseUser.getCurrentUser();
+//        ParseQuery<ParseObject> query = ParseQuery.getQuery("location");
+//        query.whereEqualTo("manager", user.getEmail());
+//        query.findInBackground(new FindCallback<ParseObject>() {
+//            @Override
+//            public void done(List<ParseObject> locations, com.parse.ParseException e) {
+//                if (e == null) {
+//                    if (locations.isEmpty()) {
+//                        Log.d(TAG, "no locations in parse");
+//                    } else {
+//                        allLocations = new String[locations.size()];
+//                        for (int i = 0; i < locations.size(); i++) {
+//                            allLocations[i] = locations.get(i).getString("location");
+//                        }
+//                    }
+//                } else {
+//                    Log.d(TAG, "exception:", e);
+//                }
+//            }
+//        });
+//    }
 }
 
 

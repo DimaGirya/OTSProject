@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -68,9 +67,11 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
     DataAccess dataAccess;
     Task taskToReport;
     String taskIdToReport;
+    private boolean isManager;
     private boolean taskIsDone = false;
     private static final int CAMERA_REQUEST = 1888;
     private ImageView imageView;
+    private boolean needLoadPhotoToParse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,9 +88,11 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                 ManagerValidation.checkRegisteredEmployee(ReportTaskActivity.this, dataAccess);
             }
         });
-
         picture = (Button)findViewById(R.id.buttonAddPicture);
-        this.imageView = (ImageView)this.findViewById(R.id.CameraImageView);
+        picture.setVisibility(View.INVISIBLE);
+        currentUser = ParseUser.getCurrentUser();
+        imageView = (ImageView)this.findViewById(R.id.CameraImageView);
+        imageView.setVisibility(View.INVISIBLE);
         reportTask = (Button)findViewById(R.id.reportTask);
         taskCategoryTextView = (TextView) findViewById(R.id.taskCategoryText);
         taskDescriptionTextView = (TextView) findViewById(R.id.taskDescriptionText);
@@ -107,6 +110,7 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
         radioGroupStatus = (RadioGroup) findViewById(R.id.radioGroupStatus);
         radioGroupProgress = (RadioGroup) findViewById(R.id.radioGroupProgress);
 
+        isManager = currentUser.getBoolean("isManager");
         textViewDeadline = (TextView) findViewById(R.id.textDeadline);
         textViewProgress = (TextView)findViewById(R.id.textViewProgress);
         textViewProgress.setVisibility(View.INVISIBLE);
@@ -122,17 +126,29 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
         }
         dataAccess = DataAccess.getInstatnce(this);
         taskToReport = dataAccess.getTaskById(taskIdToReport);
-        String  temp = Validation.dateToString(taskToReport.getDeadline());
+        String temp;
+        try {
+             temp = Validation.dateToString(taskToReport.getDeadline());
+        }
+        catch (Exception e){
+            temp = "";
+        }
         textViewDeadline.setText(temp);
         textViewLocationTask.setText(taskToReport.getLocation());
-//        if(!taskToReport.isPhotoRequire()){
-//            picture.setVisibility(View.INVISIBLE);
-//        }
+
         String status = taskToReport.getStatus();
-        if(!currentUser.getBoolean("isManager")) {
+        if(!isManager) {
             fab.hide();
+            Log.d(TAG,"taskToReport.isPhotoRequire():"+taskToReport.isPhotoRequire());
+            if(taskToReport.isPhotoRequire()){
+                needLoadPhotoToParse = true;
+            }
+            else{
+                needLoadPhotoToParse = false;
+            }
             switch (status) {
                 case "waiting": {
+                    needLoadPhotoToParse = false;
                     radioButtonWaiting.setChecked(true);
                     radioGroupProgress.setVisibility(View.INVISIBLE);
                     textViewStatus.setVisibility(View.VISIBLE);
@@ -140,17 +156,17 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                     break;
                 }
                 case "accept": {
+                    if(needLoadPhotoToParse) {
+                        picture.setVisibility(View.VISIBLE);
+                    }
                     radioButtonAccept.setChecked(true);
-                    // radioButtonWaitingInProgress.setChecked(true);
                     radioGroupStatus.setVisibility(View.INVISIBLE);
                     textViewProgress.setVisibility(View.VISIBLE);
                     statusOfTask = STATUS_ACCEPT;
                     break;
                 }
                 case "reject": {
-                    //radioButtonReject.setChecked(true);
-                    //  radioGroupStatus.setClickable(false);
-                    // radioButtonWaitingInProgress.setChecked(true);
+                    needLoadPhotoToParse = false;
                     reportTask.setText("Go back");
                     taskIsDone = true;
                     radioGroupProgress.setVisibility(View.INVISIBLE);
@@ -161,6 +177,9 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                     break;
                 }
                 case "inProgress": {
+                    if(needLoadPhotoToParse) {
+                        picture.setVisibility(View.VISIBLE);
+                    }
                     radioButtonInProgress.setChecked(true);
                     radioGroupStatus.setVisibility(View.INVISIBLE);
                     textViewProgress.setVisibility(View.VISIBLE);
@@ -168,6 +187,7 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                     break;
                 }
                 case "done": {
+                    needLoadPhotoToParse = false;
                     radioGroupStatus.setVisibility(View.INVISIBLE);
                     radioGroupProgress.setVisibility(View.INVISIBLE);
                     textViewProgress.setText("Task Done");
@@ -178,6 +198,7 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                     break;
                 }
                 case "cancel": {
+                    needLoadPhotoToParse = false;
                     statusOfTask = STATUS_CANCEL;
                     reportTask.setText("Go back");
                     taskIsDone = true;
@@ -187,6 +208,7 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                     textViewProgress.setVisibility(View.VISIBLE);
                 }
                 case "late": {
+                    needLoadPhotoToParse = false;
                     statusOfTask = STATUS_CANCEL;
                     reportTask.setText("Go back");
                     taskIsDone = true;
@@ -203,6 +225,7 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
             Log.d(TAG, "statusOfTask:" + statusOfTask);
         }
         else{
+            needLoadPhotoToParse = false;
             texViewEmployeeTask = (TextView) findViewById(R.id.texViewEmployeeTask);
             texViewEmployeeTask.setVisibility(View.VISIBLE);
             employeeOfTask = (TextView)findViewById(R.id.employeeOfTask);
@@ -214,6 +237,13 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
             radioGroupStatus.setVisibility(View.INVISIBLE);
             textViewProgress.setText("Status:"+taskToReport.getStatus());
             textViewProgress.setVisibility(View.VISIBLE);
+            if(taskToReport.isPhotoRequire()){
+                if(taskToReport.getStatus().equals("done")){
+                    picture.setText("View photo");
+                    picture.setVisibility(View.VISIBLE);
+                }
+
+            }
         }
         taskDescriptionTextView.setText(taskToReport.getTaskDescription());
         taskHeaderTextView.setText(taskToReport.getTaskHeader());
@@ -229,7 +259,7 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null) {
                     if (objects.size() == 0) {
-                        ;
+                        Log.d(TAG,"objects.size() = 0");
                     } else {
                         ParseObject fileObject = objects.get(0);
                         ParseFile file = (ParseFile) fileObject.get("imageFile");
@@ -250,9 +280,10 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                             }
                         });
                     }
-                } else {
-                    ;
                 }
+                //else {
+            //        ;
+            //    }
             }
         });
     }
@@ -322,8 +353,13 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
 
 
     public void onClickAddPicture(View view) {
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        if(isManager){
+            imageView.setVisibility(View.VISIBLE);
+        }
+        else {
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        }
     }
 //
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -334,7 +370,10 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
             imageView.setImageBitmap(photo);
             //prepare image file for parse
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            double w = photo.getWidth() * 0.5;
+            double h = photo.getHeight() * 0.5;
+            Bitmap resized = Bitmap.createScaledBitmap(photo, (int) w, (int) h, true);
+            resized.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] image = stream.toByteArray();
             ParseFile file = new ParseFile("taskPhoto.png", image);
             file.saveInBackground();
@@ -344,6 +383,8 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
             imgupload.put("task_id", taskIdToReport);
             imgupload.put("imageFile", file);
             imgupload.saveInBackground();
+            imageView.setVisibility(View.VISIBLE);
+            needLoadPhotoToParse = false;
         }
     }
 
@@ -357,13 +398,17 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
                 return;
             }
         String newTaskStatus = "none";
-
+        if(needLoadPhotoToParse){
+            Toast.makeText(this,"You must load photo to this task",Toast.LENGTH_LONG).show();
+            return;
+        }
         switch(newStatusOfTask){
             case STATUS_WAITING:{
 
                 break;
             }
             case STATUS_ACCEPT:{
+
                 if(statusOfTask == STATUS_WAITING){
                     newTaskStatus = "accept";
                 }
@@ -383,6 +428,7 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
             }
             case STATUS_DONE:{
                 if(statusOfTask == STATUS_IN_PROGRESS || statusOfTask == STATUS_ACCEPT){
+
                     newTaskStatus = "done";
                 }
                 break;

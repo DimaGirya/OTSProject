@@ -214,9 +214,11 @@
         android:text="Add Picture"
         android:onClick="onClickAddPicture"
         android:id="@+id/buttonAddPicture"
-        android:layout_alignTop="@+id/reportTask"
-        android:layout_toRightOf="@+id/reportTask"
-        android:layout_toEndOf="@+id/reportTask" />
+        android:layout_below="@+id/reportTask"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/reportTask"
+        android:layout_alignEnd="@+id/reportTask" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -289,10 +291,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/CameraImageView"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/buttonAddPicture"
-        android:layout_alignEnd="@+id/buttonAddPicture"
-        android:layout_marginBottom="36dp" />
+        android:src="#743c3c"
+        android:layout_below="@+id/textViewLocation"
+        android:layout_toRightOf="@+id/reportTask"
+        android:layout_alignBottom="@+id/buttonAddPicture"
+        android:layout_alignRight="@+id/textDeadline"
+        android:layout_alignEnd="@+id/textDeadline" />
 
 
 </RelativeLayout>

@@ -103,7 +103,7 @@ public class UpdateData {
                         category = object.getString("taskCategory");
                         location = object.getString("taskLocation");
                         parseId = object.getObjectId();
-                        photoRequire = object.getBoolean("photoRequire");
+                        photoRequire = object.getBoolean("requirePhoto");
                         priority = object.getString("priority");
                         Task oldTask = dataAccess.getTaskById(parseId);
                          Task  newTask = new Task (taskHeader,taskDescription,employee,deadline,priority,status,category,location,photoRequire,parseId,deadlineStr);
@@ -157,6 +157,7 @@ public class UpdateData {
                                    }
                                }
                            }
+                        Log.d(TAG,"IsPhoto:"+newTask.isPhotoRequire());
                         dataAccess.insertTask(newTask);
                         Log.d(TAG, "Update task done. Id is a:" + parseId);
                         object.saveInBackground();

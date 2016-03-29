@@ -330,6 +330,7 @@ public class AddTaskActivity extends AppCompatActivity
         task.put("taskLocation",selectedLocation);
         task.put("requirePhoto",requirePhoto);
         task.put("updateForEmployee",true);
+        task.put("photoUploaded",false);
         switch (priority){
             case LOW_PRIORITY: {
                 task.put("priority","low");
