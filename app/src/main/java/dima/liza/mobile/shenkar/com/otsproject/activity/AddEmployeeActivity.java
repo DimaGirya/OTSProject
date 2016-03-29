@@ -31,6 +31,7 @@ import com.parse.SaveCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import dima.liza.mobile.shenkar.com.otsproject.AboutActivity;
 import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
 import dima.liza.mobile.shenkar.com.otsproject.NotificationControl;
 import dima.liza.mobile.shenkar.com.otsproject.R;
@@ -125,6 +126,10 @@ public class AddEmployeeActivity extends AppCompatActivity
             Intent intent = new Intent(this,SignInActivity.class);
             startActivity(intent);
             finish();
+        }
+        if(id == R.id.action_about){
+            Intent intent = new Intent(this,AboutActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -239,7 +244,12 @@ public class AddEmployeeActivity extends AppCompatActivity
                                 dataAccess.insertEmployee(employee);
                             }
                             Toast.makeText(AddEmployeeActivity.this, R.string.addAllNewEmployeeDone, Toast.LENGTH_LONG).show();
-                            progressDialog.dismiss();
+                            try {
+                                progressDialog.dismiss();
+                            }
+                            catch (Exception e1){
+                                Log.d(TAG,"Exception",e1);
+                            }
                             finish();
                         }
 

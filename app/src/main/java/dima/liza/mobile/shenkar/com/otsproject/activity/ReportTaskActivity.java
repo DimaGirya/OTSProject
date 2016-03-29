@@ -33,6 +33,7 @@ import com.parse.SaveCallback;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
+import dima.liza.mobile.shenkar.com.otsproject.AboutActivity;
 import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
@@ -312,7 +313,10 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
             startActivity(intent);
             finish();
         }
-
+        if(id == R.id.action_about){
+            Intent intent = new Intent(this,AboutActivity.class);
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -448,27 +452,20 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
         task.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-               if(e == null){
-                   taskToReport.setStatus(temp);
-                   dataAccess.updateTask(taskToReport);
-                   Toast.makeText(ReportTaskActivity.this, R.string.statusSave,Toast.LENGTH_LONG).show();
-                   finish();
-               }else{
-                   Toast.makeText(ReportTaskActivity.this,R.string.conectionProblem,Toast.LENGTH_LONG).show();
-                   Log.e(TAG,"ParseException:",e);
-               }
+                if (e == null) {
+                    taskToReport.setStatus(temp);
+                    dataAccess.updateTask(taskToReport);
+                    Toast.makeText(ReportTaskActivity.this, R.string.statusSave, Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    Toast.makeText(ReportTaskActivity.this, R.string.conectionProblem, Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "ParseException:", e);
+                }
             }
         });
     }
 
-    @Override
-    public boolean onPreparePanel(int featureId, View view, Menu menu) {
-        userName = (TextView) findViewById(R.id.userNameNav);
-        userEmail = (TextView) findViewById(R.id.userEmailNav);
-        userName.setText(currentUser.getUsername());
-        userEmail.setText(currentUser.getEmail());
-        return super.onPreparePanel(featureId, view, menu);
-    }
+
 
     public void onClickRadioGroupStatus(View view) {
         boolean checked = ((RadioButton) view).isChecked();

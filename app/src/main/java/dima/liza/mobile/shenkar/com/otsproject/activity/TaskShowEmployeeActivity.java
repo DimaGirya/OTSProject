@@ -24,6 +24,7 @@ import com.parse.ParseUser;
 
 import java.util.List;
 
+import dima.liza.mobile.shenkar.com.otsproject.AboutActivity;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 import dima.liza.mobile.shenkar.com.otsproject.UpdateData;
@@ -158,6 +159,10 @@ protected void onResume() {
             Intent intent = new Intent(this,SignInActivity.class);
             startActivity(intent);
             finish();
+        }
+        if(id == R.id.action_about){
+            Intent intent = new Intent(this,AboutActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

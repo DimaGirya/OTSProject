@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -30,6 +31,7 @@ import com.parse.SaveCallback;
 
 import java.util.List;
 
+import dima.liza.mobile.shenkar.com.otsproject.AboutActivity;
 import dima.liza.mobile.shenkar.com.otsproject.ManagerValidation;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
@@ -40,7 +42,7 @@ import dima.liza.mobile.shenkar.com.otsproject.employee.data.Employee;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 
 public class EditTeamActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,SwipeRefreshLayout.OnRefreshListener {
     EditText teamName;
     ListView listView;
     List<Employee> listEmployee;
@@ -52,6 +54,7 @@ public class EditTeamActivity extends AppCompatActivity
     ProgressDialog progressDialog;
     DataAccess dataAccess;
     TextView userName,userEmail;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     final String TAG = "EditTeamActivity";
 
     @Override
@@ -75,7 +78,8 @@ public class EditTeamActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         teamName = (EditText) findViewById(R.id.editTeamNameTextField);
@@ -96,6 +100,20 @@ public class EditTeamActivity extends AppCompatActivity
            UpdateData.getInstance().updateEmployeeList(this);
         }
     }
+    @Override
+    public void onRefresh() {
+        Toast.makeText(this, R.string.refresh,Toast.LENGTH_LONG).show();
+        mSwipeRefreshLayout.setRefreshing(true);
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                UpdateData.getInstance().updateEmployeeList(EditTeamActivity.this);
+                mSwipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(EditTeamActivity.this,R.string.refreshFinish,Toast.LENGTH_LONG).show();
+                onResume();
+            }
+        });
+    }
 
     @Override
     public boolean onPreparePanel(int featureId, View view, Menu menu) {
@@ -115,17 +133,7 @@ public class EditTeamActivity extends AppCompatActivity
         super.onResume();
 
     }
-    private String getLastUpdateEmployeeList() {
-        if(!Validation.doesDatabaseExist(this, "otsProject.db")){
-                return null;
-            }
-        lastUpdateData = getSharedPreferences("DateDataUpdate",MODE_PRIVATE);
-        String lastUpdate = lastUpdateData.getString("lastEmployeeDateUpdate","");
-        if(lastUpdate.equals("")){
-            return null;
-        }
-        return lastUpdate;
-    }
+
 
     public void onClickSaveTeamName(View view) {
         teamNameStr = teamName.getText().toString();
@@ -212,6 +220,10 @@ public class EditTeamActivity extends AppCompatActivity
             Intent intent = new Intent(this,SignInActivity.class);
             startActivity(intent);
             finish();
+        }
+        if(id == R.id.action_about){
+            Intent intent = new Intent(this,AboutActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

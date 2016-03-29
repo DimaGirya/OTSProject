@@ -41,6 +41,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
+import dima.liza.mobile.shenkar.com.otsproject.AboutActivity;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
@@ -145,7 +146,25 @@ public class AddTaskActivity extends AppCompatActivity
             textDate.setText(day+getString(R.string.dot)+month+getString(R.string.dot)+year);
             hour = calendar.get(calendar.HOUR_OF_DAY);
             minute = calendar.get(calendar.MINUTE);
-            textTime.setText(hour+getString(R.string.doubleDot)+minute);
+            String hourStr;
+            if(hour < 10){
+                hourStr = "0"+hour;
+            }
+            else{
+                hourStr = ""+hour;
+            }
+            String minuteStr;
+            if(minute < 10){
+                minuteStr = "0"+minute;
+            }
+            else{
+                minuteStr = ""+minute;
+            }
+
+            textTime.setText(hourStr+getString(R.string.doubleDot)+minuteStr);
+
+            setDate.setClickable(true);
+            setDate.setClickable(true);
 
         }else{
             employeesName = dataAccess.getAllRegisteredEmployeesName();
@@ -206,6 +225,10 @@ public class AddTaskActivity extends AppCompatActivity
             Intent intent = new Intent(this,SignInActivity.class);
             startActivity(intent);
             finish();
+        }
+        if(id == R.id.action_about){
+            Intent intent = new Intent(this,AboutActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

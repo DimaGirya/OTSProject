@@ -35,7 +35,7 @@ public class UpdateData {
     private static final String TAG = "UpdateData";
     private static UpdateData ourInstance = new UpdateData();
     private int numberOfEmployee;
-    int drawable= R.drawable.ic_menu_send;
+    int drawable = R.drawable.ic_launcher;
     public static UpdateData getInstance() {
         return ourInstance;
     }
@@ -189,13 +189,6 @@ public class UpdateData {
             ParseQuery<ParseUser> queryEmployee = ParseUser.getQuery();
             queryEmployee.whereEqualTo("manager", currentUser.getEmail());
             queryEmployee.whereNotEqualTo("email", currentUser.getEmail());
-            if(numberOfEmployee != 0) {
-                queryEmployee.whereEqualTo("statusEmployeeChange",true);
-                Log.d(TAG, "Need to update  employees list");
-            }
-            else{
-                Log.d(TAG, "Need to download all employees");
-            }
             queryEmployee.findInBackground(new FindCallback<ParseUser>() {
                 @Override
                 public void done(List<ParseUser> objects, ParseException e) {

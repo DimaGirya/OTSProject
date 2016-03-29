@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -106,6 +107,7 @@ public class SignInActivity extends AppCompatActivity {
                                             AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
                                             builder2.setTitle(R.string.enterNewPassword);
                                             final EditText input2 = new EditText(context);
+                                            input2.setInputType((InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
                                             builder2.setView(input2);
                                             builder2.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                                                 @Override
