@@ -45,18 +45,18 @@ import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 public class AddEmployeeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    ProgressDialog progressDialog;
-    EditText editTextEmail,editTextPhone;
-    ListView listView;
-    List<EmployeeToAdd> listEmployeeToAdd;
-    ListAdapter adapter;
-    DataAccess dataAccess;
-    int numOfNewEmployee;
-    int numOfAddNewEmployee;
+    private ProgressDialog progressDialog;
+    private EditText editTextEmail,editTextPhone;
+    private ListView listView;
+    private List<EmployeeToAdd> listEmployeeToAdd;
+    private ListAdapter adapter;
+    private DataAccess dataAccess;
+    private int numOfNewEmployee;
+    private int numOfAddNewEmployee;
     private static String TAG  = "AddEmployeeActivity";
-    TextView userName,userEmail;
-    EditText messageToEmployee;
-    ParseUser currentUser;
+    private TextView userName,userEmail;
+    private EditText messageToEmployee;
+    private ParseUser currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

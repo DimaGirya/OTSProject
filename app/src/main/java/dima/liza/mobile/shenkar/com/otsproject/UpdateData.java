@@ -31,11 +31,11 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.Task;
  * Created by Girya on 18/03/2016.
  */
 public class UpdateData {
-    int numberOfUpdateTask;
+    private int numberOfUpdateTask;
     private static final String TAG = "UpdateData";
     private static UpdateData ourInstance = new UpdateData();
     private int numberOfEmployee;
-    int drawable = R.drawable.ic_launcher;
+    private  int drawable = R.drawable.ic_launcher;
     public static UpdateData getInstance() {
         return ourInstance;
     }

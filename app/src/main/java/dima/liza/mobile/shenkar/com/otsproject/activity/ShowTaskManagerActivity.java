@@ -45,17 +45,17 @@ public class ShowTaskManagerActivity extends AppCompatActivity
     private static final int ID_EDIT_TASK = 0 ;
     private static final int ID_CANCEL_TASK = 1 ;
     private static final int ID_VIEW_TASK = 2;
-    TextView numberOfTask;
-    CheckBox checkBox;
-    ListView listView;
-    Boolean isManager;
-    Boolean getPastTask;
-    ParseUser currentUser;
-    ListAdapter adapter;
-    List<Task> listOfTask;
-    DataAccess dataAccess;
+    private TextView numberOfTask;
+    private CheckBox checkBox;
+    private ListView listView;
+    private  Boolean isManager;
+    private Boolean getPastTask;
+    private ParseUser currentUser;
+    private ListAdapter adapter;
+    private List<Task> listOfTask;
+    private DataAccess dataAccess;
     private String taskSelectedId;
-    Task task;
+    private Task task;
     private TextView userName,userEmail;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 

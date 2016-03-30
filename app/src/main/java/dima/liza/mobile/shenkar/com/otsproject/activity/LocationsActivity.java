@@ -41,9 +41,9 @@ public class LocationsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static String TAG  = "LocationsActivity";
     private ProgressDialog progressDialog;
-    String[] allLocations;
-    DataAccess dataAccess;
-    ParseUser currentUser;
+    private String[] allLocations;
+    private DataAccess dataAccess;
+    private ParseUser currentUser;
     private TextView userName,userEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

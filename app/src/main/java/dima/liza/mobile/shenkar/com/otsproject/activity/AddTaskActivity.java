@@ -75,7 +75,7 @@ public class AddTaskActivity extends AppCompatActivity
     private String selectedEmployee,selectedLocation,selectedCategory;
     private ProgressDialog progressDialog;
     private TextView userName,userEmail;
-    ParseUser currentUser;
+    private ParseUser currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

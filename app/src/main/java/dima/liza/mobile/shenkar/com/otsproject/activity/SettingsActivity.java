@@ -16,8 +16,8 @@ import dima.liza.mobile.shenkar.com.otsproject.R;
 
 public class SettingsActivity extends AppCompatActivity {
     private static final String TAG = "SettingsActivity";
-    int optionTime;
-    SharedPreferences sPref;
+    private int optionTime;
+    private SharedPreferences sPref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

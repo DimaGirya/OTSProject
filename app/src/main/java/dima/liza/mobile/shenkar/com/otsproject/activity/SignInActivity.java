@@ -29,11 +29,11 @@ import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 import dima.liza.mobile.shenkar.com.otsproject.UpdateData;
 
 public class SignInActivity extends AppCompatActivity {
-    ProgressDialog  pd;
+    private ProgressDialog  pd;
     private static String TAG  = "SignInActivity";
-    EditText email, password;
+    private EditText email, password;
     final Context context = this;
-    String newUsername, newPassword;
+    private  String newUsername, newPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

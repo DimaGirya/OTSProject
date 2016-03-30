@@ -43,19 +43,19 @@ import dima.liza.mobile.shenkar.com.otsproject.sql.DataAccess;
 
 public class EditTeamActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,SwipeRefreshLayout.OnRefreshListener {
-    EditText teamName;
-    ListView listView;
-    List<Employee> listEmployee;
-    ListAdapter adapter;
-    ParseUser currentUser;
-    SharedPreferences teamNameSharedPreferences;
-    SharedPreferences lastUpdateData;
-    String teamNameStr;
-    ProgressDialog progressDialog;
-    DataAccess dataAccess;
-    TextView userName,userEmail;
+    private EditText teamName;
+    private ListView listView;
+    private List<Employee> listEmployee;
+    private ListAdapter adapter;
+    private ParseUser currentUser;
+    private SharedPreferences teamNameSharedPreferences;
+    private SharedPreferences lastUpdateData;
+    private String teamNameStr;
+    private ProgressDialog progressDialog;
+    private DataAccess dataAccess;
+    private TextView userName,userEmail;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    final String TAG = "EditTeamActivity";
+    private final String TAG = "EditTeamActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

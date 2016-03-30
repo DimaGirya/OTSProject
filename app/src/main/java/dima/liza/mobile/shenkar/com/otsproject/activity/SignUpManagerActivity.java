@@ -23,15 +23,15 @@ import dima.liza.mobile.shenkar.com.otsproject.UpdateData;
 
 
 public class SignUpManagerActivity extends AppCompatActivity {
-    ProgressDialog  pd;
-    SharedPreferences teamNameSharedPreferences;
+    private ProgressDialog  pd;
+    private SharedPreferences teamNameSharedPreferences;
     private static String TAG  = "SignUpManagerActivity";
-    EditText editTextEmail,editTextPassword,editTextPhone,editTextName;
+    private  EditText editTextEmail,editTextPassword,editTextPhone,editTextName;
     public static final String IfLoggedIn = "ifLoggedIn";
     public static final String Password = "password";
     public static final String Phone = "phoneKey";
     public static final String Email = "emailKey";
-    Boolean ifLogIn = false;
+    private Boolean ifLogIn = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

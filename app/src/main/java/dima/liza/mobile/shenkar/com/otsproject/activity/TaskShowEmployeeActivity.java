@@ -36,14 +36,14 @@ import dima.liza.mobile.shenkar.com.otsproject.task.data.ViewRowTask;
 
 public class TaskShowEmployeeActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = "TaskShowEmployeeActivity";
-    TextView numberOfTask;
-    CheckBox checkBox;
-    ListView listView;
-    Boolean getPastTask;
-    ParseUser currentUser;
-    ListAdapter adapter;
-    List<Task> listOfTask;
-    DataAccess dataAccess;
+    private TextView numberOfTask;
+    private CheckBox checkBox;
+    private ListView listView;
+    private Boolean getPastTask;
+    private ParseUser currentUser;
+    private ListAdapter adapter;
+    private List<Task> listOfTask;
+    private DataAccess dataAccess;
     private String taskSelectedId;
     private static final int ID_REPORT_TASK = 0;
     private String taskSelectedIdParse;
