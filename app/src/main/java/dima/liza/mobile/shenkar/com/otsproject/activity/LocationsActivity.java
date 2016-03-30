@@ -105,6 +105,7 @@ public class LocationsActivity extends AppCompatActivity
             this.deleteDatabase("otsProject.db");
             stopService(new Intent(this, SynchronizationService.class));
             Intent intent = new Intent(this,SignInActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
             finish();
         }
@@ -191,6 +192,9 @@ public class LocationsActivity extends AppCompatActivity
 
     @Override
     public void onResume(){
+        if(ParseUser.getCurrentUser()==null){
+            finish();
+        }
         populate();
         super.onResume();
     }

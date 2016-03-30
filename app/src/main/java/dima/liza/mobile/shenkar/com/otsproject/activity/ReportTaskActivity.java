@@ -496,6 +496,13 @@ public class ReportTaskActivity extends AppCompatActivity implements NavigationV
 
     }
 
+    @Override
+    protected void onResume() {
+        if(ParseUser.getCurrentUser()==null){
+            finish();
+        }
+        super.onResume();
+    }
 
     public void onClickRadioGroupProgress(View view) {
         boolean checked = ((RadioButton) view).isChecked();

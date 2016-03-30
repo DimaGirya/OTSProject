@@ -190,6 +190,13 @@ public class AddTaskActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        if(ParseUser.getCurrentUser()==null){
+            finish();
+        }
+        super.onResume();
+    }
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {

@@ -108,6 +108,14 @@ public class AddEmployeeActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        if(ParseUser.getCurrentUser()==null){
+            finish();
+        }
+        super.onResume();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long

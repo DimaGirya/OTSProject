@@ -193,11 +193,11 @@ public class SynchronizationService extends Service {
                 pendingIntent =  PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 if(isManager){
                     NotificationControl.notificationNow("Your employee late in task","Employee:"+task.getEmployee()+" Task:"+task.getTaskHeader(),
-                            R.drawable.ic_menu_send,task.getParseId().hashCode(),this,pendingIntent);
+                            R.drawable.ic_launcher,task.getParseId().hashCode(),this,pendingIntent);
                 }
                 else{
                     NotificationControl.notificationNow("You late in task","Employee:"+task.getEmployee()+" Task:"+task.getTaskHeader(),
-                            R.drawable.ic_menu_send,task.getParseId().hashCode(),this,pendingIntent);
+                            R.drawable.ic_launcher,task.getParseId().hashCode(),this,pendingIntent);
                 }
             }
         }

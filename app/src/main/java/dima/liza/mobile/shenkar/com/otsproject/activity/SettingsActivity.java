@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.NumberPicker;
 
+import com.parse.ParseUser;
+
 import dima.liza.mobile.shenkar.com.otsproject.R;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -45,7 +47,13 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
-
+    @Override
+    protected void onResume() {
+        if(ParseUser.getCurrentUser()==null){
+            finish();
+        }
+        super.onResume();
+    }
     public void onClickSaveOption(View view) {
         sPref = getSharedPreferences("Settings", MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();

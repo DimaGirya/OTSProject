@@ -91,6 +91,9 @@ public class TaskShowEmployeeActivity extends AppCompatActivity implements Swipe
     }
 @Override
 protected void onResume() {
+    if(ParseUser.getCurrentUser()==null){
+        finish();
+    }
     listOfTask = dataAccess.getAllTask(checkBox.isChecked());
     if(listOfTask.size()==0){
         String noTask [] = new String[1];

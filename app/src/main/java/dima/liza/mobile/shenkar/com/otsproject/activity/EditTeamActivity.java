@@ -100,6 +100,9 @@ public class EditTeamActivity extends AppCompatActivity
            UpdateData.getInstance().updateEmployeeList(this);
         }
     }
+
+
+
     @Override
     public void onRefresh() {
         Toast.makeText(this, R.string.refresh,Toast.LENGTH_LONG).show();
@@ -126,6 +129,9 @@ public class EditTeamActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
+        if(ParseUser.getCurrentUser()==null){
+            finish();
+        }
         listEmployee = dataAccess.getAllEmployee();
         adapter = new AdapterEmployee(this, listEmployee);
         listView = (ListView) findViewById(R.id.listViewTeamMembers);
