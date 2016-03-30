@@ -27,6 +27,7 @@ import java.util.List;
 import dima.liza.mobile.shenkar.com.otsproject.R;
 import dima.liza.mobile.shenkar.com.otsproject.SynchronizationService;
 import dima.liza.mobile.shenkar.com.otsproject.UpdateData;
+import dima.liza.mobile.shenkar.com.otsproject.Validation;
 
 public class SignInActivity extends AppCompatActivity {
     private ProgressDialog  pd;
@@ -114,8 +115,12 @@ public class SignInActivity extends AppCompatActivity {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     newPassword = input2.getText().toString();
                                                     ParseUser user = new ParseUser();
-                                                    user.setUsername(newUsername); //temp, need to implement username from input.
-                                                    user.setPassword(newPassword); //temp, need to implement change of password by user
+                                                    user.setUsername(newUsername);
+                                                    user.setPassword(newPassword);
+                                                    if(!Validation.passwordValidation(newPassword,SignInActivity.this)){
+                                                        pd.dismiss();
+                                                      return;
+                                                    }
                                                     user.setEmail(newEmployee.getString("email"));
                                                     user.put("phoneNumber", newEmployee.getString("numberPhone"));
                                                     user.put("isManager", false);
